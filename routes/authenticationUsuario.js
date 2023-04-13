@@ -4,7 +4,7 @@ const pool = require('../views/database');
 const keys = require('../views/keys');
 const consultas = require('../scripts/consultas')
 const jwt = require('jsonwebtoken');
-
+const crypto = require('crypto');
 
 router.post('/singin', (req,res) => {
    const {username, password} = req.body;

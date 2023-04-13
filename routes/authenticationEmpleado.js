@@ -4,6 +4,7 @@ const pool = require('../views/database');
 const keys = require('../views/keys');
 const consultas = require('../scripts/consultas')
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const { body, validationResult } = require('express-validator');
 
 router.post('/singin',
