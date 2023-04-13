@@ -4,10 +4,19 @@ const pool = require('../views/database');
 const keys = require('../views/keys');
 const consultas = require('../scripts/consultas')
 const jwt = require('jsonwebtoken');
+const { body, validationResult } = require('express-validator');
 
-
-router.post('/singin', (req,res) => {
-   const {username, password} = req.body;
+router.post('/singin',
+    body('username').not().isEmpty().trim().escape().isEmail().normalizeEmail(),
+    body('password').not().isEmpty().trim().escape(),
+    (req,res) => {
+   
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+   
+    const {username, password} = req.body;
    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
    pool.query(consultas.AUTHEMP, 
    [username, hashedPassword], (err, rows, fields) => {
@@ -43,5 +52,14 @@ function verifyToken(req, res, next){
     }
 }
 
+{
+    "errors" [
+      {
+        "location": "body",
+        "msg": "Invalid value",
+        "param": "username"
+      }
+    ]
+  }
 
 module.exports = router;

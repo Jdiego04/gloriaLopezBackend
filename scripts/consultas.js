@@ -70,7 +70,7 @@ const EMPLEADOS = "SELECT \
                     te.TIPO_EMPLEADO \
                   FROM EMPLEADO e  \
                   JOIN TIPO_DOCUMENTO td ON td.ID_TIPO_DOCUMENTO = e.ID_TIPO_DOCUMENTO \
-                  JOIN TIPO_EMPLEADO te ON te.TIPO_EMPLEADO = e.ID_TIPO_EMPLEADO AND te.ACTIVO = 'S' \
+                  JOIN TIPO_EMPLEADO te ON te.ID_TIPO_EMPLEADO = e.ID_TIPO_EMPLEADO AND te.ACTIVO = 'S' \
                   WHERE e.ACTIVO = 'S'"
 const EMPLEADO = "SELECT \
                   e.ID_EMPLEADO, \
