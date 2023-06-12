@@ -3,8 +3,11 @@ const router = express.Router();
 const pool = require('../views/database');
 const keys = require('../views/keys');
 const consultas = require('../scripts/consultas')
+const util = require('../scripts/util/util')
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+
+
 
 router.post('/singin', (req,res) => {
    const {username, password} = req.body;
@@ -25,6 +28,40 @@ router.post('/singin', (req,res) => {
    })
 });
 
+
+router.post('/recoverPassword', (req,res) => {
+    const email = req.body;
+    pool.query(consultas.RECOVERPASSWORD,
+        email,(err, rows, fields) => {
+            if(!err){
+                if(rows.length > 0){
+                    let data = JSON.stringify(rows[0]);
+                    const password = util.generarContrasena();
+
+                    pool.query(consultas.UPDATEPASSWORD,
+                        [password, data.ID_USUARIO], (err, rows, fields) => {
+                            if(!err){
+                                console.log('Update exitoso');
+                            }else{
+                                console.log(err);
+                            } 
+                           })
+                    const asunto = 'Nueva contraseña Gloria Lopez'
+                    const contenido = `
+                        <html>
+                        <body>
+                            <h2>Su nueva contraseña provisional es: ${password}</h2>
+                            <p>Por favor, cambie su contraseña en cuanto pueda.</p>
+                            <p>Gracias.</p>
+                        </body>
+                        </html>
+                    `;
+
+                    util.enviarCorreo(email, asunto, contenido);
+                }
+            }
+        })
+});
 
 router.post('/test', verifyToken, (req,res) => {
    res.json('Informacion secreta');
