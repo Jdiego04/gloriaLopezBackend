@@ -3,6 +3,7 @@ const router = express.Router();
 const pool = require('../views/database');
 const keys = require('../views/keys');
 const consultas = require('../scripts/consultas')
+const util = require('../scripts/util/util')
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { body, validationResult } = require('express-validator');
@@ -36,6 +37,51 @@ router.post('/singin',
         console.log(err);
     } 
    })
+});
+
+//Para recuperar contraseña
+router.post('/recoverPassword', (req,res) => {
+  const email = req.body;
+  // Verificar si el token está presente en la cookie
+  const token = req.cookies.token;
+  if (token) {
+      pool.query(consultas.RECOVERPASSWORDEMPLEADO,
+          email,(err, rows, fields) => {
+              if(!err){
+                  if(rows.length > 0){
+                      let data = JSON.stringify(rows[0]);
+                      //Genera una contraseña provicional
+                      const password = util.generarContrasena();
+                      //Actualiza la contraseña
+                      pool.query(consultas.UPDATEPASSWORDEMPLEADO,
+                          [password, data.ID_USUARIO], (err, rows, fields) => {
+                              if(!err){
+                                  console.log('Update exitoso');
+                              }else{
+                                  console.log(err);
+                              } 
+                             })
+                      //Mensaje y asusnto para enviar en un correo automatico
+                      const asunto = 'Nueva contraseña Gloria Lopez'
+                      const contenido = `
+                          <html>
+                          <body>
+                              <h2>Su nueva contraseña provisional es: ${password}</h2>
+                              <p>Por favor, cambie su contraseña en cuanto pueda.</p>
+                              <p>Gracias.</p>
+                          </body>
+                          </html>
+                      `;
+                      //Envia el correo
+                      util.enviarCorreo(email, asunto, contenido);
+                  }
+              }
+          })
+  } else {
+      // Redirigir a la página de inicio de sesión
+      res.redirect('/logout');
+  }
+  
 });
 
 //Cerrar la session
