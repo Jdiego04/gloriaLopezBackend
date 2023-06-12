@@ -13,13 +13,13 @@ router.post('/singin',
     body('username').not().isEmpty().trim().escape().isEmail().normalizeEmail(),
     body('password').not().isEmpty().trim().escape(),
     (req,res) => {
-   
+   //Valida los campos
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
    
-    const {username, password} = req.body;
+   const {username, password} = req.body;
    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
    pool.query(consultas.AUTHEMP, 
    [username, hashedPassword], (err, rows, fields) => {
@@ -27,6 +27,7 @@ router.post('/singin',
        if(rows.length > 0){
           let data = JSON.stringify(rows[0]);
           const token = jwt.sign({data: data}, keys.secretEmp, {expiresIn: "1h"});
+          res.cookie('token', token, { httpOnly: true });
           res.json({token});
         }else{
             res.json('Correo o contraseña incorrectas');
@@ -37,24 +38,14 @@ router.post('/singin',
    })
 });
 
+//Cerrar la session
+router.get('/logout', (req, res) => {
+  //Limpia la cookie
+  res.clearCookie('token');
+  res.send('Cierre de sesión exitoso');
+});
 
-router.post('/test', verifyToken, (req,res) => {
-   res.json('Informacion secreta');
- });
-
-function verifyToken(req, res, next){
-    if(!req.headers.authorization) return res.status(400).json('No autorizado');
-    const token = req.headers['authorization'];
-    
-    if(token !== ''){
-        const content =jwt.verify(token, keys.secretEmp);
-        req.data = content;
-        next();
-    }else{
-        res.status(401).json('Token vacio');
-    }
-}
-
+//JSON con mensajes de errores
 {
     "errors" [
       {
