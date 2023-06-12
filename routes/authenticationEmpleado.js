@@ -7,6 +7,8 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { body, validationResult } = require('express-validator');
 
+
+//Inicio de sesion
 router.post('/singin',
     body('username').not().isEmpty().trim().escape().isEmail().normalizeEmail(),
     body('password').not().isEmpty().trim().escape(),
