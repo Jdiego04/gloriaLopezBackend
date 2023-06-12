@@ -1,11 +1,11 @@
 //Manejamos las claves, palabras claves, etc del programa
 module.exports = {
     database: {
-        host: '127.0.0.1',
-        user: 'root',
-        password: '',
+        host: 'bcfvcghpnkkgf8cumvok-mysql.services.clever-cloud.com',
+        user: 'uwbkmke0zh8acojg',
+        password: '5Lf6fjJeNOhRaHe9MiT2',
         port: 3306,
-        database: 'gloria_lopez'
+        database: 'bcfvcghpnkkgf8cumvok'
     },
     secretEmp : 'gloria',
     secretUsu : 'lopez'
