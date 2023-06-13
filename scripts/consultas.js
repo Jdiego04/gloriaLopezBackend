@@ -139,6 +139,23 @@ const PRODUCTO = "SELECT \
                 JOIN TIPO_DOCUMENTO td ON td.ID_TIPO_DOCUMENTO = pro.ID_TIPO_DOCUMENTO \
                 WHERE p.ACTIVO = 'S' AND p.ID_PRODUCTO = ?";
 const DESPRODUCTO = "UPDATE PRODUCTO SET ACTIVO = N WHERE ID_PRODUCTO = ?";
+const VERIFICARCORREOEMPLEADO = 'SELECT * FROM EMPLEADO WHERE CORREO = ?';
+const VERIFICARDOCUMENTOEMPLEADO = 'SELECT * FROM EMPLEADO WHERE NUMERO_DOCUMENTO = ?';
+const DEACTIVATEEMPLEADO = 'UPDATE EMPLEADO SET ACTIVO = N WHERE ID_EMPLEADO';
+const UPDATEEMPLEADO = 'UPDATE EMPLEADO \
+                        SET \
+                        NOMBRE = ?, \
+                          FECHA_NACIMIENTO = ?, \
+                          FECHA_INGRESO = ?, \
+                          DIRECCION = ?, \
+                          ID_TIPO_DOCUMENTO = ?, \
+                          NUMERO_DOCUMENTO = ?, \
+                          CORREO = ?, \
+                          CELULAR = ?, \
+                          CONTRASENA = ?, \
+                          ID_ROL = ?, \
+                          ID_TIPO_EMPLEADO = ? \
+                        WHERE ID_EMPLEADO = ?';
 const PROVEEDORES = "";
 const PROVEEDOR = "";
 const INSERTPROVEEDOR = "";
@@ -204,7 +221,11 @@ module.exports = {
     INSERTUSUARIO, 
     DESUSUARIOS,
     UPDATEPASSWORDEMPLEADO,
-    RECOVERPASSWORDEMPLEADO
+    RECOVERPASSWORDEMPLEADO,
+    VERIFICARCORREOEMPLEADO,
+    VERIFICARDOCUMENTOEMPLEADO,
+    DEACTIVATEEMPLEADO,
+    UPDATEEMPLEADO
   };
   
   

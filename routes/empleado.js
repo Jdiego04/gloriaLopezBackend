@@ -14,21 +14,6 @@ router.get('/', (req, res) => {
     })
 });
 
-//Un empleado
-
-/*router.get('/:IDENTIFICACION_EMPLEADO', (req, res) => {
-    const { IDENTIFICACION_EMPLEADO } = req.params
-    let sql = 'SELECT * FROM EMPLEADO WHERE IDENTIFICACION_EMPLEADO = ?'
-    pool.query(sql, [IDENTIFICACION_EMPLEADO], (err, rows, fields) => {
-        if (err) throw err;
-        if(!rows[0]){
-            res.json({error: "Este dato no existe"})
-        }
-        else {
-            res.json(rows)
-        }
-    })
-})*/
 
 //Post
 router.post('/', (req, res) => {

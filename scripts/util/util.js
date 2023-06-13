@@ -86,7 +86,51 @@ async function enviarCorreo(destinatario, asunto, contenido) {
       console.error('Error al enviar el correo:', error);
     }
   }
+
+    //Funcion generica para verificar si existe un registro
+  function verificarExiste(dato, consulta) {
+    pool.query(consulta, 
+      dato, (err, rows, fields) => {
+       if(!err){
+          if(rows.length > 0){
+             return false;
+           }else{
+               return true;
+           }
+       }else{
+           console.log(err);
+       } 
+      })
+  }
+  
+  async function actualizarRegistro(tabla, datos, condicion) {
+    try {
+      const result = await new Promise((resolve, reject) => {
+        connection.query(
+          `UPDATE ${tabla} SET ? WHERE ${condicion}`,
+          [datos],
+          (error, result) => {
+            if (error) {
+              console.error('Error al actualizar el registro:', error);
+              reject(error);
+              return;
+            }
+    
+            resolve(result.affectedRows);
+          }
+        );
+      });
+  
+      return result;
+    } catch (error) {
+      console.error('Error al actualizar el registro:', error);
+      throw error;
+    }
+  }
+
   module.exports = {
     generarContrasena,
-    enviarCorreo
+    enviarCorreo,
+    verificarExiste,
+    actualizarRegistro
   };

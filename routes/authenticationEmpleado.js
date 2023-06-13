@@ -10,7 +10,7 @@ const { body, validationResult } = require('express-validator');
 
 
 //Inicio de sesion
-router.post('/singin',
+router.post('/login',
     body('username').not().isEmpty().trim().escape().isEmail().normalizeEmail(),
     body('password').not().isEmpty().trim().escape(),
     (req,res) => {
@@ -84,12 +84,70 @@ router.post('/recoverPassword', (req,res) => {
   
 });
 
+router.post('/singUp', (req,res) => {
+  const {nombre, fechaNacimiento, fechaIngreso, direccion, idTipoDocumento, numeroDocumento,
+        correo, celular, contrasena, idRol, idTipoEmpleado} = req.body;
+
+  const validaCorreo = util.verificarExiste(correo, consultas.VERIFICARCORREOEMPLEADO);
+  const validaDocumento = util.verificarExiste(numeroDocumento, consultas.VERIFICARDOCUMENTOEMPLEADO);
+
+  if (validaCorreo && validaDocumento) {
+    pool.query(consultas.INSERTEMPLEADO, 
+      [nombre, fechaNacimiento, fechaIngreso, direccion, idTipoDocumento, numeroDocumento,
+       correo, celular, contrasena, idRol, idTipoEmpleado], (err, rows, fields) => {
+        if(!err){
+            res.json('Insertado correctamente');
+        }else{
+            console.log(err);
+        } 
+      })
+  }else{
+    res.json('Este usuario ya esta registrado');
+  }
+  
+});
+
+router.post('/deactivate', (req,res) => {
+  //Se le envia en activo lo que se quiere cambiar
+  const {idEmpleado, activo} = req.body;
+  pool.query(consultas.DEACTIVATEEMPLEADO, 
+    [idEmpleado, activo], (err, rows, fields) => {
+     if(!err){
+      res.json("Se cambio el estado con exito");
+     }else{
+         console.log(err);
+     } 
+    })
+});
+
+//Actualizar registro
+router.post('/update/:id', (req,res) => {
+  const id = req.params.id;
+  const {nombre, fechaNacimiento, fechaIngreso, direccion, idTipoDocumento, numeroDocumento,
+        correo, celular, contrasena, idRol, idTipoEmpleado} = req.body;
+
+  const validaCorreo = util.verificarExiste(correo, consultas.VERIFICARCORREOEMPLEADO);
+  const validaDocumento = util.verificarExiste(numeroDocumento, consultas.VERIFICARDOCUMENTOEMPLEADO);
+
+    pool.query(consultas.UPDATEEMPLEADO, 
+      [nombre, fechaNacimiento, fechaIngreso, direccion, idTipoDocumento, numeroDocumento,
+       correo, celular, contrasena, idRol, idTipoEmpleado, id], (err, rows, fields) => {
+        if(!err){
+            res.json('Actualizado correctamente');
+        }else{
+            console.log(err);
+        } 
+      })
+});
+
+
 //Cerrar la session
 router.get('/logout', (req, res) => {
   //Limpia la cookie
   res.clearCookie('token');
   res.send('Cierre de sesión exitoso');
 });
+
 
 //JSON con mensajes de errores
 {

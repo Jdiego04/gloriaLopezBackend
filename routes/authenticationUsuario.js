@@ -9,7 +9,7 @@ const crypto = require('crypto');
 
 
 //Inicio de session para usuario
-router.post('/singin', (req,res) => {
+router.post('/login', (req,res) => {
     
    const {username, password} = req.body;
    //Crea el hash de sha256 con la contraseña
