@@ -1,0 +1,10 @@
+{
+  "service": "gmail",
+  "auth": {
+    "type": "OAuth2",
+    "user": "glorialopezautomatico@gmail.com",
+    "clientId": "1090448767404-9ulr4tshtj9n66hhfcf1aqda7jl03u1e.apps.googleusercontent.com",
+    "clientSecret": "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",
+    "refreshToken": "1//04Wv2r4EOisAZCgYIARAAGAQSNwF-L9IrJTnZfjyHuWFm5q_4v09aR4u-KpkFG-SRJBjsAEntnu7jhyFdSLi2z-gAFzqaHwSz3Qc"
+  }
+}

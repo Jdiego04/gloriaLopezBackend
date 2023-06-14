@@ -41,17 +41,20 @@ router.post('/login',
 
 //Para recuperar contraseña
 router.post('/recoverPassword', (req,res) => {
-  const email = req.body;
+  const {email} = req.body;
+  console.log('Empezo el servicio');
   // Verificar si el token está presente en la cookie
-  const token = req.cookies.token;
-  if (token) {
+  //const token = req.cookies.token;
+ // if (token) {
       pool.query(consultas.RECOVERPASSWORDEMPLEADO,
           email,(err, rows, fields) => {
+            console.log('recover');
               if(!err){
                   if(rows.length > 0){
                       let data = JSON.stringify(rows[0]);
                       //Genera una contraseña provicional
                       const password = util.generarContrasena();
+                      console.log('contraseña generada');
                       //Actualiza la contraseña
                       pool.query(consultas.UPDATEPASSWORDEMPLEADO,
                           [password, data.ID_USUARIO], (err, rows, fields) => {
@@ -74,13 +77,17 @@ router.post('/recoverPassword', (req,res) => {
                       `;
                       //Envia el correo
                       util.enviarCorreo(email, asunto, contenido);
+                  }else{
+                    console.log("no se encontro");
                   }
+              }else{
+                console.log(err);
               }
           })
-  } else {
+ /* } else {
       // Redirigir a la página de inicio de sesión
       res.redirect('/logout');
-  }
+  }*/
   
 });
 

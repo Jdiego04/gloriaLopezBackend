@@ -1,6 +1,10 @@
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 const pool = require('../../views/database');
+const OAuth2 = google.auth.OAuth2;
+
+const accountTransport = require("./acountTransport.json");
+
 
 //Generar contraseñas
 function generarContrasena() {
@@ -39,54 +43,42 @@ function generarContrasena() {
 
 //Correos automaticos
 async function enviarCorreo(destinatario, asunto, contenido) {
-    try {
-      // Configuración de OAuth 2.0
-      const oauth2Client = new google.auth.OAuth2(
-        '834017606216-0madn9d1i69r7m3rk793gt0tl9kkn13j.apps.googleusercontent.com',
-        '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',
-        'https://developers.google.com/oauthplayground'
-      );
-  
-      // Obtener un token de acceso
-      const tokens = {
-        access_token: 'access_token',
-        refresh_token: 'refresh_token',
-        scope: 'https://mail.google.com/',
-        token_type: 'Bearer',
-        expiry_date: 123456789
-      };
-  
-      oauth2Client.setCredentials(tokens);
-  
-      // Crear un transporte de correo con OAuth 2.0
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          type: 'OAuth2',
-          user: 'glorialopezautomatico@gmail.com',
-          clientId: '834017606216-0madn9d1i69r7m3rk793gt0tl9kkn13j.apps.googleusercontent.com',
-          clientSecret: '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',
-          refreshToken: 'refresh_token',
-          accessToken: tokens.access_token,
-          expires: tokens.expiry_date
-        }
-      });
-  
-      // Configurar el mensaje de correo
-      const mensajeCorreo = {
-        from: 'glorialopezautomatico@gmail.com',
-        to: destinatario,
-        subject: asunto,
-        html: contenido
-      };
-  
-      // Enviar el correo
-      const info = await transporter.sendMail(mensajeCorreo);
-      console.log('Correo enviado correctamente:', info.response);
-    } catch (error) {
-      console.error('Error al enviar el correo:', error);
-    }
+  try {
+    const CLIENT_ID = '1090448767404-9ulr4tshtj9n66hhfcf1aqda7jl03u1e.apps.googleusercontent.com';
+    const CLIENT_SECRET = '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';
+    const REDIRECT_URI = 'https://mail.google.com/mail/';
+    const REFRESH_TOKEN = '1//04Wv2r4EOisAZCgYIARAAGAQSNwF-L9IrJTnZfjyHuWFm5q_4v09aR4u-KpkFG-SRJBjsAEntnu7jhyFdSLi2z-gAFzqaHwSz3Qc';
+
+    const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET);
+    oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+
+    const accessToken = await oAuth2Client.getAccessToken();
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        type: 'OAuth2',
+        user: 'glorialopezautomatico@gmail.com',
+        clientId: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+        refreshToken: REFRESH_TOKEN,
+        accessToken: accessToken,
+      },
+    });
+
+    const mailOptions = {
+      from: 'glorialopezautomatico@gmail.com',
+      to: destinatario,
+      subject: asunto,
+      text: contenido,
+    };
+
+    const result = await transporter.sendMail(mailOptions);
+    console.log('Correo enviado:', result);
+  } catch (error) {
+    console.error('Error al enviar el correo:', error);
   }
+}
 
     //Funcion generica para verificar si existe un registro
   function verificarExiste(dato, consulta) {
