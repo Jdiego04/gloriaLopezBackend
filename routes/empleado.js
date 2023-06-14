@@ -1,19 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const consultas = require('../scripts/consultas')
 const pool = require('../views/database');
+const keys = require('../views/keys');
+const consultas = require('../scripts/consultas')
+const util = require('../scripts/util/util')
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const { body, validationResult } = require('express-validator');
 
 
-router.get('/', (req, res) => {
-    let sql = consultas.EMPLEADOS
-    pool.query(sql, (err, rows, fields) => {
+router.get('/all', (req, res) => {
+    pool.query(consultas.EMPLEADOS, (err, rows, fields) => {
         if (err) throw err;
         else {
             res.json(rows)
         }
     })
 });
-
 
 //Post
 router.post('/', (req, res) => {
