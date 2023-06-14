@@ -33,12 +33,14 @@ router.post('/login', (req,res) => {
    })
 });
 
+
 //Para recuperar contraseña
 router.post('/recoverPassword', (req,res) => {
-    const email = req.body;
+    const {email} = req.body;
+  
     // Verificar si el token está presente en la cookie
-    const token = req.cookies.token;
-    if (token) {
+    //const token = req.cookies.token;
+   // if (token) {
         pool.query(consultas.RECOVERPASSWORD,
             email,(err, rows, fields) => {
                 if(!err){
@@ -46,9 +48,10 @@ router.post('/recoverPassword', (req,res) => {
                         let data = JSON.stringify(rows[0]);
                         //Genera una contraseña provicional
                         const password = util.generarContrasena();
+                        console.log('contraseña generada' + password);
                         //Actualiza la contraseña
                         pool.query(consultas.UPDATEPASSWORD,
-                            [password, data.ID_USUARIO], (err, rows, fields) => {
+                            [password, email], (err, rows, fields) => {
                                 if(!err){
                                     console.log('Update exitoso');
                                 }else{
@@ -57,26 +60,25 @@ router.post('/recoverPassword', (req,res) => {
                                })
                         //Mensaje y asusnto para enviar en un correo automatico
                         const asunto = 'Nueva contraseña Gloria Lopez'
-                        const contenido = `
-                            <html>
-                            <body>
-                                <h2>Su nueva contraseña provisional es: ${password}</h2>
-                                <p>Por favor, cambie su contraseña en cuanto pueda.</p>
-                                <p>Gracias.</p>
-                            </body>
-                            </html>
-                        `;
+                        const contenido = ` Su nueva contraseña provisional es: ${password} 
+                        Por favor, cambie su contraseña en cuanto pueda. `;
                         //Envia el correo
                         util.enviarCorreo(email, asunto, contenido);
+                        res.json('Enviado correctamente');
+                    }else{
+                      console.log("no se encontro");
                     }
+                }else{
+                  console.log(err);
                 }
             })
-    } else {
+   /* } else {
         // Redirigir a la página de inicio de sesión
         res.redirect('/logout');
-    }
+    }*/
     
-});
+  });
+
 
 //Cerrar la session
 router.get('/logout', (req, res) => {

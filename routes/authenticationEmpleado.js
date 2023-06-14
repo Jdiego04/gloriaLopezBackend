@@ -42,7 +42,7 @@ router.post('/login',
 //Para recuperar contraseña
 router.post('/recoverPassword', (req,res) => {
   const {email} = req.body;
-  console.log('Empezo el servicio');
+
   // Verificar si el token está presente en la cookie
   //const token = req.cookies.token;
  // if (token) {
@@ -125,9 +125,6 @@ router.post('/update/:id', (req,res) => {
   const id = req.params.id;
   const {nombre, fechaNacimiento, fechaIngreso, direccion, idTipoDocumento, numeroDocumento,
         correo, celular, contrasena, idRol, idTipoEmpleado} = req.body;
-
-  const validaCorreo = util.verificarExiste(correo, consultas.VERIFICARCORREOEMPLEADO);
-  const validaDocumento = util.verificarExiste(numeroDocumento, consultas.VERIFICARDOCUMENTOEMPLEADO);
 
     pool.query(consultas.UPDATEEMPLEADO, 
       [nombre, fechaNacimiento, fechaIngreso, direccion, idTipoDocumento, numeroDocumento,
