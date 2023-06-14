@@ -4,7 +4,6 @@ const consultas = require('../scripts/consultas')
 const pool = require('../views/database');
 
 //Productos
-//Get Productos 
 router.get('/', (req, res) => {
     let sql = consultas.PRODUCTOS;
     pool.query(sql, (err, rows, fields) => {
