@@ -48,16 +48,15 @@ router.post('/recoverPassword', (req,res) => {
  // if (token) {
       pool.query(consultas.RECOVERPASSWORDEMPLEADO,
           email,(err, rows, fields) => {
-            console.log('recover');
               if(!err){
                   if(rows.length > 0){
                       let data = JSON.stringify(rows[0]);
                       //Genera una contraseña provicional
                       const password = util.generarContrasena();
-                      console.log('contraseña generada');
+                      console.log('contraseña generada' + password);
                       //Actualiza la contraseña
                       pool.query(consultas.UPDATEPASSWORDEMPLEADO,
-                          [password, data.ID_USUARIO], (err, rows, fields) => {
+                          [password, email], (err, rows, fields) => {
                               if(!err){
                                   console.log('Update exitoso');
                               }else{
@@ -66,17 +65,11 @@ router.post('/recoverPassword', (req,res) => {
                              })
                       //Mensaje y asusnto para enviar en un correo automatico
                       const asunto = 'Nueva contraseña Gloria Lopez'
-                      const contenido = `
-                          <html>
-                          <body>
-                              <h2>Su nueva contraseña provisional es: ${password}</h2>
-                              <p>Por favor, cambie su contraseña en cuanto pueda.</p>
-                              <p>Gracias.</p>
-                          </body>
-                          </html>
-                      `;
+                      const contenido = ` Su nueva contraseña provisional es: ${password} 
+                      Por favor, cambie su contraseña en cuanto pueda. `;
                       //Envia el correo
                       util.enviarCorreo(email, asunto, contenido);
+                      res.json('Enviado correctamente');
                   }else{
                     console.log("no se encontro");
                   }
