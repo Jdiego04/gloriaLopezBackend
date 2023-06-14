@@ -6,7 +6,7 @@ const consultas = require('../scripts/consultas')
 const util = require('../scripts/util/util')
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-
+const { body, validationResult } = require('express-validator');
 
 //Inicio de session para usuario
 router.post('/login', (req,res) => {
@@ -85,5 +85,26 @@ router.get('/logout', (req, res) => {
     res.send('Cierre de sesión exitoso');
 });
 
+router.post('/singUp', (req,res) => {
+    const {nombre, id_tipo_documento, numero_documento, celular, 
+        correo, contrasena}= req.body;
   
+    const validaCorreo = util.verificarExiste(correo, consultas.VERIFICARCORREOUSUARIO);
+    const validaDocumento = util.verificarExiste(numero_documento, consultas.VERIFICARDOCUMENTOUSUARIO);
+    if (!validaCorreo && !validaDocumento) {
+    const hashedPassword = crypto.createHash('sha256').update(contrasena).digest('hex');
+      pool.query(consultas.INSERTUSUARIO, 
+        [nombre, id_tipo_documento, numero_documento, celular, correo, 
+            hashedPassword], (err, rows, fields) => {
+          if(!err){
+              res.json('Insertado correctamente');
+          }else{
+              console.log(err);
+          } 
+        })
+    }else{
+      res.json('Este usuario ya esta registrado');
+    }
+    
+  });
 module.exports = router;

@@ -90,11 +90,11 @@ router.post('/singUp', (req,res) => {
 
   const validaCorreo = util.verificarExiste(correo, consultas.VERIFICARCORREOEMPLEADO);
   const validaDocumento = util.verificarExiste(numeroDocumento, consultas.VERIFICARDOCUMENTOEMPLEADO);
-
-  if (validaCorreo && validaDocumento) {
+  const hashedPassword = crypto.createHash('sha256').update(contrasena).digest('hex');
+  if (!validaCorreo && !validaDocumento) {
     pool.query(consultas.INSERTEMPLEADO, 
       [nombre, fechaNacimiento, fechaIngreso, direccion, idTipoDocumento, numeroDocumento,
-       correo, celular, contrasena, idRol, idTipoEmpleado], (err, rows, fields) => {
+       correo, celular, hashedPassword, idRol, idTipoEmpleado], (err, rows, fields) => {
         if(!err){
             res.json('Insertado correctamente');
         }else{

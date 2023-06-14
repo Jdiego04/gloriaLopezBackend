@@ -93,19 +93,19 @@ const EMPLEADO = "SELECT \
                 JOIN TIPO_DOCUMENTO td ON td.ID_TIPO_DOCUMENTO = e.ID_TIPO_DOCUMENTO \
                 JOIN TIPO_EMPLEADO te ON te.TIPO_EMPLEADO = e.ID_TIPO_EMPLEADO AND te.ACTIVO = 'S' \
                 WHERE e.ACTIVO = 'S' AND e.ID_EMPLEADO = ?";
-const INSERTEMPLEADO = "INSERT INTO EMPLEADO ( \
-                          NOMBRE, \
-                          FECHA_NACIMIENTO, \
-                          FECHA_INGRESO, \
-                          DIRECCION, \
-                          ID_TIPO_DOCUMENTO, \
-                          NUMERO_DOCUMENTO, \
-                          CORREO, \
-                          CELULAR, \
-                          CONTRASENA, \
-                          ID_ROL, \
-                          ID_TIPO_EMPLEADO) \
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+const INSERTEMPLEADO = "insert into empleado ( \
+                          nombre, \
+                          fecha_nacimiento, \
+                          fecha_ingreso, \
+                          direccion, \
+                          id_tipo_documento, \
+                          numero_documento, \
+                          correo, \
+                          celular, \
+                          contrasena, \
+                          id_rol, \
+                          id_tipo_empleado) \
+                          values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 const ESTADOS = "SELECT * FROM ESTADO_CITA";
 const ESTADO = "SELECT * FROM ESTADO_CITA WHERE ID_ESTADO_CITA = ?"
 const PRODUCTOS = "SELECT \
@@ -177,7 +177,17 @@ const INSERTTIPOPRODUCTO = "";
 const DESTIPOPRODUCTO = "";
 const USUARIOS = "";
 const USUARIO = "";
-const INSERTUSUARIO = "";
+const INSERTUSUARIO = "INSERT INTO USUARIO ( \
+                        NOMBRE, \
+                        ID_TIPO_DOCUMENTO, \
+                        NUMERO_DOCUMENTO, \
+                        CELULAR, \
+                        CORREO, \
+                        CONTRASENA) \
+                        VALUES (?,?,?,?,?,?)";
+const VERIFICARCORREOUSUARIO = 'SELECT * FROM USUARIO WHERE CORREO = ?';
+const VERIFICARDOCUMENTOUSUARIO = 'SELECT * FROM USUARIO WHERE NUMERO_DOCUMENTO = ?';
+
 const DESUSUARIOS = "";
 
 module.exports = {
@@ -225,7 +235,9 @@ module.exports = {
     VERIFICARCORREOEMPLEADO,
     VERIFICARDOCUMENTOEMPLEADO,
     DEACTIVATEEMPLEADO,
-    UPDATEEMPLEADO
+    UPDATEEMPLEADO,
+    VERIFICARCORREOUSUARIO,
+    VERIFICARDOCUMENTOUSUARIO
   };
   
   

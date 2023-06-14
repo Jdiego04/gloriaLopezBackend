@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
+const pool = require('../../views/database');
 
 //Generar contraseñas
 function generarContrasena() {
@@ -93,9 +94,9 @@ async function enviarCorreo(destinatario, asunto, contenido) {
       dato, (err, rows, fields) => {
        if(!err){
           if(rows.length > 0){
-             return false;
+             return true;
            }else{
-               return true;
+               return false;
            }
        }else{
            console.log(err);
