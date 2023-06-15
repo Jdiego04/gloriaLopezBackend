@@ -40,7 +40,6 @@ app.use(require('../routes/tipoProducto'));
 app.use(require('../routes/usuario'));
 
 
-
 app.use('/authEmp', require('../routes/authenticationEmpleado'));
 app.use('/authUsu', require('../routes/authenticationUsuario'));
 app.use('/empleado',require('../routes/empleado'));
