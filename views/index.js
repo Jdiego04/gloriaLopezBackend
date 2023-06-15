@@ -25,11 +25,21 @@ app.use(express.json());
 //Routes
 
 
-app.use(cors()); // no tocar si nno queire dañar el proyecto 
+app.use(cors()); 
 app.use(require('../routes/index'));
 app.use(require('../routes/authenticationEmpleado'));
 app.use(require('../routes/authenticationUsuario'));
-app.use(require('../routes/registro'));
+app.use(require('../routes/empleado'));
+app.use(require('../routes/estadoCita'));
+app.use(require('../routes/pqrs'));
+app.use(require('../routes/productos'));
+app.use(require('../routes/proveedor'));
+app.use(require('../routes/rol'));
+app.use(require('../routes/servicio'));
+app.use(require('../routes/tipoDocumento'));
+app.use(require('../routes/tipoEmpleado'));
+app.use(require('../routes/tipoProducto'));
+app.use(require('../routes/usuario'));
 
 
 
