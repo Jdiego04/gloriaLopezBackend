@@ -127,9 +127,10 @@ router.post('/update/:id', (req,res) => {
   const {nombre, fechaNacimiento, fechaIngreso, direccion, idTipoDocumento, numeroDocumento,
         correo, celular, contrasena, idRol, idTipoEmpleado} = req.body;
 
+        const hashedPassword = crypto.createHash('sha256').update(contrasena).digest('hex');
     pool.query(consultas.UPDATEEMPLEADO, 
       [nombre, fechaNacimiento, fechaIngreso, direccion, idTipoDocumento, numeroDocumento,
-       correo, celular, contrasena, idRol, idTipoEmpleado, id], (err, rows, fields) => {
+       correo, celular, hashedPassword, idRol, idTipoEmpleado, id], (err, rows, fields) => {
         if(!err){
             res.json('Actualizado correctamente');
         }else{

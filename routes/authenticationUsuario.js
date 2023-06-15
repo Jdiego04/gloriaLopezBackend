@@ -110,4 +110,21 @@ router.post('/singUp', (req,res) => {
     }
     
   });
+
+  //Actualizar registro
+router.post('/update/:id', (req,res) => {
+    const id = req.params.id;
+    const {nombre, id_tipo_documento, numero_documento, celular, 
+        correo, contrasena} = req.body;
+    const hashedPassword = crypto.createHash('sha256').update(contrasena).digest('hex');
+      pool.query(consultas.UPDATEUSUARIO, 
+        [nombre, id_tipo_documento, numero_documento, celular, 
+            correo, hashedPassword, id], (err, rows, fields) => {
+          if(!err){
+              res.json('Actualizado correctamente');
+          }else{
+              console.log(err);
+          } 
+        })
+  });
 module.exports = router;
