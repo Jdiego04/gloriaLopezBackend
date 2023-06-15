@@ -106,8 +106,10 @@ const INSERTEMPLEADO = "insert into empleado ( \
                           id_rol, \
                           id_tipo_empleado) \
                           values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-const ESTADOS = "SELECT * FROM ESTADO_CITA";
-const ESTADO = "SELECT * FROM ESTADO_CITA WHERE ID_ESTADO_CITA = ?"
+const ESTADOS = "SELECT ID_ESTADO_CITA, ESTADO_CITA FROM ESTADO_CITA";
+const ESTADO = "SELECT ID_ESTADO_CITA, ESTADO_CITA FROM ESTADO_CITA WHERE ID_ESTADO_CITA = ?"
+const INSERTESTADO = "INSERT INTO ESTADO_CITA (ESTADO_CITA) VALUES (?)";
+const ELIMINARESTADO = "DELETE FROM ESTADO_CITA WHERE ID_ESTADO_CITA = ?";
 const PRODUCTOS = "SELECT \
                     p.ID_PRODUCTO, \
                     p.NOMBRE_PRODUCTO, \
@@ -287,7 +289,9 @@ module.exports = {
     UPDATESERVICIO,
     ROL,
     INSERTROL,
-    ELIMINARROL
+    ELIMINARROL,
+    INSERTESTADO,
+    ELIMINARESTADO
   };
   
   
