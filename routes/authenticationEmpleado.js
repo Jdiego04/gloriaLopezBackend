@@ -110,9 +110,9 @@ router.post('/singUp', (req,res) => {
 
 router.post('/deactivate', (req,res) => {
   //Se le envia en activo lo que se quiere cambiar
-  const {idEmpleado, activo} = req.body;
+  const {idEmpleado} = req.body;
   pool.query(consultas.DEACTIVATEEMPLEADO, 
-    [idEmpleado, activo], (err, rows, fields) => {
+    [idEmpleado], (err, rows, fields) => {
      if(!err){
       res.json("Se cambio el estado con exito");
      }else{

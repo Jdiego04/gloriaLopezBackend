@@ -5,7 +5,7 @@ const pool = require('../views/database');
 
 //tipos
 router.get('/all', (req, res) => {
-    pool.query(consultas.TIPODOCUMENTOS, (err, rows, fields) => {
+    pool.query(consultas.TIPOEMPLEADOS, (err, rows, fields) => {
        if (err) throw err;
         else {
             res.json(rows)
@@ -16,7 +16,7 @@ router.get('/all', (req, res) => {
 //tipo
 router.get('/tipo:id', (req, res) => {
     const { id } = req.params
-    pool.query(consultas.TIPODOCUMENTO,id, (err, rows, fields) => {
+    pool.query(consultas.TIPOEMPLEADO,id, (err, rows, fields) => {
        if (err) throw err;
         else {
             res.json(rows)
@@ -27,10 +27,10 @@ router.get('/tipo:id', (req, res) => {
 
 router.post('/tipo', (req,res) => {
 
-    const {tipoDoc} = req.body;
+    const {tipoEmpleado} = req.body;
   
-    pool.query(consultas.INSERTTIPODOC, 
-        tipoDoc, (err, rows, fields) => {
+    pool.query(consultas.INSERTTIPOEMPLEADO, 
+        tipoEmpleado, (err, rows, fields) => {
             if(!err){
                 res.json('Insertado correctamente');
             }else{
@@ -40,16 +40,16 @@ router.post('/tipo', (req,res) => {
   });
 
 
-router.delete('/eliminar', (req, res) => {
-    const {idTipoDoc} = req.body
-
-    pool.query(consultas.ELIMINARTIPODOC, 
-        idTipoDoc, (err, rows, fields) => {
-        if (err) throw err
-        else {
-            res.json({status: 'Se elimino con exito'})
-        }
-    })
-})
+  router.post('/deactivate', (req,res) => {
+    const {idTipoEmpleado} = req.body;
+    pool.query(consultas.DESTIPOEMPLEADOS, 
+      [idTipoEmpleado], (err, rows, fields) => {
+       if(!err){
+        res.json("Se cambio el estado con exito");
+       }else{
+           console.log(err);
+       } 
+      })
+  });
 
 module.exports = router;

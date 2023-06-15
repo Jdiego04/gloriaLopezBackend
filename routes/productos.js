@@ -10,7 +10,6 @@ router.get('/all', (req, res) => {
         else {
             res.json(rows)
         }
-        res.json('Hola');
     })
 });
 
@@ -22,7 +21,6 @@ router.get('/producto:id', (req, res) => {
         else {
             res.json(rows)
         }
-        res.json('Hola');
     })
 });
 
@@ -63,7 +61,7 @@ router.put('/desactivar', (req, res) => {
         idProducto, (err, rows, fields) => {
         if (err) throw err
         else {
-            res.json({status: 'Se desactivo el producto'})
+            res.json({status: 'Se elimino con exito'})
         }
     })
 })
