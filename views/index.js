@@ -23,8 +23,6 @@ app.use(express.json());
 
 
 //Routes
-
-
 app.use(cors()); 
 app.use(require('../routes/index'));
 app.use(require('../routes/authenticationEmpleado'));
