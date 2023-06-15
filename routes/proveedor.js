@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const consultas = require('../scripts/consultas')
 const pool = require('../views/database');
 
 
