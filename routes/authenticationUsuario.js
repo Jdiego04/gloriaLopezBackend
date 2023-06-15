@@ -89,15 +89,15 @@ router.get('/logout', (req, res) => {
 });
 
 router.post('/singUp', (req,res) => {
-    const {nombre, id_tipo_documento, numero_documento, celular, 
+    const {nombre, idTipoDocumento, numeroDocumento, celular, 
         correo, contrasena}= req.body;
   
     const validaCorreo = util.verificarExiste(correo, consultas.VERIFICARCORREOUSUARIO);
-    const validaDocumento = util.verificarExiste(numero_documento, consultas.VERIFICARDOCUMENTOUSUARIO);
+    const validaDocumento = util.verificarExiste(numeroDocumento, consultas.VERIFICARDOCUMENTOUSUARIO);
     if (!validaCorreo && !validaDocumento) {
     const hashedPassword = crypto.createHash('sha256').update(contrasena).digest('hex');
       pool.query(consultas.INSERTUSUARIO, 
-        [nombre, id_tipo_documento, numero_documento, celular, correo, 
+        [nombre, idTipoDocumento, numeroDocumento, celular, correo, 
             hashedPassword], (err, rows, fields) => {
           if(!err){
               res.json('Insertado correctamente');
