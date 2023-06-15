@@ -156,10 +156,41 @@ const UPDATEEMPLEADO = 'UPDATE EMPLEADO \
                           ID_ROL = ?, \
                           ID_TIPO_EMPLEADO = ? \
                         WHERE ID_EMPLEADO = ?';
-const PROVEEDORES = "";
-const PROVEEDOR = "";
-const INSERTPROVEEDOR = "";
+const PROVEEDORES = "SELECT \
+                        p.ID_PROVEEDOR, \
+                        p.NOMBRE, \
+                        p.CORREO, \
+                        p.DIREECCION, \
+                        td.TIPO_DOCUMENTO, \
+                        p.NUMERO_DOCUMENTO \
+                      FROM PROVEEDOR p \
+                      JOIN TIPO_DOCUMENTO td ON td.ID_TIPO_DOCUMENTO = p.ID_TIPO_DOCUMENTO";
+const PROVEEDOR = "SELECT \
+                    p.ID_PROVEEDOR, \
+                    p.NOMBRE, \
+                    p.CORREO, \
+                    p.DIREECCION, \
+                    td.TIPO_DOCUMENTO, \
+                    p.NUMERO_DOCUMENTO \
+                  FROM PROVEEDOR p \
+                  JOIN TIPO_DOCUMENTO td ON td.ID_TIPO_DOCUMENTO = p.ID_TIPO_DOCUMENTO \
+                  WHERE p.ACTIVO = 'S' AND p.ID_PROVEEDOR = ?";
+const INSERTPROVEEDOR = "INSERT INTO PROVEEDOR( \
+                          NOMBRE, \
+                          CORREO, \
+                          DIREECCIO, \
+                          ID_TIPO_DOCUMENTO, \
+                          NUMERO_DOCUMENTO) \
+                        VALUES(?, ?, ?, ?, ?)";
 const DESPROVEEDOR = "UPDATE PROVEEDOR SET ACTIVO = N WHERE ID_PROVEEDOR = ?";
+const UPDATEPROVEEDOR = "UPDATE PROVEEDOR \
+                          SET \
+                          NOMBRE = ?, \
+                          CORREO = ?, \
+                          DIREECCION = ?, \
+                          ID_TIPO_DOCUMENTO = ?, \
+                          NUMERO_DOCUMENTO = ? \
+                          WHERE PROVEEDOR = ?";
 const ROLES = "";
 const SERVICIOS = "";
 const SERVICIO = "";
@@ -187,6 +218,8 @@ const INSERTUSUARIO = "INSERT INTO USUARIO ( \
                         VALUES (?,?,?,?,?,?)";
 const VERIFICARCORREOUSUARIO = 'SELECT * FROM USUARIO WHERE CORREO = ?';
 const VERIFICARDOCUMENTOUSUARIO = 'SELECT * FROM USUARIO WHERE NUMERO_DOCUMENTO = ?';
+const VERIFICARCORREOPROVEEDOR = 'SELECT * FROM PROVEEDOR WHERE CORREO = ?';
+const VERIFICARDOCUMENTOPROVEEDOR = 'SELECT * FROM PROVEEDOR WHERE NUMERO_DOCUMENTO = ?';
 
 const DESUSUARIOS = "";
 
@@ -237,7 +270,10 @@ module.exports = {
     DEACTIVATEEMPLEADO,
     UPDATEEMPLEADO,
     VERIFICARCORREOUSUARIO,
-    VERIFICARDOCUMENTOUSUARIO
+    VERIFICARDOCUMENTOUSUARIO,
+    VERIFICARCORREOPROVEEDOR,
+    VERIFICARDOCUMENTOPROVEEDOR,
+    UPDATEPROVEEDOR
   };
   
   

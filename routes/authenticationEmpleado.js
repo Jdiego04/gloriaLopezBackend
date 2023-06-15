@@ -54,9 +54,10 @@ router.post('/recoverPassword', (req,res) => {
                       //Genera una contraseña provicional
                       const password = util.generarContrasena();
                       console.log('contraseña generada' + password);
+                      const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
                       //Actualiza la contraseña
                       pool.query(consultas.UPDATEPASSWORDEMPLEADO,
-                          [password, email], (err, rows, fields) => {
+                          [hashedPassword, email], (err, rows, fields) => {
                               if(!err){
                                   console.log('Update exitoso');
                               }else{

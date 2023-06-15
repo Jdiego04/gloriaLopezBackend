@@ -50,8 +50,9 @@ router.post('/recoverPassword', (req,res) => {
                         const password = util.generarContrasena();
                         console.log('contraseña generada' + password);
                         //Actualiza la contraseña
+                        const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
                         pool.query(consultas.UPDATEPASSWORD,
-                            [password, email], (err, rows, fields) => {
+                            [hashedPassword, email], (err, rows, fields) => {
                                 if(!err){
                                     console.log('Update exitoso');
                                 }else{
