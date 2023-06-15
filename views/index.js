@@ -32,14 +32,20 @@ app.use(require('../routes/authenticationUsuario'));
 app.use(require('../routes/registro'));
 
 
-app.use('/proveedor', require('../routes/proveedor'));
+
 app.use('/authEmp', require('../routes/authenticationEmpleado'));
 app.use('/authUsu', require('../routes/authenticationUsuario'));
-app.use('/reg', require('../routes/registro'));
-app.use('/productos', require('../routes/productos'));
 app.use('/empleado',require('../routes/empleado'));
+app.use('/estadoCita',require('../routes/estadoCita'));
+app.use('/pqrs',require('../routes/pqrs'));
+app.use('/productos', require('../routes/productos'));
+app.use('/proveedor', require('../routes/proveedor'));
+app.use('/rol', require('../routes/rol'));
 app.use('/servicio',require('../routes/servicio'));
-
+app.use('/tipoDoc', require('../routes/tipoDocumento'));
+app.use('/tipoEmpleado', require('../routes/tipoEmpleado'));
+app.use('/tipoProducto', require('../routes/tipoProducto'));
+app.use('/usuario', require('../routes/usuario'));
 
 //Starting the server
 

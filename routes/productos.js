@@ -4,80 +4,80 @@ const consultas = require('../scripts/consultas')
 const pool = require('../views/database');
 
 //Productos
-router.get('/', (req, res) => {
-    let sql = consultas.PRODUCTOS;
-    pool.query(sql, (err, rows, fields) => {
+router.get('/all', (req, res) => {
+    pool.query(consultas.PRODUCTOS, (err, rows, fields) => {
        if (err) throw err;
         else {
             res.json(rows)
         }
-        res.json('Hola');
     })
 });
 
-//Get para un proveedor
-/*router.get('/:IDENTIFICACION_PRODUCTO', (req, res) => {
-    const { IDENTIFICACION_PRODUCTO } = req.params
-    let sql = 'SELECT * FROM PRODUCTO WHERE IDENTIFICACION_PRODUCTO = ?'
-    pool.query(sql, [IDENTIFICACION_PRODUCTO], (err, rows, fields) => {
-        if (err) throw err;
+//Productos
+router.get('/producto:id', (req, res) => {
+    const { id } = req.params
+    pool.query(consultas.PRODUCTO,id, (err, rows, fields) => {
+       if (err) throw err;
         else {
             res.json(rows)
         }
     })
-})*/
-
-router.post('/', (req, res) => {
-    const { IDENTIFICACION_PRODUCTO, NOMBRE_PRODUCTO, FECHA_COMPRA, CANTIDAD_PRODUCTO, IDENTIFICACION_PROVEEDOR } = req.body
-    let sql = 'SELECT IDENTIFICACION_PRODUCTO FROM PRODUCTO WHERE IDENTIFICACION_PRODUCTO= ?'
-    pool.query(sql,[IDENTIFICACION_PRODUCTO], (err,rows,fields)=>{
-        if(err) return err;
-        if(rows[0]) return res.json({status: "error", error: "Este dato ya existe"})   
-    else{
-        let sql = `INSERT INTO PRODUCTO(IDENTIFICACION_PRODUCTO, NOMBRE_PRODUCTO, FECHA_COMPRA, CANTIDAD_PRODUCTO, IDENTIFICACION_PROVEEDOR) 
-        values ('${IDENTIFICACION_PRODUCTO}','${NOMBRE_PRODUCTO}','${FECHA_COMPRA}','${CANTIDAD_PRODUCTO}','${IDENTIFICACION_PROVEEDOR}')`
-        pool.query(sql, (err, rows, fields) => {
-            if (err) throw err
-            else {
-                res.json({ status: 'Producto agregado agregado' })
-            }
-        })
-    } 
-    })   
 });
 
-router.put('/desactivar', (req, res) => {
 
+router.post('/producto', (req,res) => {
+
+    const {nombreProducto, cantidad, idTipoProducto, idProveedor} = req.body;
+  
+    pool.query(consultas.INSERTPRODUCTO, 
+        [nombreProducto, cantidad, idTipoProducto], (err, rows, fields) => {
+          if(!err){
+            pool.query("SELECT MAX(ID_PRODUCTO) AS max_id FROM PRODUCTO", (err, rows, fields) => {
+
+                if (err) throw err;
+                 else {
+                    const idProducto= rows[1][0].max_id;
+                    pool.query(consultas.INSERTPRODUCTOPROVEEDOR, 
+                        [idProducto, idProveedor], (err, rows, fields) => {
+                        if(!err){
+                              res.json('Insertado correctamente');
+                        }else{
+                              console.log(err);
+                        } 
+                    })
+                 }
+             })
+          }else{
+              console.log(err);
+          } 
+    })
+  });
+
+
+router.put('/desactivar', (req, res) => {
     const {idProducto} = req.body
 
     pool.query(consultas.DESPRODUCTO, 
-        [idProducto], (err, rows, fields) => {
+        idProducto, (err, rows, fields) => {
         if (err) throw err
         else {
-            res.json({status: 'Se desactivo el producto'})
+            res.json({status: 'Se elimino con exito'})
         }
     })
 })
 
-router.put('/:ID', (req, res) => {
-    const {ID} = req.params
-    const {IDENTIFICACION_PRODUCTO, NOMBRE_PRODUCTO, FECHA_COMPRA, CANTIDAD_PRODUCTO, IDENTIFICACION_PROVEEDOR} = req.body
+router.put('/update/:id', (req,res) => {
+    const id = req.params.id;
+    const {nombreProducto, cantidad} = req.body;
+  
+      pool.query(consultas.UPDATEPRODUCTO, 
+        [nombreProducto, cantidad, id], (err, rows, fields) => {
+          if(!err){
+              res.json('Actualizado correctamente');
+          }else{
+              console.log(err);
+          } 
+        })
+  });
 
-    let sql = `UPDATE PRODUCTO SET
-    IDENTIFICACION_PRODUCTO = '${IDENTIFICACION_PRODUCTO}',
-    NOMBRE_PRODUCTO = '${NOMBRE_PRODUCTO}',
-    FECHA_COMPRA = '${FECHA_COMPRA}',
-    CANTIDAD_PRODUCTO = ${CANTIDAD_PRODUCTO},
-    IDENTIFICACION_PROVEEDOR = '${IDENTIFICACION_PROVEEDOR}'
-    where IDENTIFICACION_PRODUCTO = '${ID}'`
-    
-
-
-    pool.query(sql, (err, rows, fields) => {
-        if (err) throw err
-        else {
-            res.json({status: 'Se modifico la informacion del proveedor'})
-        }
-    })
-})
 module.exports = router;

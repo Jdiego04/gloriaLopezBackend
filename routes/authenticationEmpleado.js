@@ -54,9 +54,10 @@ router.post('/recoverPassword', (req,res) => {
                       //Genera una contraseña provicional
                       const password = util.generarContrasena();
                       console.log('contraseña generada' + password);
+                      const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
                       //Actualiza la contraseña
                       pool.query(consultas.UPDATEPASSWORDEMPLEADO,
-                          [password, email], (err, rows, fields) => {
+                          [hashedPassword, email], (err, rows, fields) => {
                               if(!err){
                                   console.log('Update exitoso');
                               }else{
@@ -109,9 +110,9 @@ router.post('/singUp', (req,res) => {
 
 router.post('/deactivate', (req,res) => {
   //Se le envia en activo lo que se quiere cambiar
-  const {idEmpleado, activo} = req.body;
+  const {idEmpleado} = req.body;
   pool.query(consultas.DEACTIVATEEMPLEADO, 
-    [idEmpleado, activo], (err, rows, fields) => {
+    [idEmpleado], (err, rows, fields) => {
      if(!err){
       res.json("Se cambio el estado con exito");
      }else{
@@ -126,9 +127,10 @@ router.post('/update/:id', (req,res) => {
   const {nombre, fechaNacimiento, fechaIngreso, direccion, idTipoDocumento, numeroDocumento,
         correo, celular, contrasena, idRol, idTipoEmpleado} = req.body;
 
+        const hashedPassword = crypto.createHash('sha256').update(contrasena).digest('hex');
     pool.query(consultas.UPDATEEMPLEADO, 
       [nombre, fechaNacimiento, fechaIngreso, direccion, idTipoDocumento, numeroDocumento,
-       correo, celular, contrasena, idRol, idTipoEmpleado, id], (err, rows, fields) => {
+       correo, celular, hashedPassword, idRol, idTipoEmpleado, id], (err, rows, fields) => {
         if(!err){
             res.json('Actualizado correctamente');
         }else{

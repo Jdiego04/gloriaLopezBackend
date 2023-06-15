@@ -1,88 +1,80 @@
 const express = require('express');
 const router = express.Router();
-
+const consultas = require('../scripts/consultas')
 const pool = require('../views/database');
-//Proveedores: 
 
 
-//Get para varios proveedores
-router.get('/', (req, res) => {
-    let sql = 'SELECT * FROM PROVEEDOR'
-    pool.query(sql, (err, rows, fields) => {
+//Get para todos proveedores
+router.get('/all', (req, res) => {
+    pool.query(consultas.PROVEEDORES, (err, rows, fields) => {
         if (err) throw err;
         else {
             res.json(rows)
         }
     })
 });
+
 //Get para un proveedor
-router.get('/:IDENTIFICACION_PROVEEDOR', (req, res) => {
-    const { IDENTIFICACION_PROVEEDOR } = req.params
-    let sql = 'SELECT * FROM PROVEEDOR WHERE IDENTIFICACION_PROVEEDOR = ?'
-    pool.query(sql, [IDENTIFICACION_PROVEEDOR], (err, rows, fields) => {
+router.get('/proveedor/:id', (req, res) => {
+    const { id } = req.params
+    pool.query(consultas.PROVEEDOR, id,(err, rows, fields) => {
         if (err) throw err;
         else {
             res.json(rows)
         }
     })
-})
-
-//Post
-router.post('/', (req, res) => {
-    const { IDENTIFICACION_PROVEEDOR, NOMBRE_PROVEEDOR, TELEFONO, CORREO, DIRECCION } = req.body
-    let sql = 'SELECT IDENTIFICACION_PROVEEDOR FROM PROVEEDOR WHERE IDENTIFICACION_PROVEEDOR= ?'
-    pool.query(sql,[IDENTIFICACION_PROVEEDOR], (err,rows,fields) =>{
-        if(err) return err;
-        if(rows[0]) return res.json({status: "error", error: "Este dato ya existe"})   
-    else{
-        let sql = `INSERT INTO PROVEEDOR(IDENTIFICACION_PROVEEDOR, NOMBRE_PROVEEDOR, TELEFONO, CORREO, DIRECCION) 
-        values ('${IDENTIFICACION_PROVEEDOR}','${NOMBRE_PROVEEDOR}','${TELEFONO}','${CORREO}','${DIRECCION}')`
-        pool.query(sql, (err, rows, fields) => {
-            if (err) throw err
-            else {
-                res.json({ status: 'Proveedor agregado' })
-            }
-        })
-    }
-    }) 
 });
 
-//Delete
-router.delete('/:IDENTIFICACION_PROVEEDOR', (req, res) => {
-    const { IDENTIFICACION_PROVEEDOR } = req.params
 
-    let sql = `DELETE FROM PROVEEDOR WHERE IDENTIFICACION_PROVEEDOR = '${IDENTIFICACION_PROVEEDOR}'`
-    pool.query(sql, (err, rows, fields) => {
-        if (err) throw err
-        else {
-            res.json({ status: 'Se elimino el proveedor' })
-        }
-    })
-}); 
+router.post('/proveedor', (req,res) => {
+    const {nombre, correo, direccion, idTipoDocumento, numeroDocumento} = req.body;
+  
+    const validaCorreo = util.verificarExiste(correo, consultas.VERIFICARCORREOPROVEEDOR);
+    const validaDocumento = util.verificarExiste(numeroDocumento, consultas.VERIFICARDOCUMENTOPROVEEDOR);
 
-//Put
-router.put('/:ID', (req, res) => {
-    const {ID} = req.params
-    const {IDENTIFICACION_PROVEEDOR, NOMBRE_PROVEEDOR, TELEFONO, CORREO, DIRECCION} = req.body
-
-    let sql = `update PROVEEDOR set
-    IDENTIFICACION_PROVEEDOR = '${IDENTIFICACION_PROVEEDOR}',
-    NOMBRE_PROVEEDOR = '${NOMBRE_PROVEEDOR}',
-    TELEFONO = '${TELEFONO}',
-    CORREO = '${CORREO}',
-    DIRECCION = '${DIRECCION}'
-    where IDENTIFICACION_PROVEEDOR = '${ID}'`
-
-    pool.query(sql, (err, rows, fields) => {
-        if (err) throw err
-        else {
-            console.log('hola '+sql);
-            res.json({status: 'Se modifico la informacion del proveedor'})
-        }
-    })
-})
+    if (!validaCorreo && !validaDocumento) {
+      pool.query(consultas.INSERTPROVEEDOR, 
+        [nombre, correo, direccion, idTipoDocumento, numeroDocumento], (err, rows, fields) => {
+          if(!err){
+              res.json('Insertado correctamente');
+          }else{
+              console.log(err);
+          } 
+        })
+    }else{
+      res.json('Este proveedor ya esta registrado');
+    }
+    
+  });
 
 
+  router.post('/deactivate', (req,res) => {
+    //Se le envia en activo lo que se quiere cambiar
+    const {idProveedor} = req.body;
+    pool.query(consultas.DESPROVEEDOR, 
+      [idProveedor], (err, rows, fields) => {
+       if(!err){
+        res.json("Se cambio el estado con exito");
+       }else{
+           console.log(err);
+       } 
+      })
+  });
 
+
+//Actualizar registro
+router.put('/update/:id', (req,res) => {
+    const id = req.params.id;
+    const {nombre, correo, direccion, idTipoDocumento, numeroDocumento} = req.body;
+  
+      pool.query(consultas.UPDATEPROVEEDOR, 
+        [nombre, correo, direccion, idTipoDocumento, numeroDocumento, id], (err, rows, fields) => {
+          if(!err){
+              res.json('Actualizado correctamente');
+          }else{
+              console.log(err);
+          } 
+        })
+  });
 
 module.exports = router;
