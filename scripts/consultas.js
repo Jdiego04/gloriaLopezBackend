@@ -191,6 +191,11 @@ const UPDATEPROVEEDOR = "UPDATE PROVEEDOR \
                           ID_TIPO_DOCUMENTO = ?, \
                           NUMERO_DOCUMENTO = ? \
                           WHERE PROVEEDOR = ?";
+const UPDATEPRODUCTO = "UPDATE PRODUCTO \
+                        SET \
+                        NOMBRE_PRODUCTO = ?, \
+                        CANTIDA = ? \
+                        WHERE ID_PRODUCTO = ?";
 const ROLES = "";
 const SERVICIOS = "";
 const SERVICIO = "";
@@ -273,7 +278,8 @@ module.exports = {
     VERIFICARDOCUMENTOUSUARIO,
     VERIFICARCORREOPROVEEDOR,
     VERIFICARDOCUMENTOPROVEEDOR,
-    UPDATEPROVEEDOR
+    UPDATEPROVEEDOR,
+    UPDATEPRODUCTO
   };
   
   

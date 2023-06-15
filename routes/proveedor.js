@@ -15,7 +15,7 @@ router.get('/all', (req, res) => {
 });
 
 //Get para un proveedor
-router.get('proveedor/:id', (req, res) => {
+router.get('/proveedor/:id', (req, res) => {
     const { id } = req.params
     pool.query(consultas.PROVEEDOR, id,(err, rows, fields) => {
         if (err) throw err;
