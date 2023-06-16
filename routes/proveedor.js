@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const consultas = require('../scripts/consultas')
 const pool = require('../views/database');
+const util = require('../scripts/util/util')
 
 
 //Get para todos proveedores
@@ -15,7 +16,7 @@ router.get('/all', (req, res) => {
 });
 
 //Get para un proveedor
-router.get('/proveedor/:id', (req, res) => {
+router.get('/:id', (req, res) => {
     const { id } = req.params
     pool.query(consultas.PROVEEDOR, id,(err, rows, fields) => {
         if (err) throw err;
@@ -33,6 +34,7 @@ router.post('/proveedor', (req,res) => {
     const validaDocumento = util.verificarExiste(numeroDocumento, consultas.VERIFICARDOCUMENTOPROVEEDOR);
 
     if (!validaCorreo && !validaDocumento) {
+console.log(nombre)
       pool.query(consultas.INSERTPROVEEDOR, 
         [nombre, correo, direccion, idTipoDocumento, numeroDocumento], (err, rows, fields) => {
           if(!err){

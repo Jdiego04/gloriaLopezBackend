@@ -109,37 +109,48 @@ const INSERTEMPLEADO = "insert into empleado ( \
 const ESTADOS = "SELECT ID_ESTADO_CITA, ESTADO_CITA FROM ESTADO_CITA";
 const ESTADO = "SELECT ID_ESTADO_CITA, ESTADO_CITA FROM ESTADO_CITA WHERE ID_ESTADO_CITA = ?"
 const INSERTESTADO = "INSERT INTO ESTADO_CITA (ESTADO_CITA) VALUES (?)";
-const ELIMINARESTADO = "DELETE FROM ESTADO_CITA WHERE ID_ESTADO_CITA = ?";
-const PRODUCTOS = "SELECT \
-                    p.ID_PRODUCTO, \
-                    p.NOMBRE_PRODUCTO, \
-                    p.CANTIDAD, \
-                    p.ID_TIPO_PRODUCTO, \
-                    tp.TIPO_PRODUCTO, \
-                    p.ID_PROVEEDOR, \
-                    pro.NOMBRE AS PROVEEDOR, \
-                    td.TIPO_DOCUMENTO, \
-                    pro.NUMERO_DOCUMENTO \
-                  FROM PRODUCTO p \
-                  JOIN TIPO_PRODUCTO tp ON tp.ID_TIPO_PRODUCTO = p.ID_TIPO_PRODUCTO AND TP.ACTIVO = 'S' \
-                  JOIN PROVEEDOR pro ON pro.ID_PROVEEDOR = p.ID_PROVEEDOR AND pro.ACTIVO = 'S' \
-                  JOIN TIPO_DOCUMENTO td ON td.ID_TIPO_DOCUMENTO = pro.ID_TIPO_DOCUMENTO \
-                  WHERE p.ACTIVO = 'S'";
-const PRODUCTO = "SELECT \
-                  p.ID_PRODUCTO, \
-                  p.NOMBRE_PRODUCTO, \
-                  p.CANTIDAD, \
-                  p.ID_TIPO_PRODUCTO, \
-                  tp.TIPO_PRODUCTO, \
-                  p.ID_PROVEEDOR, \
-                  pro.NOMBRE AS PROVEEDOR, \
-                  td.TIPO_DOCUMENTO, \
-                  pro.NUMERO_DOCUMENTO \
-                FROM PRODUCTO p \
-                JOIN TIPO_PRODUCTO tp ON tp.ID_TIPO_PRODUCTO = p.ID_TIPO_PRODUCTO AND TP.ACTIVO = 'S' \
-                JOIN PROVEEDOR pro ON pro.ID_PROVEEDOR = p.ID_PROVEEDOR AND pro.ACTIVO = 'S' \
-                JOIN TIPO_DOCUMENTO td ON td.ID_TIPO_DOCUMENTO = pro.ID_TIPO_DOCUMENTO \
-                WHERE p.ACTIVO = 'S' AND p.ID_PRODUCTO = ?";
+const ELIMINARESTADO = "DELETE FROM ESTADO_CITA WHERE ID_ESTADO_CITA = ?"; 
+const PRODUCTOS = "SELECT p.ID_PRODUCTO, p.Nombre_producto, p.cantidad, tpp.TIPO_PRODUCTO,pr.NOMBRE \
+FROM producto p \
+JOIN productoproveedor pp ON pp.ID_PRODUCTO = p.ID_PRODUCTO \
+JOIN proveedor pr ON pr.ID_PROVEEDOR = pp.ID_PROVEDOR \
+JOIN tipo_producto tpp ON tpp.ID_TIPO_PRODUCTO = p.ID_TIPO_PRODUCTO";
+// "SELECT \
+//                     p.ID_PRODUCTO, \
+//                     p.NOMBRE_PRODUCTO, \
+//                     p.CANTIDAD, \
+//                     p.ID_TIPO_PRODUCTO, \
+//                     tp.TIPO_PRODUCTO, \
+//                     p.ID_PROVEEDOR, \
+//                     pro.NOMBRE AS PROVEEDOR, \
+//                     td.TIPO_DOCUMENTO, \
+//                     pro.NUMERO_DOCUMENTO \
+//                   FROM PRODUCTO p \
+//                   JOIN TIPO_PRODUCTO tp ON tp.ID_TIPO_PRODUCTO = p.ID_TIPO_PRODUCTO AND TP.ACTIVO = 'S' \
+//                   JOIN PROVEEDOR pro ON pro.ID_PROVEEDOR = p.ID_PROVEEDOR AND pro.ACTIVO = 'S' \
+//                   JOIN TIPO_DOCUMENTO td ON td.ID_TIPO_DOCUMENTO = pro.ID_TIPO_DOCUMENTO \
+//                   WHERE p.ACTIVO = 'S'";
+const PRODUCTO = "SELECT p.Nombre_producto, p.cantidad, pr.nombre \
+FROM producto p \
+JOIN productoProveedor pp ON pp.id_producto = p.id_producto \
+JOIN proveedor pr ON pr.id_proveedor = pp.id_proveedor";
+
+const INSERTPRODUCTO = "INSERT INTO producto(NOMBRE_PRODUCTO, CANTIDAD, ID_TIPO_PRODUCTO) VALUES (?,?,?)";
+// "SELECT \
+//                   p.ID_PRODUCTO, \
+//                   p.NOMBRE_PRODUCTO, \
+//                   p.CANTIDAD, \
+//                   p.ID_TIPO_PRODUCTO, \
+//                   tp.TIPO_PRODUCTO, \
+//                   p.ID_PROVEEDOR, \
+//                   pro.NOMBRE AS PROVEEDOR, \
+//                   td.TIPO_DOCUMENTO, \
+//                   pro.NUMERO_DOCUMENTO \
+//                 FROM PRODUCTO p \
+//                 JOIN TIPO_PRODUCTO tp ON tp.ID_TIPO_PRODUCTO = p.ID_TIPO_PRODUCTO AND TP.ACTIVO = 'S' \
+//                 JOIN PROVEEDOR pro ON pro.ID_PROVEEDOR = p.ID_PROVEEDOR AND pro.ACTIVO = 'S' \
+//                 JOIN TIPO_DOCUMENTO td ON td.ID_TIPO_DOCUMENTO = pro.ID_TIPO_DOCUMENTO \
+//                 WHERE p.ACTIVO = 'S' AND p.ID_PRODUCTO = ?";
 const DESPRODUCTO = "UPDATE PRODUCTO SET ACTIVO = 'N' WHERE ID_PRODUCTO = ?";
 const VERIFICARCORREOEMPLEADO = 'SELECT * FROM EMPLEADO WHERE CORREO = ?';
 const VERIFICARDOCUMENTOEMPLEADO = 'SELECT * FROM EMPLEADO WHERE NUMERO_DOCUMENTO = ?';
@@ -162,7 +173,7 @@ const PROVEEDORES = "SELECT \
                         p.ID_PROVEEDOR, \
                         p.NOMBRE, \
                         p.CORREO, \
-                        p.DIREECCION, \
+                        p.DIRECCION, \
                         td.TIPO_DOCUMENTO, \
                         p.NUMERO_DOCUMENTO \
                       FROM PROVEEDOR p \
@@ -171,16 +182,16 @@ const PROVEEDOR = "SELECT \
                     p.ID_PROVEEDOR, \
                     p.NOMBRE, \
                     p.CORREO, \
-                    p.DIREECCION, \
+                    p.DIRECCION, \
                     td.TIPO_DOCUMENTO, \
                     p.NUMERO_DOCUMENTO \
-                  FROM PROVEEDOR p \
+                  FROM PROVEDOR p \
                   JOIN TIPO_DOCUMENTO td ON td.ID_TIPO_DOCUMENTO = p.ID_TIPO_DOCUMENTO \
                   WHERE p.ACTIVO = 'S' AND p.ID_PROVEEDOR = ?";
 const INSERTPROVEEDOR = "INSERT INTO PROVEEDOR( \
                           NOMBRE, \
                           CORREO, \
-                          DIREECCIO, \
+                          DIRECCION, \
                           ID_TIPO_DOCUMENTO, \
                           NUMERO_DOCUMENTO) \
                         VALUES(?, ?, ?, ?, ?)";
@@ -205,7 +216,7 @@ const ELIMINARROL = "DELETE FROM ROL WHERE ID_ROL = ?";
 const SERVICIOS = "SELECT ID_SERVICIO, NOMBRE, VALOR FROM SERVICIO";
 const SERVICIO = "SELECT ID_SERVICIO, NOMBRE, VALOR FROM SERVICIO WHERE ACTIVO = 'S' AND ID_SERVICIO = ?";
 const INSERTSERVICIO = "INSERT INTO SERVICIO (NOMBRE, VALOR) VALUES (?, ?)";
-const UPDATESERVICIO = "UPDATE SERVICIO SET NOMBRE = ?, VALOR = ? WHERE ID_PRODUCTO = ?";
+const UPDATESERVICIO = "UPDATE SERVICIO SET NOMBRE = ?, VALOR = ? WHERE ID_SERVICIO = ?";
 const DESSERVICIO = "UPDATE SERVICIO SET ACTIVO = 'N' WHERE ID_SERVICIO = ?";
 const TIPODOCUMENTOS = "SELECT ID_TIPO_DOCUMENTO, TIPO_DOCUMENTO FROM TIPO_DOCUMENTO";
 const TIPODOCUMENTO = "SELECT ID_TIPO_DOCUMENTO, TIPO_DOCUMENTO FROM TIPO_DOCUMENTO WHERE ID_TIPO_DOCUMENTO = ?";
@@ -250,6 +261,7 @@ const VERIFICARDOCUMENTOPROVEEDOR = 'SELECT * FROM PROVEEDOR WHERE NUMERO_DOCUME
 
 
 module.exports = {
+    INSERTPRODUCTO,
     AUTHEMP,
     RECOVERPASSWORD,
     UPDATEPASSWORD,
