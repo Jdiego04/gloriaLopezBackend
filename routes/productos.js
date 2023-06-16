@@ -14,8 +14,8 @@ router.get('/all', (req, res) => {
 });
 
 //Productos
-router.get('/producto:id', (req, res) => {
-    const { id } = req.params
+router.get('/producto', (req, res) => {
+    const {id} = req.body;
     pool.query(consultas.PRODUCTO,id, (err, rows, fields) => {
        if (err) throw err;
         else {

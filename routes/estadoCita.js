@@ -14,8 +14,8 @@ router.get('/all', (req, res) => {
 });
 
 //estado
-router.get('/estado:id', (req, res) => {
-    const { id } = req.params
+router.get('/estado', (req, res) => {
+    const {id} = req.body;
     pool.query(consultas.ESTADO,id, (err, rows, fields) => {
        if (err) throw err;
         else {

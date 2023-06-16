@@ -14,8 +14,8 @@ router.get('/all', (req, res) => {
 });
 
 //rol
-router.get('/rol:id', (req, res) => {
-    const { id } = req.params
+router.get('/rol', (req, res) => {
+    const {id} = req.body;
     pool.query(consultas.ROL,id, (err, rows, fields) => {
        if (err) throw err;
         else {
