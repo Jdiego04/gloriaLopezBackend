@@ -10,7 +10,7 @@ const { body, validationResult } = require('express-validator');
 
 //Inicio de session para usuario
 router.post('/login', (req,res) => {
-    
+  const statusCode = 203;
    const {username, password} = req.body;
    //Crea el hash de sha256 con la contraseña
    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
@@ -25,8 +25,10 @@ router.post('/login', (req,res) => {
           res.cookie('token', token, { httpOnly: true });
           res.json({token});
         }else{
-            res.json('Correo o contraseña incorrectas');
-        }
+          res.status(statusCode).json(
+            {statusCode : 'correo o contraseña incorrecta'}
+          );
+      }
     }else{
         console.log(err);
     } 
