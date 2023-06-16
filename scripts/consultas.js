@@ -117,14 +117,11 @@ const PRODUCTOS = "SELECT \
                      p.ID_TIPO_PRODUCTO, \
                      tp.TIPO_PRODUCTO, \
                      pr.ID_PROVEEDOR, \
-                     pr.NOMBRE AS PROVEEDOR, \
-                     td.TIPO_DOCUMENTO, \
-                     pr.NUMERO_DOCUMENTO \
+                     pr.NOMBRE AS PROVEEDOR \
                   FROM PRODUCTO p \
                   JOIN TIPO_PRODUCTO tp ON tp.ID_TIPO_PRODUCTO = p.ID_TIPO_PRODUCTO AND TP.ACTIVO = 'S' \
                   JOIN productoproveedor pp ON pp.ID_PRODUCTO = p.ID_PRODUCTO \
                   JOIN proveedor pr ON pr.ID_PROVEEDOR = pp.ID_PROVEEDOR \
-                  JOIN TIPO_DOCUMENTO td ON td.ID_TIPO_DOCUMENTO = pr.ID_TIPO_DOCUMENTO \
                    WHERE p.ACTIVO = 'S'";
 const PRODUCTO = "SELECT \
                   p.ID_PRODUCTO, \
@@ -133,14 +130,11 @@ const PRODUCTO = "SELECT \
                   p.ID_TIPO_PRODUCTO, \
                   tp.TIPO_PRODUCTO, \
                   pr.ID_PROVEEDOR, \
-                  pr.NOMBRE AS PROVEEDOR, \
-                  td.TIPO_DOCUMENTO, \
-                  pr.NUMERO_DOCUMENTO \
+                  pr.NOMBRE AS PROVEEDOR \
                   FROM PRODUCTO p \
                   JOIN TIPO_PRODUCTO tp ON tp.ID_TIPO_PRODUCTO = p.ID_TIPO_PRODUCTO AND TP.ACTIVO = 'S' \
                   JOIN productoproveedor pp ON pp.ID_PRODUCTO = p.ID_PRODUCTO \
                   JOIN proveedor pr ON pr.ID_PROVEEDOR = pp.ID_PROVEEDOR \
-                  JOIN TIPO_DOCUMENTO td ON td.ID_TIPO_DOCUMENTO = pr.ID_TIPO_DOCUMENTO \
                   WHERE p.ACTIVO = 'S' AND p.ID_PRODUCTO = ?";
 const INSERTPRODUCTO = "INSERT INTO producto(NOMBRE_PRODUCTO, CANTIDAD, ID_TIPO_PRODUCTO) VALUES (?,?,?)";
 const DESPRODUCTO = "UPDATE PRODUCTO SET ACTIVO = 'N' WHERE ID_PRODUCTO = ?";
