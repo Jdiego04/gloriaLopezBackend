@@ -25,34 +25,19 @@ router.get('/producto:id', (req, res) => {
 });
 
 
-router.post('/productos', (req,res) => {
-
-    const {nombreProducto, cantidad, idTipoProducto, idProveedor} = req.body;
-    pool.query(consultas.INSERTPRODUCTO,
-        [nombreProducto, cantidad, idTipoProducto], (err, rows, fields) => {
-    if(!err){
-        pool.query(consultas.INSERTPRODUCTO)
-        res.json('Insertado correctamente');
-    }else{
-        console.log(err);
-    }
-})
-});
-
 router.post('/producto', (req,res) => {
 
      const {nombreProducto, cantidad, idTipoProducto, idProveedor} = req.body;
-  
      pool.query(consultas.INSERTPRODUCTO, 
          [nombreProducto, cantidad, idTipoProducto], (err, rows, fields) => {
            if(!err){
-             pool.query("SELECT MAX(ID_PRODUCTO) AS max_id FROM PRODUCTO", (err, rows, fields) => {
+             pool.query(consultas.MAXPRODUCTO, (err, rows, fields) => {
 
                  if (err) throw err;
                   else {
-                     const idProducto= rows[1][0].max_id;
+                     const idProducto= rows[0].max_id;
                      pool.query(consultas.INSERTPRODUCTOPROVEEDOR, 
-                         [idProducto, idProveedor], (err, rows, fields) => {
+                         [idProveedor,idProducto], (err, rows, fields) => {
                        if(!err){
                                res.json('Insertado correctamente');
                         }else{
