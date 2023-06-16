@@ -122,7 +122,7 @@ router.post('/deactivate', (req,res) => {
 });
 
 //Actualizar registro
-router.post('/update', (req,res) => {
+router.put('/update', (req,res) => {
 
   const {id,nombre, fechaNacimiento, fechaIngreso, direccion, idTipoDocumento, numeroDocumento,
         correo, celular, contrasena, idRol, idTipoEmpleado} = req.body;
