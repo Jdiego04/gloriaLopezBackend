@@ -65,9 +65,9 @@ console.log(nombre)
 
 
 //Actualizar registro
-router.put('/update/:id', (req,res) => {
-    const id = req.params.id;
-    const {nombre, correo, direccion, idTipoDocumento, numeroDocumento} = req.body;
+router.put('/update', (req,res) => {
+
+    const {id,nombre, correo, direccion, idTipoDocumento, numeroDocumento} = req.body;
   
       pool.query(consultas.UPDATEPROVEEDOR, 
         [nombre, correo, direccion, idTipoDocumento, numeroDocumento, id], (err, rows, fields) => {

@@ -16,7 +16,7 @@ router.get('/all', (req, res) => {
     })
 });
 
-router.get('usuario/:id', (req, res) => {
+router.get('/usuario/:id', (req, res) => {
     const { id } = req.params
     pool.query(consultas.USUARIO, id,(err, rows, fields) => {
         if (err) throw err;

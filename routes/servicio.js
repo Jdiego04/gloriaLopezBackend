@@ -52,9 +52,9 @@ router.put('/desactivar', (req, res) => {
     })
 })
 
-router.put('/update/:id', (req,res) => {
-    const id = req.params.id;
-    const {nombre, valor} = req.body;
+router.put('/update', (req,res) => {
+
+    const {id,nombre, valor} = req.body;
   
       pool.query(consultas.UPDATESERVICIO, 
         [nombre, valor, id], (err, rows, fields) => {

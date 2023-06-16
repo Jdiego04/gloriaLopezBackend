@@ -39,33 +39,33 @@ router.post('/productos', (req,res) => {
 })
 });
 
-// router.post('/producto', (req,res) => {
+router.post('/producto', (req,res) => {
 
-//     const {nombreProducto, cantidad, idTipoProducto, idProveedor} = req.body;
+     const {nombreProducto, cantidad, idTipoProducto, idProveedor} = req.body;
   
-//     pool.query(consultas.INSERTPRODUCTO, 
-//         [nombreProducto, cantidad, idTipoProducto], (err, rows, fields) => {
-//           if(!err){
-//             pool.query("SELECT MAX(ID_PRODUCTO) AS max_id FROM PRODUCTO", (err, rows, fields) => {
+     pool.query(consultas.INSERTPRODUCTO, 
+         [nombreProducto, cantidad, idTipoProducto], (err, rows, fields) => {
+           if(!err){
+             pool.query("SELECT MAX(ID_PRODUCTO) AS max_id FROM PRODUCTO", (err, rows, fields) => {
 
-//                 if (err) throw err;
-//                  else {
-//                     const idProducto= rows[1][0].max_id;
-//                     pool.query(consultas.INSERTPRODUCTOPROVEEDOR, 
-//                         [idProducto, idProveedor], (err, rows, fields) => {
-//                         if(!err){
-//                               res.json('Insertado correctamente');
-//                         }else{
-//                               console.log(err);
-//                         } 
-//                     })
-//                  }
-//              })
-//           }else{
-//               console.log(err);
-//           } 
-//     })
-//   });
+                 if (err) throw err;
+                  else {
+                     const idProducto= rows[1][0].max_id;
+                     pool.query(consultas.INSERTPRODUCTOPROVEEDOR, 
+                         [idProducto, idProveedor], (err, rows, fields) => {
+                       if(!err){
+                               res.json('Insertado correctamente');
+                        }else{
+                              console.log(err);
+                        } 
+                    })
+                 }
+              })
+           }else{
+               console.log(err);
+           } 
+     })
+});
 
 
 router.put('/desactivar', (req, res) => {
@@ -80,9 +80,8 @@ router.put('/desactivar', (req, res) => {
     })
 })
 
-router.put('/update/:id', (req,res) => {
-    const id = req.params.id;
-    const {nombreProducto, cantidad} = req.body;
+router.put('/update', (req,res) => {
+    const {id,nombreProducto, cantidad} = req.body;
   
       pool.query(consultas.UPDATEPRODUCTO, 
         [nombreProducto, cantidad, id], (err, rows, fields) => {
