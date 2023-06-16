@@ -122,9 +122,9 @@ router.post('/deactivate', (req,res) => {
 });
 
 //Actualizar registro
-router.post('/update/:id', (req,res) => {
-  const id = req.params.id;
-  const {nombre, fechaNacimiento, fechaIngreso, direccion, idTipoDocumento, numeroDocumento,
+router.post('/update', (req,res) => {
+
+  const {id,nombre, fechaNacimiento, fechaIngreso, direccion, idTipoDocumento, numeroDocumento,
         correo, celular, contrasena, idRol, idTipoEmpleado} = req.body;
 
         const hashedPassword = crypto.createHash('sha256').update(contrasena).digest('hex');
