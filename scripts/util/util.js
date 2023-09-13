@@ -47,7 +47,7 @@ async function enviarCorreo(destinatario, asunto, contenido) {
     const CLIENT_ID = '1090448767404-9ulr4tshtj9n66hhfcf1aqda7jl03u1e.apps.googleusercontent.com';
     const CLIENT_SECRET = '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';
     const REDIRECT_URI = 'https://mail.google.com/mail/';
-    const REFRESH_TOKEN = '1//04Wv2r4EOisAZCgYIARAAGAQSNwF-L9IrJTnZfjyHuWFm5q_4v09aR4u-KpkFG-SRJBjsAEntnu7jhyFdSLi2z-gAFzqaHwSz3Qc';
+    const REFRESH_TOKEN = '1//04P155HvqFPLeCgYIARAAGAQSNwF-L9IrikthBf4On8I3DSnkoousPQmqj0wxkYUAcjokACwZIVic42yB_Vinw8H5H4p2vfPFjiU';
 
     const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET);
     oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
