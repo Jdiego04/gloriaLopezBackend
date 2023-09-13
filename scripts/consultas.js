@@ -186,14 +186,14 @@ const UPDATEPROVEEDOR = "UPDATE PROVEEDOR \
                           SET \
                           NOMBRE = ?, \
                           CORREO = ?, \
-                          DIREECCION = ?, \
+                          DIRECCION = ?, \
                           ID_TIPO_DOCUMENTO = ?, \
                           NUMERO_DOCUMENTO = ? \
-                          WHERE PROVEEDOR = ?";
+                          WHERE ID_PROVEEDOR  = ?";
 const UPDATEPRODUCTO = "UPDATE PRODUCTO \
                         SET \
                         NOMBRE_PRODUCTO = ?, \
-                        CANTIDA = ? \
+                        CANTIDAD = ? \
                         WHERE ID_PRODUCTO = ?";
 const ROLES = "SELECT ID_ROL, ROL FROM ROL";
 const ROL = "SELECT ID_ROL, ROL FROM ROL WHERE = ?";

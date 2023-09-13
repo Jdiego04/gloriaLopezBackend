@@ -20,6 +20,7 @@ router.post('/login',
       return res.status(400).json({ errors: errors.array() });
     }
    
+  const statusCode = 203;
    const {username, password} = req.body;
    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
    pool.query(consultas.AUTHEMP, 
@@ -31,7 +32,9 @@ router.post('/login',
           res.cookie('token', token, { httpOnly: true });
           res.json({token});
         }else{
-            res.json('Correo o contraseña incorrectas');
+            res.status(statusCode).json(
+              {statusCode : 'correo o contraseña incorrecta'}
+            );
         }
     }else{
         console.log(err);
@@ -122,7 +125,7 @@ router.post('/deactivate', (req,res) => {
 });
 
 //Actualizar registro
-router.post('/update', (req,res) => {
+router.put('/update', (req,res) => {
 
   const {id,nombre, fechaNacimiento, fechaIngreso, direccion, idTipoDocumento, numeroDocumento,
         correo, celular, contrasena, idRol, idTipoEmpleado} = req.body;
