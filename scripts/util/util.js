@@ -41,43 +41,50 @@ function generarContrasena() {
     return contrasena;
   }
 
+  const mail_rover = async (callback) => {
+    try {
+      const oauth2Client = new OAuth2(
+        accountTransport.auth.clientId,
+        accountTransport.auth.clientSecret,
+        "https://developers.google.com/oauthplayground",
+        );
+        oauth2Client.setCredentials({
+            refresh_token: accountTransport.auth.refreshToken,
+            tls: {
+                rejectUnauthorized: false
+            }
+        });
+        oauth2Client.getAccessToken((err, token) => {
+            if (err)
+                return console.log(err);;
+            accountTransport.auth.accessToken = token;
+            callback(nodemailer.createTransport(accountTransport));
+        });
+    }catch (error){
+        console.error(error);
+    }
+    
+};
+
+
 //Correos automaticos
-async function enviarCorreo(destinatario, asunto, contenido) {
-  try {
-    const CLIENT_ID = '1090448767404-9ulr4tshtj9n66hhfcf1aqda7jl03u1e.apps.googleusercontent.com';
-    const CLIENT_SECRET = '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';
-    const REDIRECT_URI = 'https://mail.google.com/mail/';
-    const REFRESH_TOKEN = '1//04P155HvqFPLeCgYIARAAGAQSNwF-L9IrikthBf4On8I3DSnkoousPQmqj0wxkYUAcjokACwZIVic42yB_Vinw8H5H4p2vfPFjiU';
-
-    const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET);
-    oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
-
-    const accessToken = await oAuth2Client.getAccessToken();
-
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        type: 'OAuth2',
-        user: 'glorialopezautomatico@gmail.com',
-        clientId: CLIENT_ID,
-        clientSecret: CLIENT_SECRET,
-        refreshToken: REFRESH_TOKEN,
-        accessToken: accessToken,
-      },
+function enviarCorreo(destinatario, asunto, contenido) {
+    mail_rover(function (emailTransporter) {
+      const mailOptions = {
+        mail: emailTransporter, 
+        from: 'glorialopezautomatico@gmail.com',
+        to: destinatario,
+        subject: asunto,
+        text: contenido
+      };
+      emailTransporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.error('Error al enviar el correo electrónico:', error);
+        } else {
+            console.log('Correo electrónico enviado:', info);
+        }
     });
-
-    const mailOptions = {
-      from: 'glorialopezautomatico@gmail.com',
-      to: destinatario,
-      subject: asunto,
-      text: contenido,
-    };
-
-    const result = await transporter.sendMail(mailOptions);
-    console.log('Correo enviado:', result);
-  } catch (error) {
-    console.error('Error al enviar el correo:', error);
-  }
+    });
 }
 
     //Funcion generica para verificar si existe un registro
