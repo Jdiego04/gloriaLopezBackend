@@ -4,9 +4,8 @@ const express = require('express');
 const morgan = require('morgan');
 const passport =require ('passport'); 
 const cors =require ('cors'); 
-const { connectToDatabase } = require('./database');
-//Initializations
 
+//Initializations
 const app = express();
 const port = (process.env.port || 3000);
 require("../lib/passport");
@@ -23,36 +22,36 @@ app.use(express.json());
 
 
 //Routes
-app.use(cors()); 
+/*app.use(cors()); 
 app.use(require('../routes/index'));
-app.use(require('../routes/authenticationEmpleado'));
-app.use(require('../routes/authenticationUsuario'));
+app.use(require('../routes/authenticationColaborador'));
+app.use(require('../routes/authenticationCliente'));
 app.use(require('../routes/colaborador'));
 app.use(require('../routes/estadoCita'));
 app.use(require('../routes/pqrs'));
 app.use(require('../routes/productos'));
 app.use(require('../routes/proveedor'));
 app.use(require('../routes/rol'));
-app.use(require('../routes/servicio'));
+app.use(require('../routes/servicio'));*/
 app.use(require('../routes/tipoDocumentos'));
-app.use(require('../routes/tipoEmpleado'));
+/*app.use(require('../routes/tipoEmpleado'));
 app.use(require('../routes/tipoProducto'));
-app.use(require('../routes/usuario'));
+app.use(require('../routes/usuario'));*/
 
 
-app.use('/authEmp', require('../routes/authenticationEmpleado'));
-app.use('/authUsu', require('../routes/authenticationUsuario'));
+/*app.use('/authEmp', require('../routes/authenticationColaborador'));
+app.use('/authUsu', require('../routes/authenticationCliente'));
 app.use('/colaborador',require('../routes/colaborador'));
 app.use('/estadoCita',require('../routes/estadoCita'));
 app.use('/pqrs',require('../routes/pqrs'));
 app.use('/productos', require('../routes/productos'));
 app.use('/proveedor', require('../routes/proveedor'));
 app.use('/rol', require('../routes/rol'));
-app.use('/servicio',require('../routes/servicio'));
+app.use('/servicio',require('../routes/servicio'));*/
 app.use('/tipoDoc', require('../routes/tipoDocumentos'));
-app.use('/tipoEmpleado', require('../routes/tipoEmpleado'));
+/*app.use('/tipoEmpleado', require('../routes/tipoEmpleado'));
 app.use('/tipoProducto', require('../routes/tipoProducto'));
-app.use('/usuario', require('../routes/usuario'));
+app.use('/usuario', require('../routes/usuario'));*/
 
 //Starting the server
 
@@ -63,19 +62,6 @@ app.listen(app.get('port'), (err) => {
     console.log('Server inciando en el puerto: ' + app.get('port'));
 });
 
-async function startApp() {
-    try {
-      const connection = await connectToDatabase();
-      console.log('¡Conexión a la base de datos establecida correctamente!');
-      // Aquí puedes iniciar el resto de tu aplicación
-    } catch (err) {
-      console.error('Error al establecer la conexión a la base de datos: ', err);
-      // En caso de error, puedes manejarlo adecuadamente, por ejemplo, terminando la aplicación
-      process.exit(1);
-    }
-  }
-  
-  startApp();
  
   
   

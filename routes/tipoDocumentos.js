@@ -1,63 +1,56 @@
 const express = require('express');
 const router = express.Router();
 const consultas = require('../scripts/consultas')
-const { connectToDatabase} = require('../views/database');
+const pool = require('../views/database');
+const { body, validationResult } = require('express-validator');
 
-//tipos
-router.get('/all', async (req, res) => {
-    const connection = await connectToDatabase();
-    try{
-        const result = await connection.execute(consultas.TIPODOCUMENTOS);
-        res.json(result.rows);
-    }catch (err) {
-        console.error('Error al ejecutar la consulta:', err);
-        res.status(500).json({ error: 'Error interno del servidor' });
-    }finally {
-        if (connection) {
-            try {
-                await connection.close();
-            } catch (err) {
-                console.error('Error al cerrar la conexión:', err);
-            }
-        }
-    }
-});
+router.get('/all', (req, res) => {
 
-//tipo
-router.get('/tipo', (req, res) => {
-    const {id} = req.body;
-    pool.query(consultas.TIPODOCUMENTO,id, (err, rows, fields) => {
-       if (err) throw err;
+    pool.query(consultas.TIPODOCUMENTOS, (err, rows, fields) => {
+        if (err) throw err;
         else {
-            res.json(rows)
+            res.json({ status: 200, data: rows });
         }
     })
 });
 
+router.get('/tipo', (req, res) => {
 
-router.post('/tipo', (req,res) => {
+    const {id} = req.query;
+    pool.query(consultas.TIPODOCUMENTO,id, (err, rows, fields) => {
+       if (err) throw err;
+        else {
+            res.json({ status: 200, data: rows });
+        }
+    })
+});
+
+router.post('/tipo',body('tipoDoc').not().isEmpty().trim().escape(), (req,res) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.json({ status: 400, data: errors.array() });
+    }
 
     const {tipoDoc} = req.body;
   
     pool.query(consultas.INSERTTIPODOC, 
         tipoDoc, (err, rows, fields) => {
-            if(!err){
-                res.json('Insertado correctamente');
-            }else{
-                console.log(err);
-            } 
-          })
-  });
+        if (err) throw err;
+        else {
+            res.json({ status: 200, data: [] });
+        }
+    })
+});
 
-
-router.delete('/eliminar', (req, res) => {
+router.put('/desactivar', (req, res) => {
     const {idTipoDoc} = req.body
 
-    pool.query(consultas.ELIMINARTIPODOC, 
+    pool.query(consultas.DESACTIVARTIPODOC, 
         idTipoDoc, (err, rows, fields) => {
         if (err) throw err
         else {
-            res.json({status: 'Se elimino con exito'})
+            res.json({ status: 200, data: [] });
         }
     })
 })
