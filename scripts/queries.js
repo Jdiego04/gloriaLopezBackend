@@ -1,6 +1,18 @@
 const queries = {
-  errors: {
-    invalidCredentials: "Usuario o contraseña incorrectos.",
+  documentType: {
+    allDocumentType:
+      "SELECT Id_TipoDocumento, Tipo_Documento  FROM TBL_TIPO_DOCUMENTOS WHERE Activo = 'S'",
+    documentType:
+      "SELECT Id_TipoDocumento, Tipo_Documento  FROM TBL_TIPO_DOCUMENTOS WHERE Activo = 'S' AND Id_TipoDocumento = ?",
+    newDocumentType:
+      "INSERT INTO TBL_TIPO_DOCUMENTOS (Tipo_Documento) VALUES (?)",
+    deactivate:
+      "UPDATE TBL_TIPO_DOCUMENTOS \
+    SET Activo = CASE \
+        WHEN Activo = 'N' THEN 'S' \
+        WHEN Activo = 'S' THEN 'N' \
+    END \
+    WHERE Id_TipoDocumento = ?",
   },
 };
 
@@ -231,19 +243,7 @@ const INSERTSERVICIO = "INSERT INTO SERVICIO (NOMBRE, VALOR) VALUES (?, ?)";
 const UPDATESERVICIO =
   "UPDATE SERVICIO SET NOMBRE = ?, VALOR = ? WHERE ID_SERVICIO = ?";
 const DESSERVICIO = "UPDATE SERVICIO SET ACTIVO = 'N' WHERE ID_SERVICIO = ?";
-const TIPODOCUMENTOS =
-  "SELECT Id_TipoDocumento, Tipo_Documento  FROM TBL_TIPO_DOCUMENTOS WHERE Activo = 'S'";
-const TIPODOCUMENTO =
-  "SELECT Id_TipoDocumento, Tipo_Documento  FROM TBL_TIPO_DOCUMENTOS WHERE Activo = 'S' AND Id_TipoDocumento = ?";
-const INSERTTIPODOC =
-  "INSERT INTO TBL_TIPO_DOCUMENTOS (Tipo_Documento) VALUES (?)";
-const DESACTIVARTIPODOC =
-  "UPDATE TBL_TIPO_DOCUMENTOS \
-                          SET Activo = CASE \
-                              WHEN Activo = 'N' THEN 'S' \
-                              WHEN Activo = 'S' THEN 'N' \
-                          END \
-                          WHERE Id_TipoDocumento = ?";
+
 const TIPOEMPLEADOS =
   "SELECT ID_TIPO_EMPLEADO, TIPO_EMPLEADO FROM TIPO_EMPLEADO WHERE ACTIVO = 'S'";
 const TIPOEMPLEADO =

@@ -29,11 +29,11 @@ router.post("/proveedor", (req, res) => {
   const { nombre, correo, direccion, idTipoDocumento, numeroDocumento } =
     req.body;
 
-  const validaCorreo = util.verificarExiste(
+  const validaCorreo = util.checkIfExists(
     correo,
     consultas.VERIFICARCORREOPROVEEDOR,
   );
-  const validaDocumento = util.verificarExiste(
+  const validaDocumento = util.checkIfExists(
     numeroDocumento,
     consultas.VERIFICARDOCUMENTOPROVEEDOR,
   );

@@ -78,11 +78,11 @@ router.post("/recoverPassword", (req, res) => {
           },
         );
         //Mensaje y asusnto para enviar en un correo automatico
-        const asunto = "Nueva contraseña Gloria Lopez";
-        const contenido = ` Su nueva contraseña provisional es: ${password} 
+        const subject = "Nueva contraseña Gloria Lopez";
+        const content = ` Su nueva contraseña provisional es: ${password} 
                         Por favor, cambie su contraseña en cuanto pueda. `;
         //Envia el correo
-        util.enviarCorreo(email, asunto, contenido);
+        util.sendMail(email, subject, content);
         res.json("Enviado correctamente");
       } else {
         console.log("no se encontro");
@@ -114,11 +114,11 @@ router.post("/singUp", (req, res) => {
     contrasena,
   } = req.body;
 
-  const validaCorreo = util.verificarExiste(
+  const validaCorreo = util.checkIfExists(
     correo,
     consultas.VERIFICARCORREOUSUARIO,
   );
-  const validaDocumento = util.verificarExiste(
+  const validaDocumento = util.checkIfExists(
     numeroDocumento,
     consultas.VERIFICARDOCUMENTOUSUARIO,
   );

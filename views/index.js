@@ -2,16 +2,13 @@
 
 const express = require("express");
 const morgan = require("morgan");
-const passport = require("passport");
 const cors = require("cors");
 
 //Initializations
 const app = express();
 const port = process.env.port || 3000;
-require("../lib/passport");
 
 //Settings
-
 app.set("port", port);
 
 //Middlewares (funciones que se ejecutan cada vez que un usuario manda una petición)
@@ -31,7 +28,7 @@ app.use(require('../routes/productos'));
 app.use(require('../routes/proveedor'));
 app.use(require('../routes/rol'));
 app.use(require('../routes/servicio'));*/
-app.use(require("../routes/tipoDocumentos"));
+app.use(require("../routes/documentType"));
 /*app.use(require('../routes/tipoEmpleado'));
 app.use(require('../routes/tipoProducto'));
 app.use(require('../routes/usuario'));*/
@@ -45,13 +42,12 @@ app.use('/productos', require('../routes/productos'));
 app.use('/proveedor', require('../routes/proveedor'));
 app.use('/rol', require('../routes/rol'));
 app.use('/servicio',require('../routes/servicio'));*/
-app.use("/tipoDoc", require("../routes/tipoDocumentos"));
+app.use("/documentType", require("../routes/documentType"));
 /*app.use('/tipoEmpleado', require('../routes/tipoEmpleado'));
 app.use('/tipoProducto', require('../routes/tipoProducto'));
 app.use('/usuario', require('../routes/usuario'));*/
 
 //Starting the server
-
 app.listen(app.get("port"), (err) => {
   if (err) {
     console.log("Error al iniciar el servidor: " + err);

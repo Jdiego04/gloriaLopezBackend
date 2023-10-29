@@ -10,8 +10,8 @@ const email = "glorialopezautomatico@gmail.com";
 
 //Para recuperar contraseña
 router.post("/pqrs", (req, res) => {
-  const { asunto, contenido } = req.body;
-  util.enviarCorreo(email, asunto, contenido);
+  const { subject, content } = req.body;
+  util.sendMail(email, subject, content);
   res.json("Enviado correctamente");
 });
 

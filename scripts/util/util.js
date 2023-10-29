@@ -46,7 +46,7 @@ function generatePassword() {
   return password;
 }
 
-const mail_rover = async (callback) => {
+const mail = async (callback) => {
   try {
     const oauth2Client = new OAuth2(
       accountTransport.auth.clientId,
@@ -70,14 +70,14 @@ const mail_rover = async (callback) => {
 };
 
 //Correos automaticos
-function enviarCorreo(destinatario, asunto, contenido) {
-  mail_rover(function (emailTransporter) {
+function sendMail(recipient, subject, content) {
+  mail(function (emailTransporter) {
     const mailOptions = {
       mail: emailTransporter,
       from: "glorialopezautomatico@gmail.com",
-      to: destinatario,
-      subject: asunto,
-      text: contenido,
+      to: recipient,
+      subject: subject,
+      text: content,
     };
     emailTransporter.sendMail(mailOptions, function (error, info) {
       if (error) {
@@ -90,48 +90,21 @@ function enviarCorreo(destinatario, asunto, contenido) {
 }
 
 //Funcion generica para verificar si existe un registro
-function verificarExiste(dato, consulta) {
+function checkIfExists(dato, consulta) {
   pool.query(consulta, dato, (err, rows, fields) => {
-    if (!err) {
+    if (err) throw err;
+    else {
       if (rows.length > 0) {
         return true;
       } else {
         return false;
       }
-    } else {
-      console.log(err);
     }
   });
 }
 
-async function actualizarRegistro(tabla, datos, condicion) {
-  try {
-    const result = await new Promise((resolve, reject) => {
-      connection.query(
-        `UPDATE ${tabla} SET ? WHERE ${condicion}`,
-        [datos],
-        (error, result) => {
-          if (error) {
-            console.error("Error al actualizar el registro:", error);
-            reject(error);
-            return;
-          }
-
-          resolve(result.affectedRows);
-        },
-      );
-    });
-
-    return result;
-  } catch (error) {
-    console.error("Error al actualizar el registro:", error);
-    throw error;
-  }
-}
-
 module.exports = {
   generatePassword,
-  enviarCorreo,
-  verificarExiste,
-  actualizarRegistro,
+  sendMail,
+  checkIfExists,
 };
