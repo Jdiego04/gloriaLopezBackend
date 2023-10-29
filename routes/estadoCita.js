@@ -1,55 +1,50 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const consultas = require('../scripts/consultas')
-const pool = require('../views/database');
+const consultas = require("../scripts/consultas");
+const pool = require("../views/database");
 
 //estados
-router.get('/all', (req, res) => {
-    pool.query(consultas.ESTADOS, (err, rows, fields) => {
-       if (err) throw err;
-        else {
-            res.json(rows)
-        }
-    })
+router.get("/all", (req, res) => {
+  pool.query(consultas.ESTADOS, (err, rows, fields) => {
+    if (err) throw err;
+    else {
+      res.json(rows);
+    }
+  });
 });
 
 //estado
-router.get('/estado', (req, res) => {
-    const {id} = req.body;
-    pool.query(consultas.ESTADO,id, (err, rows, fields) => {
-       if (err) throw err;
-        else {
-            res.json(rows)
-        }
-    })
+router.get("/estado", (req, res) => {
+  const { id } = req.body;
+  pool.query(consultas.ESTADO, id, (err, rows, fields) => {
+    if (err) throw err;
+    else {
+      res.json(rows);
+    }
+  });
 });
 
+router.post("/estado", (req, res) => {
+  const { rol } = req.body;
 
-router.post('/estado', (req,res) => {
-
-    const {rol} = req.body;
-  
-    pool.query(consultas.INSERTESTADO, 
-        rol, (err, rows, fields) => {
-            if(!err){
-                res.json('Insertado correctamente');
-            }else{
-                console.log(err);
-            } 
-          })
+  pool.query(consultas.INSERTESTADO, rol, (err, rows, fields) => {
+    if (!err) {
+      res.json("Insertado correctamente");
+    } else {
+      console.log(err);
+    }
   });
+});
 
+router.delete("/eliminar", (req, res) => {
+  const { idRol } = req.body;
 
-router.delete('/eliminar', (req, res) => {
-    const {idRol} = req.body
-
-    pool.query(consultas.ELIMINARESTADO, 
-        idRol, (err, rows, fields) => {
-        if (err) throw err
-        else {
-            res.json({status: 'Se elimino con exito'})
-        }
-    })
-})
+  pool.query(consultas.ELIMINARESTADO, idRol, (err, rows, fields) => {
+    if (err) throw err;
+    else {
+      res.json({ status: "Se elimino con exito" });
+    }
+  });
+});
 
 module.exports = router;
