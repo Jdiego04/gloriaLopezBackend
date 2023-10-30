@@ -14,6 +14,14 @@ const queries = {
     END \
     WHERE Id_TipoDocumento = ?",
   },
+  serviceAppointment: {
+    newserviceAppointment:
+      "INSERT INTO TBL_SERVICIOS_CITAS (Id_Servicio, Id_Cita) VALUES (?, ?)",
+  },
+  serviceProvider: {
+    newServiceProvider:
+      "INSERT INTO TBL_SERVICIOS_PROVEEDORES (Id_Servicio, Id_cita) VALUES (?, ?)",
+  },
 };
 
 const AUTHEMP = "SELECT * FROM EMPLEADO WHERE CORREO = ? AND CONTRASENA = ?";

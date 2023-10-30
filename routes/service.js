@@ -3,7 +3,6 @@ const router = express.Router();
 const consultas = require("../scripts/consultas");
 const pool = require("../views/database");
 
-//SERVICIOS
 router.get("/all", (req, res) => {
   pool.query(consultas.SERVICIOS, (err, rows, fields) => {
     if (err) throw err;
@@ -13,8 +12,7 @@ router.get("/all", (req, res) => {
   });
 });
 
-//servicio
-router.get("/servicio", (req, res) => {
+router.get("/service", (req, res) => {
   const { id } = req.body;
   pool.query(consultas.SERVICIO, id, (err, rows, fields) => {
     if (err) throw err;
@@ -24,7 +22,7 @@ router.get("/servicio", (req, res) => {
   });
 });
 
-router.post("/servicio", (req, res) => {
+router.post("/service", (req, res) => {
   const { nombre, valor } = req.body;
 
   pool.query(consultas.INSERTSERVICIO, [nombre, valor], (err, rows, fields) => {
