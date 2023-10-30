@@ -4,6 +4,8 @@ const messages = {
   },
   succesMessage: {
     insertedSuccessfully: "Elemento insertado correctamente.",
+    disabledSuccessfully: "Elemento desactivado correctamente.",
+    updatedSuccessfully: "Elemento actualizado correctamente",
   },
 };
 

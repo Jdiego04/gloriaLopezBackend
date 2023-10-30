@@ -3,6 +3,7 @@ const router = express.Router();
 const queries = require("../scripts/queries");
 const pool = require("../views/database");
 const { body, validationResult } = require("express-validator");
+const messages = require("../scripts/messages");
 
 router.get("/all", (req, res) => {
   pool.query(queries.documentType.allDocumentType, (err, rows, fields) => {
@@ -44,7 +45,10 @@ router.post(
       (err, rows, fields) => {
         if (err) throw err;
         else {
-          res.json({ status: 200, data: [] });
+          res.json({
+            status: 200,
+            data: messages.succesMessage.insertedSuccessfully,
+          });
         }
       },
     );
@@ -57,7 +61,10 @@ router.put("/deactivate", (req, res) => {
   pool.query(queries.DESACTIVARTIPODOC, idDocumentType, (err, rows, fields) => {
     if (err) throw err;
     else {
-      res.json({ status: 200, data: [] });
+      res.json({
+        status: 200,
+        data: messages.succesMessage.disabledSuccessfully,
+      });
     }
   });
 });

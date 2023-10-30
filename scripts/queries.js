@@ -8,11 +8,11 @@ const queries = {
       "INSERT INTO TBL_TIPO_DOCUMENTOS (Tipo_Documento) VALUES (?)",
     deactivate:
       "UPDATE TBL_TIPO_DOCUMENTOS \
-    SET Activo = CASE \
+      SET Activo = CASE \
         WHEN Activo = 'N' THEN 'S' \
         WHEN Activo = 'S' THEN 'N' \
-    END \
-    WHERE Id_TipoDocumento = ?",
+      END \
+      WHERE Id_TipoDocumento = ?",
   },
   serviceAppointment: {
     newserviceAppointment:
@@ -21,6 +21,65 @@ const queries = {
   serviceProvider: {
     newServiceProvider:
       "INSERT INTO TBL_SERVICIOS_PROVEEDORES (Id_Servicio, Id_cita) VALUES (?, ?)",
+  },
+  service: {
+    allService:
+      "SELECT ts.Id_Servicio, ts.Id_Categoria,tc.Categoria,ts.Nombre_Servicio, ts.Valor_Servicio ,ts.Descripcion_Servicio, \
+        ts.Duracion_Servicio, tp.Nombre AS nombre_Proveedor  FROM  TBL_SERVICIOS ts \
+      JOIN TBL_CATEGORIAS tc ON tc.Id_Categoria = ts.Id_Categoria AND tc.Activo = 'S' \
+      LEFT JOIN TBL_SERVICIOS_PROVEEDORES tsp ON tsp.Id_Servicio = ts.Id_Servicio \
+      LEFT JOIN TBL_PROVEEDORES tp ON tp.Id_Proveedor  = tsp.Id_Proveedor AND tp.Activo = 'S' \
+      WHERE ts.Activo = 'S'",
+    service:
+      "SELECT ts.Id_Servicio, ts.Id_Categoria,tc.Categoria,ts.Nombre_Servicio, ts.Valor_Servicio ,ts.Descripcion_Servicio, \
+        ts.Duracion_Servicio, tp.Nombre AS nombre_Proveedor  FROM  TBL_SERVICIOS ts \
+      JOIN TBL_CATEGORIAS tc ON tc.Id_Categoria = ts.Id_Categoria AND tc.Activo = 'S' \
+      LEFT JOIN TBL_SERVICIOS_PROVEEDORES tsp ON tsp.Id_Servicio = ts.Id_Servicio \
+      LEFT JOIN TBL_PROVEEDORES tp ON tp.Id_Proveedor  = tsp.Id_Proveedor AND tp.Activo = 'S' \
+      WHERE ts.Activo = 'S' AND ts.Id_Servicio = ?",
+    serviceByCategory:
+      "SELECT ts.Id_Servicio, ts.Id_Categoria,tc.Categoria,ts.Nombre_Servicio, ts.Valor_Servicio ,ts.Descripcion_Servicio, \
+        ts.Duracion_Servicio, tp.Nombre AS nombre_Proveedor  FROM  TBL_SERVICIOS ts \
+      JOIN TBL_CATEGORIAS tc ON tc.Id_Categoria = ts.Id_Categoria AND tc.Activo = 'S' \
+      LEFT JOIN TBL_SERVICIOS_PROVEEDORES tsp ON tsp.Id_Servicio = ts.Id_Servicio \
+      LEFT JOIN TBL_PROVEEDORES tp ON tp.Id_Proveedor  = tsp.Id_Proveedor AND tp.Activo = 'S' \
+      WHERE ts.Activo = 'S' AND tc.Id_Categoria = ?",
+    serviceByProvider:
+      "SELECT ts.Id_Servicio, ts.Id_Categoria,tc.Categoria,ts.Nombre_Servicio, ts.Valor_Servicio ,ts.Descripcion_Servicio, \
+        ts.Duracion_Servicio, tp.Nombre AS nombre_Proveedor  FROM  TBL_SERVICIOS ts \
+      JOIN TBL_CATEGORIAS tc ON tc.Id_Categoria = ts.Id_Categoria AND tc.Activo = 'S' \
+      LEFT JOIN TBL_SERVICIOS_PROVEEDORES tsp ON tsp.Id_Servicio = ts.Id_Servicio \
+      LEFT JOIN TBL_PROVEEDORES tp ON tp.Id_Proveedor  = tsp.Id_Proveedor AND tp.Activo = 'S' \
+      WHERE ts.Activo = 'S' AND tp.Id_Proveedor = ?",
+    serviceByAppointment:
+      "SELECT ts.Id_Servicio, ts.Id_Categoria,tc.Categoria,ts.Nombre_Servicio, ts.Valor_Servicio ,ts.Descripcion_Servicio, \
+        ts.Duracion_Servicio, tp.Nombre AS nombre_Proveedor  FROM  TBL_SERVICIOS ts \
+      JOIN TBL_CATEGORIAS tc ON tc.Id_Categoria = ts.Id_Categoria AND tc.Activo = 'S' \
+      LEFT JOIN TBL_SERVICIOS_PROVEEDORES tsp ON tsp.Id_Servicio = ts.Id_Servicio \
+      LEFT JOIN TBL_PROVEEDORES tp ON tp.Id_Proveedor  = tsp.Id_Proveedor AND tp.Activo = 'S' \
+      LEFT JOIN TBL_SERVICIOS_CITAS tsc ON tsc.Id_Servicio = ts.Id_Servicio \
+      LEFT JOIN TBL_CITAS tc2 ON tc2.Id_Cita = tsc.Id_Cita \
+      WHERE ts.Activo = 'S' AND tc2.Id_Cita = ?",
+    deactivate:
+      "UPDATE TBL_SERVICIOS \
+      SET Activo = CASE \
+        WHEN Activo = 'N' THEN 'S' \
+        WHEN Activo = 'S' THEN 'N' \
+      END \
+      WHERE Id_Servicio = ?",
+    updateService:
+      "UPDATE TBL_SERVICIOS \
+      SET \
+        Id_Categoria = ?, \
+        Nombre_Servicio = ?, \
+        Valor_Servicio = ?, \
+        Descripcion_Servicio = ?, \
+        Duracion_Servicio = ? \
+      WHERE Id_Servicio = ?",
+    newService:
+      "INSERT INTO TBL_SERVICIOS \
+        (Id_Categoria, Nombre_Servicio, Valor_Servicio, Descripcion_Servicio, Duracion_Servicio) \
+      VALUES (?, ?, ?, ?, ?)",
   },
 };
 

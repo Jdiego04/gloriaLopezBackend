@@ -1,13 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const consultas = require("../scripts/consultas");
+const queries = require("../scripts/queries");
 const pool = require("../views/database");
+const { body, validationResult } = require("express-validator");
+const messages = require("../scripts/messages");
 
 router.get("/all", (req, res) => {
   pool.query(consultas.SERVICIOS, (err, rows, fields) => {
     if (err) throw err;
     else {
-      res.json(rows);
+      res.json({
+        status: 200,
+        data: rows,
+      });
     }
   });
 });
