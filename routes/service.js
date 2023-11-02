@@ -6,7 +6,7 @@ const { body, validationResult } = require("express-validator");
 const messages = require("../scripts/messages");
 
 router.get("/all", (req, res) => {
-  pool.query(consultas.SERVICIOS, (err, rows, fields) => {
+  pool.query(queries.service.allService, (err, rows, fields) => {
     if (err) throw err;
     else {
       res.json({
@@ -18,49 +18,140 @@ router.get("/all", (req, res) => {
 });
 
 router.get("/service", (req, res) => {
-  const { id } = req.body;
-  pool.query(consultas.SERVICIO, id, (err, rows, fields) => {
+  const { idService } = req.body;
+  pool.query(queries.service.service, idService, (err, rows, fields) => {
     if (err) throw err;
     else {
-      res.json(rows);
+      res.json({
+        status: 200,
+        data: rows,
+      });
     }
   });
+});
+
+router.get("/serviceByAppointment", (req, res) => {
+  const { idAppointment } = req.body;
+  pool.query(
+    queries.service.serviceByAppointment,
+    idAppointment,
+    (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: rows,
+        });
+      }
+    },
+  );
+});
+
+router.get("/serviceByCategory", (req, res) => {
+  const { idCategory } = req.body;
+  pool.query(
+    queries.service.serviceByCategory,
+    idAppointment,
+    (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: rows,
+        });
+      }
+    },
+  );
+});
+
+router.get("/serviceByProvider", (req, res) => {
+  const { idProvider } = req.body;
+  pool.query(
+    queries.service.serviceByProvider,
+    idProvider,
+    (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: rows,
+        });
+      }
+    },
+  );
 });
 
 router.post("/service", (req, res) => {
-  const { nombre, valor } = req.body;
+  const {
+    idCategory,
+    serviceName,
+    serviceValue,
+    serviceDescription,
+    serviceDuration,
+  } = req.body;
 
-  pool.query(consultas.INSERTSERVICIO, [nombre, valor], (err, rows, fields) => {
-    if (!err) {
-      res.json("Insertado correctamente");
-    } else {
-      console.log(err);
-    }
-  });
+  pool.query(
+    queries.service.newService,
+    [
+      idCategory,
+      serviceName,
+      serviceValue,
+      serviceDescription,
+      serviceDuration,
+    ],
+    (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: messages.succesMessage.insertedSuccessfully,
+        });
+      }
+    },
+  );
 });
 
-router.put("/desactivar", (req, res) => {
-  const { idProducto } = req.body;
+router.put("/deactivate", (req, res) => {
+  const { idService } = req.body;
 
-  pool.query(consultas.DESSERVICIO, idProducto, (err, rows, fields) => {
+  pool.query(queries.service.deactivate, idService, (err, rows, fields) => {
     if (err) throw err;
     else {
-      res.json({ status: "Se elimino con exito" });
+      res.json({
+        status: 200,
+        data: messages.succesMessage.disabledSuccessfully,
+      });
     }
   });
 });
 
 router.put("/update", (req, res) => {
-  const { id, nombre, valor } = req.body;
+  const {
+    idCategory,
+    serviceName,
+    serviceValue,
+    serviceDescription,
+    serviceDuration,
+    idService,
+  } = req.body;
 
   pool.query(
-    consultas.UPDATESERVICIO,
-    [nombre, valor, id],
+    queries.service.updateService,
+    [
+      idCategory,
+      serviceName,
+      serviceValue,
+      serviceDescription,
+      serviceDuration,
+      idService,
+    ],
     (err, rows, fields) => {
-      if (!err) {
-        res.json("Actualizado correctamente");
-      } else {
-        console.log(err);
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: messages.succesMessage.updatedSuccessfully,
+        });
       }
     },
   );
