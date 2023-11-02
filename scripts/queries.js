@@ -100,7 +100,7 @@ const queries = {
       SET \
         Nombre = ?, \
         Numero_Contacto = ?, \
-        Direccion = ?, \
+        Direccion = ? \
       WHERE Id_Proveedor = ?",
   },
   collaborator: {
