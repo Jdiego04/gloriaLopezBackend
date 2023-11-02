@@ -14,14 +14,6 @@ const queries = {
       END \
       WHERE Id_TipoDocumento = ?",
   },
-  serviceAppointment: {
-    newserviceAppointment:
-      "INSERT INTO TBL_SERVICIOS_CITAS (Id_Servicio, Id_Cita) VALUES (?, ?)",
-  },
-  serviceProvider: {
-    newServiceProvider:
-      "INSERT INTO TBL_SERVICIOS_PROVEEDORES (Id_Servicio, Id_cita) VALUES (?, ?)",
-  },
   service: {
     allService:
       "SELECT ts.Id_Servicio, ts.Id_Categoria,tc.Categoria,ts.Nombre_Servicio, ts.Valor_Servicio ,ts.Descripcion_Servicio, \
@@ -80,6 +72,10 @@ const queries = {
       "INSERT INTO TBL_SERVICIOS \
         (Id_Categoria, Nombre_Servicio, Valor_Servicio, Descripcion_Servicio, Duracion_Servicio) \
       VALUES (?, ?, ?, ?, ?)",
+    newServiceAppointment:
+      "INSERT INTO TBL_SERVICIOS_CITAS (Id_Servicio, Id_Cita) VALUES (?, ?)",
+    newServiceProvider:
+      "INSERT INTO TBL_SERVICIOS_PROVEEDORES (Id_Servicio, Id_cita) VALUES (?, ?)",
   },
   provider: {
     allProvider:
@@ -106,7 +102,27 @@ const queries = {
         Numero_Contacto = ?, \
         Direccion = ?, \
       WHERE Id_Proveedor = ?",
-  }
+  },
+  collaborator: {
+    collaboratorAuthentication:
+      "SELECT GROUP_CONCAT(CONCAT(tm.Nombre_Modulo, '_', tp.valor_permiso) SEPARATOR ', ') AS Permisos \
+      FROM TBL_COLABORADORES tc \
+      JOIN TBL_MODULOS_PERMISOS tmp ON tmp.Numero_DocumentoColaborador = tc.Numero_DocumentoColaborador \
+          AND tmp.Id_TipoDocumento  = tc.Id_TipoDocumento \
+      JOIN TBL_MODULOS tm ON tm.Id_Modulo = tmp.Id_Modulo \
+      JOIN TBL_PERMISOS tp ON tp.Id_Permiso  = tmp.Id_Permiso \
+      WHERE tc.Correo_Electronico = ? \
+        AND tc.Contrasennia = ? ",
+    recoverPassword:
+      "SELECT * FROM TBL_COLABORADORES WHERE Correo_Electronico = ?",
+    updatePassword:
+      "UPDATE TBL_COLABORADORES SET Contrasennia = ? WHERE Correo_Electronico = ?",
+    newCollaborator:
+      "INSERT INTO TBL_COLABORADORES \
+        (Nombres, Primer_Apellido, Segundo_Apellido, Id_TipoDocumento, Numero_DocumentoColaborador, \
+        Numero_Contacto, Correo_Electronico, Contrasennia, Fecha_Ingreso, Fecha_Nacimiento, Id_Cargo) \
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+  },
 };
 
 const AUTHEMP = "SELECT * FROM EMPLEADO WHERE CORREO = ? AND CONTRASENA = ?";

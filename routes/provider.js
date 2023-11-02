@@ -8,9 +8,9 @@ const messages = require("../scripts/messages");
 router.get("/all", (req, res) => {
   pool.query(queries.provider.allProvider, (err, rows, fields) => {
     if (err) throw err;
-      else {
-        res.json({ status: 200, data: rows });
-      }
+    else {
+      res.json({ status: 200, data: rows });
+    }
   });
 });
 
@@ -18,42 +18,49 @@ router.get("/provider", (req, res) => {
   const { idProvider } = req.body;
   pool.query(queries.provider.provider, idProvider, (err, rows, fields) => {
     if (err) throw err;
-      else {
-        res.json({ status: 200, data: rows });
-      }
+    else {
+      res.json({ status: 200, data: rows });
+    }
   });
 });
 
 router.post("/provider", (req, res) => {
-  const { name, contactNumber, address} = req.body;
+  const { name, contactNumber, address } = req.body;
 
-  
-    pool.query(
-      queries.provider.newProvider,
-      [ name, contactNumber, address],
-      (err, rows, fields) => {
-        if (err) throw err;
+  pool.query(
+    queries.provider.newProvider,
+    [name, contactNumber, address],
+    (err, rows, fields) => {
+      if (err) throw err;
       else {
-        res.json({ status: 200, data: messages.succesMessage.insertedSuccessfully });
+        res.json({
+          status: 200,
+          data: messages.succesMessage.insertedSuccessfully,
+        });
       }
-      },
-    );
-
+    },
+  );
 });
 
 router.post("/deactivate", (req, res) => {
   const { idProvider } = req.body;
-  pool.query(queries.provider.desactivate, [idProvider], (err, rows, fields) => {
-    if (err) throw err;
+  pool.query(
+    queries.provider.desactivate,
+    [idProvider],
+    (err, rows, fields) => {
+      if (err) throw err;
       else {
-        res.json({ status: 200, data: messages.succesMessage.disabledSuccessfully });
+        res.json({
+          status: 200,
+          data: messages.succesMessage.disabledSuccessfully,
+        });
       }
-  });
+    },
+  );
 });
 
 router.put("/update", (req, res) => {
-  const { name, contactNumber, address, idProvider } =
-    req.body;
+  const { name, contactNumber, address, idProvider } = req.body;
 
   pool.query(
     queries.provider.updateProvider,
@@ -61,7 +68,10 @@ router.put("/update", (req, res) => {
     (err, rows, fields) => {
       if (err) throw err;
       else {
-        res.json({ status: 200, data: messages.succesMessage.updatedSuccessfully });
+        res.json({
+          status: 200,
+          data: messages.succesMessage.updatedSuccessfully,
+        });
       }
     },
   );

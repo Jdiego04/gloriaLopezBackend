@@ -157,4 +157,60 @@ router.put("/update", (req, res) => {
   );
 });
 
+router.post(
+  "/serviceAppointment",
+  body("idService").not().isEmpty().trim().escape(),
+  body("idAppointment").not().isEmpty().trim().escape(),
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.json({ status: 400, data: errors.array() });
+    }
+
+    const { idService, idAppointment } = req.body;
+
+    pool.query(
+      queries.service.newServiceAppointment,
+      [idService, idAppointment],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: messages.succesMessage.insertedSuccessfully,
+          });
+        }
+      },
+    );
+  },
+);
+
+router.post(
+  "/serviceProvider",
+  body("idService").not().isEmpty().trim().escape(),
+  body("idProvider").not().isEmpty().trim().escape(),
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.json({ status: 400, data: errors.array() });
+    }
+
+    const { idService, idProvider } = req.body;
+
+    pool.query(
+      queries.service.newServiceProvider,
+      [idService, idProvider],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: messages.succesMessage.insertedSuccessfully,
+          });
+        }
+      },
+    );
+  },
+);
+
 module.exports = router;
