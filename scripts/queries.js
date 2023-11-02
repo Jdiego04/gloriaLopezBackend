@@ -81,6 +81,32 @@ const queries = {
         (Id_Categoria, Nombre_Servicio, Valor_Servicio, Descripcion_Servicio, Duracion_Servicio) \
       VALUES (?, ?, ?, ?, ?)",
   },
+  provider: {
+    allProvider:
+      "SELECT Id_Proveedor, Nombre, Numero_Contacto,	Direccion \
+       FROM TBL_PROVEEDORES WHERE Activo = 'S'",
+    provider:
+      "SELECT Id_Proveedor, Nombre, Numero_Contacto,	Direccion \
+      FROM TBL_PROVEEDORES WHERE Activo = 'S' AND Id_Proveedor = ?",
+    newProvider:
+      "INSERT INTO TBL_PROVEEDORES \
+        (Nombre, Numero_Contacto,	Direccion) \
+      VALUES (?, ?, ?)",
+    desactivate:
+      "UPDATE TBL_PROVEEDORES \
+      SET Activo = CASE \
+        WHEN Activo = 'N' THEN 'S' \
+        WHEN Activo = 'S' THEN 'N' \
+      END \
+      WHERE Id_Proveedor = ?",
+    updateProvider:
+      "UPDATE TBL_PROVEEDORES \
+      SET \
+        Nombre = ?, \
+        Numero_Contacto = ?, \
+        Direccion = ?, \
+      WHERE Id_Proveedor = ?",
+  }
 };
 
 const AUTHEMP = "SELECT * FROM EMPLEADO WHERE CORREO = ? AND CONTRASENA = ?";
