@@ -11,7 +11,7 @@ const messages = require("../scripts/messages");
 
 router.post(
   "/login",
-  body("username").not().isEmpty().trim().escape().isEmail().normalizeEmail(),
+  body("username").not().isEmpty().trim().escape().isEmail(),
   body("password").not().isEmpty().trim().escape(),
   (req, res) => {
     const errors = validationResult(req);

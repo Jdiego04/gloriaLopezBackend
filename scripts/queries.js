@@ -105,14 +105,15 @@ const queries = {
   },
   collaborator: {
     collaboratorAuthentication:
-      "SELECT GROUP_CONCAT(CONCAT(tm.Nombre_Modulo, '_', tp.valor_permiso) SEPARATOR ', ') AS Permisos \
+      "SELECT COALESCE(GROUP_CONCAT(CONCAT(tm.Nombre_Modulo, '_', tp.valor_permiso) SEPARATOR ', '), 'NULL') AS permissions \
       FROM TBL_COLABORADORES tc \
-      JOIN TBL_MODULOS_PERMISOS tmp ON tmp.Numero_DocumentoColaborador = tc.Numero_DocumentoColaborador \
-          AND tmp.Id_TipoDocumento  = tc.Id_TipoDocumento \
-      JOIN TBL_MODULOS tm ON tm.Id_Modulo = tmp.Id_Modulo \
-      JOIN TBL_PERMISOS tp ON tp.Id_Permiso  = tmp.Id_Permiso \
-      WHERE tc.Correo_Electronico = ? \
-        AND tc.Contrasennia = ? ",
+      LEFT JOIN TBL_MODULOS_PERMISOS tmp ON tmp.Numero_DocumentoColaborador = tc.Numero_DocumentoColaborador \
+          AND tmp.Id_TipoDocumento = tc.Id_TipoDocumento \
+      LEFT JOIN TBL_MODULOS tm ON tm.Id_Modulo = tmp.Id_Modulo \
+      LEFT JOIN TBL_PERMISOS tp ON tp.Id_Permiso = tmp.Id_Permiso \
+      WHERE tc.Correo_Electronico = ? AND \
+      tc.Contrasennia = ? \
+      GROUP BY tc.Correo_Electronico, tc.Contrasennia ",
     recoverPassword:
       "SELECT * FROM TBL_COLABORADORES WHERE Correo_Electronico = ?",
     updatePassword:
