@@ -8,6 +8,7 @@ const messages = {
     disabledSuccessfully: "Elemento desactivado correctamente.",
     updatedSuccessfully: "Elemento actualizado correctamente.",
     sendSuccessfully: "Correo enviado correctamene.",
+    logoutSuccessfully: "Se cerro la sesion correctamente.",
   },
 };
 

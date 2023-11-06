@@ -87,10 +87,6 @@ router.post("/recoverPassword", (req, res) => {
       }
     }
   });
-  /* } else {
-      // Redirigir a la página de inicio de sesión
-      res.redirect('/logout');
-  }*/
 });
 
 router.post("/updatePassword", (req, res) => {
@@ -177,17 +173,19 @@ router.post("/singUp", (req, res) => {
   }*/
 });
 
-/*router.post("/deactivate", (req, res) => {
-  //Se le envia en activo lo que se quiere cambiar
-  const { idEmpleado } = req.body;
+router.put("/deactivate", (req, res) => {
+  const { idCollaborator, idDocumentType } = req.body;
+
   pool.query(
-    consultas.DEACTIVATEEMPLEADO,
-    [idEmpleado],
+    queries.collaborator.deactivate,
+    [idCollaborator, idDocumentType],
     (err, rows, fields) => {
-      if (!err) {
-        res.json("Se cambio el estado con exito");
-      } else {
-        console.log(err);
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: messages.succesMessage.disabledSuccessfully,
+        });
       }
     },
   );
@@ -196,57 +194,46 @@ router.post("/singUp", (req, res) => {
 //Actualizar registro
 router.put("/update", (req, res) => {
   const {
-    id,
-    nombre,
-    fechaNacimiento,
-    fechaIngreso,
-    direccion,
-    idTipoDocumento,
-    numeroDocumento,
-    correo,
-    celular,
-    contrasena,
-    idRol,
-    idTipoEmpleado,
+    names,
+    firstLastname,
+    secondLastname,
+    contactNumber,
+    positionId,
+    idCollaborator,
+    idDocumentType,
   } = req.body;
 
-  const hashedPassword = crypto
-    .createHash("sha256")
-    .update(contrasena)
-    .digest("hex");
   pool.query(
-    consultas.UPDATEEMPLEADO,
+    queries.collaborator.updateCollaborator,
     [
-      nombre,
-      fechaNacimiento,
-      fechaIngreso,
-      direccion,
-      idTipoDocumento,
-      numeroDocumento,
-      correo,
-      celular,
-      hashedPassword,
-      idRol,
-      idTipoEmpleado,
-      id,
+      names,
+      firstLastname,
+      secondLastname,
+      contactNumber,
+      positionId,
+      idCollaborator,
+      idDocumentType,
     ],
     (err, rows, fields) => {
-      if (!err) {
-        res.json("Actualizado correctamente");
-      } else {
-        console.log(err);
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: messages.succesMessage.updatedSuccessfully,
+        });
       }
     },
   );
 });
 
-//Cerrar la session
 router.get("/logout", (req, res) => {
-  //Limpia la cookie
   res.clearCookie("token");
-  res.send("Cierre de sesión exitoso");
+  res.json({
+    status: 200,
+    data: messages.succesMessage.logoutSuccessfully,
+  });
 });
-*/
+
 //JSON con mensajes de errores
 {
   "errors"[
