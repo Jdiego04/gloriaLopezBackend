@@ -213,4 +213,176 @@ router.post(
   },
 );
 
+router.get("/allServiceHistory", (req, res) => {
+  pool.query(queries.service.allServiceHistory, (err, rows, fields) => {
+    if (err) throw err;
+    else {
+      res.json({
+        status: 200,
+        data: rows,
+      });
+    }
+  });
+});
+
+router.get("/serviceHistory", (req, res) => {
+  const { idserviceHistory } = req.body;
+  pool.query(
+    queries.service.serviceHistory,
+    idserviceHistory,
+    (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: rows,
+        });
+      }
+    },
+  );
+});
+
+router.get("/serviceHistoryByCollaborator", (req, res) => {
+  const { idCollaborator, idDocumentType } = req.body;
+  pool.query(
+    queries.service.serviceHistoryByCollaborator,
+    [idCollaborator, idDocumentType],
+    (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: rows,
+        });
+      }
+    },
+  );
+});
+
+router.get("/serviceHistoryByProvider", (req, res) => {
+  const { idProvider } = req.body;
+  pool.query(
+    queries.service.serviceHistoryByProvider,
+    idProvider,
+    (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: rows,
+        });
+      }
+    },
+  );
+});
+
+router.get("/serviceHistoryByService", (req, res) => {
+  const { idService } = req.body;
+  pool.query(
+    queries.service.serviceHistoryByService,
+    idService,
+    (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: rows,
+        });
+      }
+    },
+  );
+});
+
+router.post(
+  "/serviceHistory",
+  body("idService").not().isEmpty().trim().escape(),
+  body("amount").not().isEmpty().trim().escape(),
+  body("modificationType").not().isEmpty().trim().escape(),
+  body("serviceDescription").not().isEmpty().trim().escape(),
+  body("idCollaborator").not().isEmpty().trim().escape(),
+  body("idDocumentType").not().isEmpty().trim().escape(),
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.json({ status: 400, data: errors.array() });
+    }
+
+    const {
+      idService,
+      amount,
+      modificationType,
+      serviceDescription,
+      idCollaborator,
+      idDocumentType,
+    } = req.body;
+
+    pool.query(
+      queries.service.newServiceHistory,
+      [
+        idService,
+        amount,
+        modificationType,
+        serviceDescription,
+        idCollaborator,
+        idDocumentType,
+      ],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: messages.succesMessage.insertedSuccessfully,
+          });
+        }
+      },
+    );
+  },
+);
+
+router.get("/accountAllServiceHistory", (req, res) => {
+  const { idService } = req.body;
+  pool.query(
+    queries.service.accountAllServiceHistory,
+    idService,
+    (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: rows,
+        });
+      }
+    },
+  );
+});
+
+router.get("/accountServiceHistory", (req, res) => {
+  const { idService } = req.body;
+  pool.query(
+    queries.service.accountServiceHistory,
+    idService,
+    (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: rows,
+        });
+      }
+    },
+  );
+});
+
+router.get("/accountAllServiceHistory", (req, res) => {
+  pool.query(queries.service.accountServiceHistory, (err, rows, fields) => {
+    if (err) throw err;
+    else {
+      res.json({
+        status: 200,
+        data: rows,
+      });
+    }
+  });
+});
+
 module.exports = router;

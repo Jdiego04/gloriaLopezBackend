@@ -76,7 +76,104 @@ const queries = {
       "INSERT INTO TBL_SERVICIOS_CITAS (Id_Servicio, Id_Cita) VALUES (?, ?)",
     newServiceProvider:
       "INSERT INTO TBL_SERVICIOS_PROVEEDORES (Id_Servicio, Id_cita) VALUES (?, ?)",
-    allServiceHistory: "",
+    allServiceHistory:
+      "SELECT  ths.Id_HistorialServicio, ths.Id_Servicio, ts.Nombre_Servicio, tp.Nombre AS Proveedor, \
+        ths.Cantidad, ths.Tipo_Modificacion, ths.Descripcion_Servicio, ths.Fecha_HoraModificacion, \
+        ths.Numero_DocumentoColaborador, ths.Id_TipoDocumento, \
+        CONCAT(tc.Nombres, tc.Primer_Apellido ) AS Colaborador \
+      FROM TBL_HISTORIAL_SERVICIOS ths \
+      LEFT JOIN TBL_SERVICIOS ts ON ts.Id_Servicio = ths.Id_Servicio \
+        AND ts.Activo ='S' \
+      LEFT JOIN TBL_SERVICIOS_PROVEEDORES tsp ON tsp.Id_Servicio  = ts.Id_Servicio \
+      LEFT JOIN TBL_PROVEEDORES tp ON tp.Id_Proveedor = tsp.Id_Proveedor \
+        AND tp.Activo = 'S' \
+      LEFT JOIN TBL_COLABORADORES tc ON tc.Id_TipoDocumento = ths.Id_TipoDocumento \
+        AND tc.Numero_DocumentoColaborador = ths.Numero_DocumentoColaborador \
+        AND tc.Activo = 'S'",
+    serviceHistory:
+      "SELECT  ths.Id_HistorialServicio, ths.Id_Servicio, ts.Nombre_Servicio, tp.Nombre AS Proveedor, \
+        ths.Cantidad, ths.Tipo_Modificacion, ths.Descripcion_Servicio, ths.Fecha_HoraModificacion, \
+        ths.Numero_DocumentoColaborador, ths.Id_TipoDocumento, \
+        CONCAT(tc.Nombres, tc.Primer_Apellido ) AS Colaborador \
+      FROM TBL_HISTORIAL_SERVICIOS ths \
+      LEFT JOIN TBL_SERVICIOS ts ON ts.Id_Servicio = ths.Id_Servicio \
+        AND ts.Activo ='S' \
+      LEFT JOIN TBL_SERVICIOS_PROVEEDORES tsp ON tsp.Id_Servicio  = ts.Id_Servicio \
+      LEFT JOIN TBL_PROVEEDORES tp ON tp.Id_Proveedor = tsp.Id_Proveedor \
+        AND tp.Activo = 'S' \
+      LEFT JOIN TBL_COLABORADORES tc ON tc.Id_TipoDocumento = ths.Id_TipoDocumento \
+        AND tc.Numero_DocumentoColaborador = ths.Numero_DocumentoColaborador \
+        AND tc.Activo = 'S' \
+      WHERE ths.Id_HistorialServicio = ?",
+    serviceHistoryByCollaborator:
+      "SELECT  ths.Id_HistorialServicio, ths.Id_Servicio, ts.Nombre_Servicio, tp.Nombre AS Proveedor, \
+        ths.Cantidad, ths.Tipo_Modificacion, ths.Descripcion_Servicio, ths.Fecha_HoraModificacion, \
+        ths.Numero_DocumentoColaborador, ths.Id_TipoDocumento, \
+        CONCAT(tc.Nombres, tc.Primer_Apellido ) AS Colaborador \
+      FROM TBL_HISTORIAL_SERVICIOS ths \
+      LEFT JOIN TBL_SERVICIOS ts ON ts.Id_Servicio = ths.Id_Servicio \
+        AND ts.Activo ='S' \
+      LEFT JOIN TBL_SERVICIOS_PROVEEDORES tsp ON tsp.Id_Servicio  = ts.Id_Servicio \
+      LEFT JOIN TBL_PROVEEDORES tp ON tp.Id_Proveedor = tsp.Id_Proveedor \
+        AND tp.Activo = 'S' \
+      LEFT JOIN TBL_COLABORADORES tc ON tc.Id_TipoDocumento = ths.Id_TipoDocumento \
+        AND tc.Numero_DocumentoColaborador = ths.Numero_DocumentoColaborador \
+        AND tc.Activo = 'S' \
+      WHERE ths.Numero_DocumentoColaborador = ? AND ths.Id_TipoDocumento = ? ",
+    serviceHistoryByProvider:
+      "SELECT  ths.Id_HistorialServicio, ths.Id_Servicio, ts.Nombre_Servicio, tp.Nombre AS Proveedor, \
+        ths.Cantidad, ths.Tipo_Modificacion, ths.Descripcion_Servicio, ths.Fecha_HoraModificacion, \
+        ths.Numero_DocumentoColaborador, ths.Id_TipoDocumento, \
+        CONCAT(tc.Nombres, tc.Primer_Apellido ) AS Colaborador \
+      FROM TBL_HISTORIAL_SERVICIOS ths \
+      LEFT JOIN TBL_SERVICIOS ts ON ts.Id_Servicio = ths.Id_Servicio \
+        AND ts.Activo ='S' \
+      LEFT JOIN TBL_SERVICIOS_PROVEEDORES tsp ON tsp.Id_Servicio  = ts.Id_Servicio \
+      LEFT JOIN TBL_PROVEEDORES tp ON tp.Id_Proveedor = tsp.Id_Proveedor \
+        AND tp.Activo = 'S' \
+      LEFT JOIN TBL_COLABORADORES tc ON tc.Id_TipoDocumento = ths.Id_TipoDocumento \
+        AND tc.Numero_DocumentoColaborador = ths.Numero_DocumentoColaborador \
+        AND tc.Activo = 'S' \
+      WHERE tp.Id_Proveedor = ? ",
+    serviceHistoryByService:
+      "SELECT  ths.Id_HistorialServicio, ths.Id_Servicio, ts.Nombre_Servicio, tp.Nombre AS Proveedor, \
+        ths.Cantidad, ths.Tipo_Modificacion, ths.Descripcion_Servicio, ths.Fecha_HoraModificacion, \
+        ths.Numero_DocumentoColaborador, ths.Id_TipoDocumento, \
+        CONCAT(tc.Nombres, tc.Primer_Apellido ) AS Colaborador \
+      FROM TBL_HISTORIAL_SERVICIOS ths \
+      LEFT JOIN TBL_SERVICIOS ts ON ts.Id_Servicio = ths.Id_Servicio \
+        AND ts.Activo ='S' \
+      LEFT JOIN TBL_SERVICIOS_PROVEEDORES tsp ON tsp.Id_Servicio  = ts.Id_Servicio \
+      LEFT JOIN TBL_PROVEEDORES tp ON tp.Id_Proveedor = tsp.Id_Proveedor \
+        AND tp.Activo = 'S' \
+      LEFT JOIN TBL_COLABORADORES tc ON tc.Id_TipoDocumento = ths.Id_TipoDocumento \
+        AND tc.Numero_DocumentoColaborador = ths.Numero_DocumentoColaborador \
+        AND tc.Activo = 'S' \
+      WHERE ths.Id_Servicio = ? ",
+    newServiceHistory:
+      "INSERT INTO TBL_HISTORIAL_SERVICIOS \
+        (Id_Servicio, Cantidad, Tipo_Modificacion, Descripcion_Servicio, Numero_DocumentoColaborador, \
+          Id_TipoDocumento) \
+      VALUES (?, ?, ?, ?, ?, ?)",
+    accountServiceHistory:
+      "SELECT ths.Id_Servicio, ts.Nombre_Servicio, \
+        SUM(CASE WHEN Tipo_Modificacion = 'E' THEN Cantidad ELSE 0 END) AS Entradas, \
+        SUM(CASE WHEN Tipo_Modificacion = 'S' THEN Cantidad ELSE 0 END) AS Salidas, \
+        SUM(CASE WHEN Tipo_Modificacion = 'E' THEN Cantidad ELSE 0 END) - \
+        SUM(CASE WHEN Tipo_Modificacion = 'S' THEN Cantidad ELSE 0 END) AS CantidadTotal \
+      FROM TBL_HISTORIAL_SERVICIOS ths \
+      LEFT JOIN TBL_SERVICIOS ts ON ts.Id_Servicio = ths.Id_Servicio \
+      WHERE ths.Id_Servicio = ? \
+      GROUP BY ths.Id_Servicio",
+    accountAllServiceHistory:
+      "SELECT ths.Id_Servicio, ts.Nombre_Servicio, \
+        SUM(CASE WHEN Tipo_Modificacion = 'E' THEN Cantidad ELSE 0 END) AS Entradas, \
+        SUM(CASE WHEN Tipo_Modificacion = 'S' THEN Cantidad ELSE 0 END) AS Salidas, \
+        SUM(CASE WHEN Tipo_Modificacion = 'E' THEN Cantidad ELSE 0 END) - \
+        SUM(CASE WHEN Tipo_Modificacion = 'S' THEN Cantidad ELSE 0 END) AS CantidadTotal \
+      FROM TBL_HISTORIAL_SERVICIOS ths \
+      LEFT JOIN TBL_SERVICIOS ts ON ts.Id_Servicio = ths.Id_Servicio \
+      GROUP BY ths.Id_Servicio",
   },
   provider: {
     allProvider:
