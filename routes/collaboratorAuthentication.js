@@ -231,6 +231,24 @@ router.put("/update", (req, res) => {
   );
 });
 
+router.post("/collaboratorCategory", (req, res) => {
+  const { idCategory, idCollaborator, idDocumentType } = req.body;
+
+  pool.query(
+    queries.collaborator.newCollaboratorCategory,
+    [idCategory, idCollaborator, idDocumentType],
+    (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: messages.succesMessage.insertedSuccessfully,
+        });
+      }
+    },
+  );
+});
+
 router.get("/logout", (req, res) => {
   res.clearCookie("token");
   res.json({
