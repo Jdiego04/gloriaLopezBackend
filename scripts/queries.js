@@ -76,6 +76,7 @@ const queries = {
       "INSERT INTO TBL_SERVICIOS_CITAS (Id_Servicio, Id_Cita) VALUES (?, ?)",
     newServiceProvider:
       "INSERT INTO TBL_SERVICIOS_PROVEEDORES (Id_Servicio, Id_cita) VALUES (?, ?)",
+    allServiceHistory: "",
   },
   provider: {
     allProvider:
@@ -88,7 +89,7 @@ const queries = {
       "INSERT INTO TBL_PROVEEDORES \
         (Nombre, Numero_Contacto,	Direccion) \
       VALUES (?, ?, ?)",
-    desactivate:
+    deactivate:
       "UPDATE TBL_PROVEEDORES \
       SET Activo = CASE \
         WHEN Activo = 'N' THEN 'S' \
@@ -123,6 +124,40 @@ const queries = {
         (Nombres, Primer_Apellido, Segundo_Apellido, Id_TipoDocumento, Numero_DocumentoColaborador, \
         Numero_Contacto, Correo_Electronico, Contrasennia, Fecha_Ingreso, Fecha_Nacimiento, Id_Cargo) \
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+  },
+  module: {
+    all: "SELECT Id_Modulo, Nombre_Modulo  from TBL_MODULOS WHERE Activo = 'S'",
+    module:
+      "SELECT Id_Modulo, Nombre_Modulo FROM TBL_MODULOS WHERE Activo = 'S' AND Id_Modulo = ?",
+    deactivate:
+      "UPDATE TBL_MODULOS \
+      SET Activo = CASE \
+        WHEN Activo = 'N' THEN 'S' \
+        WHEN Activo = 'S' THEN 'N' \
+      END \
+      WHERE Id_Modulo = ?",
+    updateModule:
+      "UPDATE TBL_MODULOS SET Nombre_Modulo = ? WHERE Id_Modulo = ?",
+    newModule: "INSERT INTO TBL_MODULES (Nombre_Modulo) VALUES (?)",
+    newPermissionModule:
+      "INSERT INTO TBL_MODULOS_PERMISOS \
+      (Id_Modulo, Numero_DocumentoColaborador, Id_TipoDocumento, Id_Permiso) \
+      VALUES (?, ?, ?, ?)",
+    allPermissionModuleByCollaborator:
+      "SELECT 	COALESCE(GROUP_CONCAT(CONCAT(tm.Nombre_Modulo, '_', tp.valor_permiso) SEPARATOR ', '), 'NULL') AS permissions \
+      FROM TBL_MODULOS tm \
+      LEFT JOIN TBL_MODULOS_PERMISOS tmp ON tmp.Id_Modulo = tm.Id_Modulo \
+      LEFT JOIN TBL_PERMISOS tp ON tp.Id_Permiso = tmp.Id_Permiso \
+      WHERE tmp.Numero_DocumentoColaborador = ? AND tmp.Id_TipoDocumento = ?",
+    permissionModuleByCollaborator:
+      "SELECT 	COALESCE(GROUP_CONCAT(CONCAT(tm.Nombre_Modulo, '_', tp.valor_permiso) SEPARATOR ', '), 'NULL') AS permissions \
+      FROM TBL_MODULOS tm \
+      LEFT JOIN TBL_MODULOS_PERMISOS tmp ON tmp.Id_Modulo = tm.Id_Modulo \
+      LEFT JOIN TBL_PERMISOS tp ON tp.Id_Permiso = tmp.Id_Permiso \
+      WHERE tmp.Numero_DocumentoColaborador = ? AND tmp.Id_TipoDocumento = ? AND tmp.Id_Modulo = ?",
+    updatePermissionModule:
+      "UPDATE TBL_MODULOS_PERMISOS SET Id_Permiso = ? WHERE Id_Modulo = ? \
+      AND Numero_DocumentoColaborador = ? AND Id_TipoDocumento = ?",
   },
 };
 

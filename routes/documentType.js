@@ -58,15 +58,19 @@ router.post(
 router.put("/deactivate", (req, res) => {
   const { idDocumentType } = req.body;
 
-  pool.query(queries.DESACTIVARTIPODOC, idDocumentType, (err, rows, fields) => {
-    if (err) throw err;
-    else {
-      res.json({
-        status: 200,
-        data: messages.succesMessage.disabledSuccessfully,
-      });
-    }
-  });
+  pool.query(
+    queries.documentType.deactivate,
+    idDocumentType,
+    (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: messages.succesMessage.disabledSuccessfully,
+        });
+      }
+    },
+  );
 });
 
 module.exports = router;

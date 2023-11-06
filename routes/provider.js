@@ -44,19 +44,15 @@ router.post("/provider", (req, res) => {
 
 router.post("/deactivate", (req, res) => {
   const { idProvider } = req.body;
-  pool.query(
-    queries.provider.desactivate,
-    [idProvider],
-    (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        res.json({
-          status: 200,
-          data: messages.succesMessage.disabledSuccessfully,
-        });
-      }
-    },
-  );
+  pool.query(queries.provider.deactivate, [idProvider], (err, rows, fields) => {
+    if (err) throw err;
+    else {
+      res.json({
+        status: 200,
+        data: messages.succesMessage.disabledSuccessfully,
+      });
+    }
+  });
 });
 
 router.put("/update", (req, res) => {

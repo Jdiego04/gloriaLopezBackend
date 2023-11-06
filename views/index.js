@@ -20,6 +20,7 @@ app.use(require("../routes/documentType"));
 app.use(require("../routes/service"));
 app.use(require("../routes/provider"));
 app.use(require("../routes/collaboratorAuthentication"));
+app.use(require("../routes/modules"));
 /*
 app.use(require('../routes/index'));
 
@@ -29,7 +30,6 @@ app.use(require('../routes/estadoCita'));
 app.use(require('../routes/pqrs'));
 app.use(require('../routes/productos'));
 
-app.use(require('../routes/rol'));
 
 app.use(require('../routes/tipoEmpleado'));
 app.use(require('../routes/tipoProducto'));
@@ -42,6 +42,7 @@ app.use(
   "/collaboratorAuthentication",
   require("../routes/collaboratorAuthentication"),
 );
+app.use("/modules", require("../routes/modules"));
 /*
 app.use('/authUsu', require('../routes/authenticationCliente'));
 app.use('/colaborador',require('../routes/colaborador'));
@@ -49,7 +50,6 @@ app.use('/estadoCita',require('../routes/estadoCita'));
 app.use('/pqrs',require('../routes/pqrs'));
 app.use('/productos', require('../routes/productos'));
 
-app.use('/rol', require('../routes/rol'));
 
 app.use('/tipoEmpleado', require('../routes/tipoEmpleado'));
 app.use('/tipoProducto', require('../routes/tipoProducto'));
