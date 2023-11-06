@@ -25,17 +25,17 @@ router.post(
       .update(password)
       .digest("hex");
     pool.query(
-      queries.collaborator.collaboratorAuthentication,
+      queries.client.clientAuthentication,
       [username, hashedPassword],
       (err, rows, fields) => {
         if (!err) {
           if (rows.length > 0) {
             let data = JSON.stringify(rows[0]);
-            const token = jwt.sign({ data: data }, keys.secretEmp, {
+            const token = jwt.sign({ data: data }, keys.secretUsu, {
               expiresIn: "1h",
             });
             res.cookie("token", token, { httpOnly: true });
-            res.json({ status: 400, data: { token, data } });
+            res.json({ status: 400, data: { token } });
           } else {
             res.json({ status: 200, data: messages.errors.invalidCredentials });
           }
@@ -47,50 +47,47 @@ router.post(
   },
 );
 
+//Para recuperar contraseña
 router.post("/recoverPassword", (req, res) => {
   const { email } = req.body;
 
   // Verificar si el token está presente en la cookie
   //const token = req.cookies.token;
   // if (token) {
-  pool.query(
-    queries.collaborator.recoverPassword,
-    email,
-    (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        if (rows.length > 0) {
-          //Genera una contraseña provicional
-          const password = util.generatePassword();
-          const hashedPassword = crypto
-            .createHash("sha256")
-            .update(password)
-            .digest("hex");
-          //Actualiza la contraseña
-          pool.query(
-            queries.collaborator.updatePassword,
-            [password, email],
-            (err, rows, fields) => {
-              if (err) throw err;
-              else {
-                const subject = "Nueva contraseña Gloria Lopez";
-                const content = ` Su nueva contraseña provisional es: ${password} 
+  pool.query(queries.client.recoverPassword, email, (err, rows, fields) => {
+    if (err) throw err;
+    else {
+      if (rows.length > 0) {
+        //Genera una contraseña provicional
+        const password = util.generatePassword();
+        const hashedPassword = crypto
+          .createHash("sha256")
+          .update(password)
+          .digest("hex");
+        //Actualiza la contraseña
+        pool.query(
+          queries.client.updatePassword,
+          [password, email],
+          (err, rows, fields) => {
+            if (err) throw err;
+            else {
+              const subject = "Nueva contraseña Gloria Lopez";
+              const content = ` Su nueva contraseña provisional es: ${password} 
                     Por favor, cambie su contraseña en cuanto pueda. `;
-                //Envia el correo
-                util.sendMail(email, subject, content);
-                res.json({
-                  status: 200,
-                  data: messages.succesMessage.updatedSuccessfully,
-                });
-              }
-            },
-          );
-        } else {
-          res.json({ status: 200, data: messages.errors.notExist });
-        }
+              //Envia el correo
+              util.sendMail(email, subject, content);
+              res.json({
+                status: 200,
+                data: messages.succesMessage.updatedSuccessfully,
+              });
+            }
+          },
+        );
+      } else {
+        res.json({ status: 200, data: messages.errors.notExist });
       }
-    },
-  );
+    }
+  });
 });
 
 router.post("/updatePassword", (req, res) => {
@@ -101,7 +98,7 @@ router.post("/updatePassword", (req, res) => {
   // if (token) {
 
   pool.query(
-    queries.collaborator.updatePassword,
+    queries.client.updatePassword,
     [password, email],
     (err, rows, fields) => {
       if (err) throw err;
@@ -115,9 +112,9 @@ router.post("/updatePassword", (req, res) => {
   );
 
   /* } else {
-      // Redirigir a la página de inicio de sesión
-      res.redirect('/logout');
-  }*/
+        // Redirigir a la página de inicio de sesión
+        res.redirect('/logout');
+    }*/
 });
 
 router.post("/singUp", (req, res) => {
@@ -126,42 +123,38 @@ router.post("/singUp", (req, res) => {
     firstLastname,
     secondLastname,
     documentTypeId,
-    collaboratorId,
+    clientId,
     contactNumber,
     email,
     password,
-    entryDate,
     birthDate,
-    positionId,
   } = req.body;
 
   /* const validaCorreo = util.checkIfExists(
-    correo,
-    consultas.VERIFICARCORREOEMPLEADO,
-  );
-  const validaDocumento = util.checkIfExists(
-    numeroDocumento,
-    consultas.VERIFICARDOCUMENTOEMPLEADO,
-  );*/
+      correo,
+      consultas.VERIFICARCORREOEMPLEADO,
+    );
+    const validaDocumento = util.checkIfExists(
+      numeroDocumento,
+      consultas.VERIFICARDOCUMENTOEMPLEADO,
+    );*/
   const hashedPassword = crypto
     .createHash("sha256")
     .update(password)
     .digest("hex");
   // if (!validaCorreo && !validaDocumento) {
   pool.query(
-    queries.collaborator.newCollaborator,
+    queries.client.newClient,
     [
       names,
       firstLastname,
       secondLastname,
       documentTypeId,
-      collaboratorId,
+      clientId,
       contactNumber,
       email,
       hashedPassword,
-      entryDate,
       birthDate,
-      positionId,
     ],
     (err, rows, fields) => {
       if (err) throw err;
@@ -174,26 +167,8 @@ router.post("/singUp", (req, res) => {
     },
   );
   /* } else {
-    res.json("Este usuario ya esta registrado");
-  }*/
-});
-
-router.put("/deactivate", (req, res) => {
-  const { idCollaborator, idDocumentType } = req.body;
-
-  pool.query(
-    queries.collaborator.deactivate,
-    [idCollaborator, idDocumentType],
-    (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        res.json({
-          status: 200,
-          data: messages.succesMessage.disabledSuccessfully,
-        });
-      }
-    },
-  );
+      res.json("Este usuario ya esta registrado");
+    }*/
 });
 
 //Actualizar registro
@@ -203,21 +178,19 @@ router.put("/update", (req, res) => {
     firstLastname,
     secondLastname,
     contactNumber,
-    positionId,
-    idCollaborator,
-    idDocumentType,
+    clientId,
+    documentTypeId,
   } = req.body;
 
   pool.query(
-    queries.collaborator.updateCollaborator,
+    queries.client.updateClient,
     [
       names,
       firstLastname,
       secondLastname,
       contactNumber,
-      positionId,
-      idCollaborator,
-      idDocumentType,
+      clientId,
+      documentTypeId,
     ],
     (err, rows, fields) => {
       if (err) throw err;

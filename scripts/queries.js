@@ -287,6 +287,37 @@ const queries = {
       "UPDATE TBL_MODULOS_PERMISOS SET Id_Permiso = ? WHERE Id_Modulo = ? \
       AND Numero_DocumentoColaborador = ? AND Id_TipoDocumento = ?",
   },
+  client: {
+    all: "SELECT Nombres,	Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento,	ttd.Tipo_Documento, \
+        Numero_DocumentoCliente,	Numero_Contacto,	Correo_Electronico,	Fecha_Nacimiento \
+      FROM TBL_CLIENTES tc \
+      LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON ttd.Id_TipoDocumento = tc.Id_TipoDocumento AND ttd.Activo = 'S'",
+    client:
+      "SELECT Nombres,	Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento,	ttd.Tipo_Documento, \
+        Numero_DocumentoCliente,	Numero_Contacto,	Correo_Electronico,	Fecha_Nacimiento \
+      FROM TBL_CLIENTES tc \
+      LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON ttd.Id_TipoDocumento = tc.Id_TipoDocumento AND ttd.Activo = 'S' \
+      WHERE Numero_DocumentoCliente = ? AND tc.Id_TipoDocumento = ?",
+    clientAuthentication:
+      "SELECT * FROM TBL_CLIENTES tc WHERE tc.Correo_Electronico = ? AND tc.Contrasennia = ?",
+    recoverPassword:
+      "SELECT * FROM TBL_CLIENTES tc WHERE tc.Correo_Electronico = ?",
+    updatePassword:
+      "UPDATE TBL_CLIENTES SET Contrasennia = ? WHERE Correo_Electronico = ?",
+    newCollaborator:
+      "INSERT INTO TBL_COLABORADORES \
+        (Nombres, Primer_Apellido, Segundo_Apellido, Id_TipoDocumento, Numero_DocumentoColaborador, \
+        Numero_Contacto, Correo_Electronico, Contrasennia, Fecha_Nacimiento) \
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    updateClient:
+      "UPDATE TBL_CLIENTES \
+      SET  \
+        Nombres = ?, \
+        Primer_Apellido = ?, \
+        Segundo_Apellido = ?, \
+        Numero_Contacto = ? \
+      WHERE Numero_DocumentoColaborador = ? AND Id_TipoDocumento = ?",
+  },
 };
 
 const AUTHEMP = "SELECT * FROM EMPLEADO WHERE CORREO = ? AND CONTRASENA = ?";
