@@ -2,15 +2,13 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../views/database");
 const queries = require("../scripts/queries");
+const messages = require("../scripts/messages");
 
 router.get("/all", (req, res) => {
   pool.query(queries.collaborator.all, (err, rows, fields) => {
     if (err) throw err;
     else {
-      res.json({
-        status: 200,
-        data: messages.succesMessage.insertedSuccessfully,
-      });
+      res.json({ status: 200, data: rows });
     }
   });
 });
