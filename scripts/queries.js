@@ -306,9 +306,9 @@ const queries = {
       "SELECT * FROM TBL_CLIENTES tc WHERE tc.Correo_Electronico = ?",
     updatePassword:
       "UPDATE TBL_CLIENTES SET Contrasennia = ? WHERE Correo_Electronico = ?",
-    newCollaborator:
-      "INSERT INTO TBL_COLABORADORES \
-        (Nombres, Primer_Apellido, Segundo_Apellido, Id_TipoDocumento, Numero_DocumentoColaborador, \
+    newClient:
+      "INSERT INTO TBL_CLIENTES \
+        (Nombres, Primer_Apellido, Segundo_Apellido, Id_TipoDocumento, Numero_DocumentoCliente, \
         Numero_Contacto, Correo_Electronico, Contrasennia, Fecha_Nacimiento) \
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
     updateClient:
