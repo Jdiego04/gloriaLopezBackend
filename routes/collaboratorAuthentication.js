@@ -35,9 +35,9 @@ router.post(
               expiresIn: "1h",
             });
             res.cookie("token", token, { httpOnly: true });
-            res.json({ status: 400, data: { token, data } });
+            res.json({ status: 200, data: { token, data } });
           } else {
-            res.json({ status: 200, data: messages.errors.invalidCredentials });
+            res.json({ status: 400, data: messages.errors.invalidCredentials });
           }
         } else {
           console.log(err);
