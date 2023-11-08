@@ -320,6 +320,75 @@ const queries = {
         Numero_Contacto = ? \
       WHERE Numero_DocumentoColaborador = ? AND Id_TipoDocumento = ?",
   },
+  appointment: {
+    allAppointment:
+      "SELECT c.Id_Cita, c.Numero_DocumentoCliente, c.Id_TipoDocumentoCliente, tc.Nombres AS Nombre_Cliente, \
+        tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
+        c.Fecha_Cita, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
+        c.Id_TipoDocumentoColaborador, tc2.Nombres AS Nombre_Colaborador, \
+        tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador \
+      FROM TBL_CITAS c \
+      LEFT JOIN TBL_CLIENTES tc ON tc.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
+        AND tc.Numero_DocumentoCliente = c.Numero_DocumentoCliente \
+      LEFT JOIN TBL_COLABORADORES tc2 ON tc2.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
+        AND tc2.Numero_DocumentoColaborador  = c.Numero_DocumentoColaborador \
+      LEFT JOIN TBL_ESTADO_CITAS tec ON tec.Id_EstadoCita = c.Id_EstadoCita AND tec.Activo = 'S'",
+    appointment:
+      "SELECT c.Id_Cita, c.Numero_DocumentoCliente, c.Id_TipoDocumentoCliente, tc.Nombres AS Nombre_Cliente, \
+        tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
+        c.Fecha_Cita, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
+        c.Id_TipoDocumentoColaborador, tc2.Nombres AS Nombre_Colaborador, \
+        tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador \
+      FROM TBL_CITAS c \
+      LEFT JOIN TBL_CLIENTES tc ON tc.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
+        AND tc.Numero_DocumentoCliente = c.Numero_DocumentoCliente \
+      LEFT JOIN TBL_COLABORADORES tc2 ON tc2.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
+        AND tc2.Numero_DocumentoColaborador  = c.Numero_DocumentoColaborador \
+      LEFT JOIN TBL_ESTADO_CITAS tec ON tec.Id_EstadoCita = c.Id_EstadoCita AND tec.Activo = 'S' \
+      WHERE c.Id_Cita = ?",
+    appointmentByCliente:
+      "SELECT c.Id_Cita, c.Numero_DocumentoCliente, c.Id_TipoDocumentoCliente, tc.Nombres AS Nombre_Cliente, \
+        tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
+        c.Fecha_Cita, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
+        c.Id_TipoDocumentoColaborador, tc2.Nombres AS Nombre_Colaborador, \
+        tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador \
+      FROM TBL_CITAS c \
+      LEFT JOIN TBL_CLIENTES tc ON tc.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
+        AND tc.Numero_DocumentoCliente = c.Numero_DocumentoCliente \
+      LEFT JOIN TBL_COLABORADORES tc2 ON tc2.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
+        AND tc2.Numero_DocumentoColaborador  = c.Numero_DocumentoColaborador \
+      LEFT JOIN TBL_ESTADO_CITAS tec ON tec.Id_EstadoCita = c.Id_EstadoCita AND tec.Activo = 'S' \
+      WHERE c.Numero_DocumentoCliente = ? AND c.Id_TipoDocumentoCliente = ?",
+    appointmentByColaborador:
+      "SELECT c.Id_Cita, c.Numero_DocumentoCliente, c.Id_TipoDocumentoCliente, tc.Nombres AS Nombre_Cliente, \
+      tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
+      c.Fecha_Cita, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
+      c.Id_TipoDocumentoColaborador, tc2.Nombres AS Nombre_Colaborador, \
+      tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador \
+    FROM TBL_CITAS c \
+    LEFT JOIN TBL_CLIENTES tc ON tc.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
+      AND tc.Numero_DocumentoCliente = c.Numero_DocumentoCliente \
+    LEFT JOIN TBL_COLABORADORES tc2 ON tc2.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
+      AND tc2.Numero_DocumentoColaborador  = c.Numero_DocumentoColaborador \
+    LEFT JOIN TBL_ESTADO_CITAS tec ON tec.Id_EstadoCita = c.Id_EstadoCita AND tec.Activo = 'S' \
+    WHERE c.Numero_DocumentoColaborador = ? AND c.Id_TipoDocumentoColaborador = ?",
+    newAppointment:
+      "INSERT INTO TBL_CITAS (Numero_DocumentoCliente, Numero_DocumentoColaborador, \
+        Fecha_Cita, Id_EstadoCita,Id_TipoDocumentoCliente, Id_TipoDocumentoColaborador) \
+      VALUES (?, ?, ?, ?, ?, ?)",
+    updateAppointment:
+      "UPDATE TBL_CITAS \
+      SET \
+        Numero_DocumentoColaborador = ?, \
+        Fecha_Cita = ?, \
+        Id_TipoDocumentoColaborador = ? \
+      WHERE Id_Cita = ?",
+    change:
+      "UPDATE TBL_CITAS \
+      SET \
+        Id_EstadoCita = ? \
+      WHERE Id_Cita = ?",
+  },
 };
 
 const AUTHEMP = "SELECT * FROM EMPLEADO WHERE CORREO = ? AND CONTRASENA = ?";

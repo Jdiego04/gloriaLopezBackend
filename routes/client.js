@@ -21,10 +21,7 @@ router.get("/client", (req, res) => {
     (err, rows, fields) => {
       if (err) throw err;
       else {
-        res.json({
-          status: 200,
-          data: messages.succesMessage.insertedSuccessfully,
-        });
+        res.json({ status: 200, data: rows });
       }
     },
   );
