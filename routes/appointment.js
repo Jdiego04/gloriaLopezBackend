@@ -89,4 +89,51 @@ router.put("/updateAppointment", (req, res) => {
   );
 });
 
+Id_TipoDocumentoCliente, Id_TipoDocumentoColaborador;
+router.post(
+  "/appointment",
+  body("idClient").not().isEmpty().trim().escape(),
+  body("idCollaborator").not().isEmpty().trim().escape(),
+  body("appointmentDate").not().isEmpty().trim().escape(),
+  body("state").not().isEmpty().trim().escape(),
+  body("idDocumentTypeClient").not().isEmpty().trim().escape(),
+  body("idDocumentTypeCollaborator").not().isEmpty().trim().escape(),
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.json({ status: 400, data: errors.array() });
+    }
+
+    const {
+      idClient,
+      idCollaborator,
+      appointmentDate,
+      state,
+      idDocumentTypeClient,
+      idDocumentTypeCollaborator,
+    } = req.body;
+
+    pool.query(
+      queries.appointment.newAppointment,
+      [
+        idClient,
+        idCollaborator,
+        appointmentDate,
+        state,
+        idDocumentTypeClient,
+        idDocumentTypeCollaborator,
+      ],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: messages.succesMessage.insertedSuccessfully,
+          });
+        }
+      },
+    );
+  },
+);
+
 module.exports = router;
