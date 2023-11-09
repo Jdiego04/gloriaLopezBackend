@@ -64,23 +64,6 @@ router.get("/serviceByCategory", (req, res) => {
   );
 });
 
-router.get("/serviceByProvider", (req, res) => {
-  const { idProvider } = req.body;
-  pool.query(
-    queries.service.serviceByProvider,
-    idProvider,
-    (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        res.json({
-          status: 200,
-          data: rows,
-        });
-      }
-    },
-  );
-});
-
 router.post("/service", (req, res) => {
   const {
     idCategory,
@@ -383,6 +366,48 @@ router.get("/accountAllServiceHistory", (req, res) => {
       });
     }
   });
+});
+
+router.get("/allProduct", (req, res) => {
+  pool.query(queries.service.allProduct, (err, rows, fields) => {
+    if (err) throw err;
+    else {
+      res.json({
+        status: 200,
+        data: rows,
+      });
+    }
+  });
+});
+
+router.get("/product", (req, res) => {
+  const { idService } = req.body;
+  pool.query(queries.service.product, idService, (err, rows, fields) => {
+    if (err) throw err;
+    else {
+      res.json({
+        status: 200,
+        data: rows,
+      });
+    }
+  });
+});
+
+router.get("/productByProvider", (req, res) => {
+  const { idProvider } = req.body;
+  pool.query(
+    queries.service.productByProvider,
+    idProvider,
+    (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: rows,
+        });
+      }
+    },
+  );
 });
 
 module.exports = router;
