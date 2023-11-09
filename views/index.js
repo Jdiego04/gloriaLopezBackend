@@ -27,9 +27,9 @@ app.use(require("../routes/collaborator"));
 
 app.use(require("../routes/client"));
 app.use(require("../routes/appointment"));
-/*app.use(require('../routes/position'));
+app.use(require('../routes/position'));
 app.use(require('../routes/category'));
-app.use(require('../routes/report'));*/
+/*app.use(require('../routes/report'));*/
 
 app.use("/documentType", require("../routes/documentType"));
 app.use("/service", require("../routes/service"));
@@ -45,9 +45,9 @@ app.use("/clientAuthentication", require("../routes/clientAuthentication"));
 
 app.use("/client", require("../routes/client"));
 app.use("/appointment", require("../routes/appointment"));
-/*app.use('/position', require('../routes/position'));
+app.use('/position', require('../routes/position'));
 app.use('/category', require('../routes/category'));
-app.use('/report', require('../routes/report'));*/
+/*app.use('/report', require('../routes/report'));*/
 
 //Starting the server
 app.listen(app.get("port"), (err) => {

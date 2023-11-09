@@ -409,6 +409,22 @@ const queries = {
       "INSERT INTO TBL_CATEGORIAS_COLABORADORES (Id_Categoria,	Numero_DocumentoColaborador,	Id_TipoDocumento) \
       VALUES(?,?,?)",
   },
+  position: {
+    all: "SELECT * FROM TBL_CARGOS WHERE Activo = 'S'",
+    position: "SELECT * FROM TBL_CARGOS WHERE Activo = 'S' AND Id_Cargo = ?",
+    newPosition: "INSERT INTO TBL_CARGOS (Cargo) VALUES (?)",
+    deactivate:
+      "UPDATE TBL_CARGOS \
+      SET Activo = CASE \
+        WHEN Activo = 'N' THEN 'S' \
+        WHEN Activo = 'S' THEN 'N' \
+      END \
+      WHERE Id_Cargo = ?",
+    update:
+      "UPDATE TBL_CARGOS \
+      SET Cargo = ? \
+      WHERE Id_Cargo = ?",
+  },
 };
 
 module.exports = queries;
