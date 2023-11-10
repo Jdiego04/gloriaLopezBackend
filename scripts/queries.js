@@ -367,21 +367,21 @@ const queries = {
       WHERE c.Numero_DocumentoCliente = ? AND c.Id_TipoDocumentoCliente = ?",
     appointmentByColaborador:
       "SELECT c.Id_Cita, c.Numero_DocumentoCliente, c.Id_TipoDocumentoCliente, tc.Nombres AS Nombre_Cliente, \
-      tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
-      c.Fecha_Cita, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
-      c.Id_TipoDocumentoColaborador, tc2.Nombres AS Nombre_Colaborador, \
-      tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador \
-    FROM TBL_CITAS c \
-    LEFT JOIN TBL_CLIENTES tc ON tc.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
-      AND tc.Numero_DocumentoCliente = c.Numero_DocumentoCliente \
-    LEFT JOIN TBL_COLABORADORES tc2 ON tc2.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
-      AND tc2.Numero_DocumentoColaborador  = c.Numero_DocumentoColaborador \
-    LEFT JOIN TBL_ESTADO_CITAS tec ON tec.Id_EstadoCita = c.Id_EstadoCita AND tec.Activo = 'S' \
-    WHERE c.Numero_DocumentoColaborador = ? AND c.Id_TipoDocumentoColaborador = ?",
+        tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
+        c.Fecha_Cita, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
+        c.Id_TipoDocumentoColaborador, tc2.Nombres AS Nombre_Colaborador, \
+        tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador \
+      FROM TBL_CITAS c \
+      LEFT JOIN TBL_CLIENTES tc ON tc.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
+        AND tc.Numero_DocumentoCliente = c.Numero_DocumentoCliente \
+      LEFT JOIN TBL_COLABORADORES tc2 ON tc2.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
+        AND tc2.Numero_DocumentoColaborador  = c.Numero_DocumentoColaborador \
+      LEFT JOIN TBL_ESTADO_CITAS tec ON tec.Id_EstadoCita = c.Id_EstadoCita AND tec.Activo = 'S' \
+      WHERE c.Numero_DocumentoColaborador = ? AND c.Id_TipoDocumentoColaborador = ?",
     newAppointment:
       "INSERT INTO TBL_CITAS (Numero_DocumentoCliente, Numero_DocumentoColaborador, \
-        Fecha_Cita, Id_EstadoCita,Id_TipoDocumentoCliente, Id_TipoDocumentoColaborador) \
-      VALUES (?, ?, ?, ?, ?, ?)",
+        Fecha_Cita, Fecha_Final,Id_EstadoCita,Id_TipoDocumentoCliente, Id_TipoDocumentoColaborador) \
+      VALUES (?, ?, ?, ?, ?, ?, ?)",
     updateAppointment:
       "UPDATE TBL_CITAS \
       SET \
@@ -394,6 +394,16 @@ const queries = {
       SET \
         Id_EstadoCita = ? \
       WHERE Id_Cita = ?",
+    duration:
+      "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(Duracion_Servicio))) AS DURACION FROM TBL_SERVICIOS WHERE Id_Servicio = ?",
+    simultaneous:
+      "SELECT COUNT(*) AS SIMULTANEOS FROM TBL_SERVICIOS_SIMULTANEOS tss \
+        WHERE (Id_Servicio IN (?) AND Id_ServicioAsociado IN (?))",
+    availability:
+      "SELECT COUNT(*) AS AVAILABILITY FROM TBL_CITAS tc \
+      WHERE  tc.Numero_DocumentoCliente = ? AND tc.Numero_DocumentoColaborador = ? \
+        AND (tc.Fecha_Cita  BETWEEN ? AND ?) \
+        AND tc.Id_TipoDocumentoCliente = ? AND tc.Id_TipoDocumentoColaborador =1 AND tc.Id_Cita = 1",
   },
   categoy: {
     allCategorys: "SELECT * FROM TBL_CATEGORIAS WHERE Activo = 'S'",

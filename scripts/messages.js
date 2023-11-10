@@ -2,6 +2,7 @@ const messages = {
   errors: {
     invalidCredentials: "Usuario o contraseña incorrectos.",
     notExist: "No existe.",
+    notAvailable: "No esta disponible ese horario.",
   },
   succesMessage: {
     insertedSuccessfully: "Elemento insertado correctamente.",
