@@ -159,16 +159,25 @@ router.post("/singUp", (req, res) => {
     (err, rows, fields) => {
       if (err) throw err;
       else {
-
+        const otp = util.generateOTP;
         const subject = "Codigo de verificacion";
-        const content = ` Su codigo de verificacion es: ${util.generateOTP} 
+        const content = ` Su codigo de verificacion es: ${otp} 
               Por favor, cambie su contraseña en cuanto pueda. `;
         //Envia el correo
         util.sendMail(email, subject, content);
-        res.json({
-          status: 200,
-          data: messages.succesMessage.insertedSuccessfully,
-        });
+        pool.query(
+          queries.documentType.newDocumentType,
+          [clientId, documentTypeId, otp],
+          (err, rows, fields) => {
+            if (err) throw err;
+            else {
+              res.json({
+                status: 200,
+                data: messages.succesMessage.insertedSuccessfully,
+              });
+            }
+          },
+        );
       }
     },
   );

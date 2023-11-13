@@ -161,14 +161,14 @@ const queries = {
       GROUP BY ths.Id_Servicio",
     allProduct:
       "SELECT ts.Id_Servicio, ts.Id_Categoria,tc.Categoria,ts.Nombre_Servicio, ts.Valor_Servicio ,ts.Descripcion_Servicio, \
-        ts.Duracion_Servicio, tp.Nombre AS nombre_Proveedor  FROM  TBL_SERVICIOS ts \
+        ts.Duracion_Servicio,tp.Id_Proveedor, tp.Nombre AS nombre_Proveedor  FROM  TBL_SERVICIOS ts \
       JOIN TBL_CATEGORIAS tc ON tc.Id_Categoria = ts.Id_Categoria AND tc.Activo = 'S' \
       LEFT JOIN TBL_SERVICIOS_PROVEEDORES tsp ON tsp.Id_Servicio = ts.Id_Servicio \
       LEFT JOIN TBL_PROVEEDORES tp ON tp.Id_Proveedor  = tsp.Id_Proveedor AND tp.Activo = 'S' \
       WHERE ts.Activo = 'S' AND ts.Duracion_Servicio = '00:00:00'",
     product:
       "SELECT ts.Id_Servicio, ts.Id_Categoria,tc.Categoria,ts.Nombre_Servicio, ts.Valor_Servicio ,ts.Descripcion_Servicio, \
-        ts.Duracion_Servicio, tp.Nombre AS nombre_Proveedor  FROM  TBL_SERVICIOS ts \
+        ts.Duracion_Servicio, tp.Id_Proveedor, tp.Nombre AS nombre_Proveedor  FROM  TBL_SERVICIOS ts \
       JOIN TBL_CATEGORIAS tc ON tc.Id_Categoria = ts.Id_Categoria AND tc.Activo = 'S' \
       LEFT JOIN TBL_SERVICIOS_PROVEEDORES tsp ON tsp.Id_Servicio = ts.Id_Servicio \
       LEFT JOIN TBL_PROVEEDORES tp ON tp.Id_Proveedor  = tsp.Id_Proveedor AND tp.Activo = 'S' \

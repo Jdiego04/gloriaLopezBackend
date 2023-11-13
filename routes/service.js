@@ -87,7 +87,6 @@ router.post("/service", (req, res) => {
       if (err) throw err;
       else {
         const idService = rows.insertId;
-        console.log(idService);
         if (idProvider != null) {
           pool.query(
             queries.service.newServiceProvider,
@@ -107,7 +106,6 @@ router.post("/service", (req, res) => {
     },
   );
 
-  
 });
 
 router.put("/deactivate", (req, res) => {
