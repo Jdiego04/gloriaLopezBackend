@@ -60,7 +60,7 @@ const queries = {
     newServiceAppointment:
       "INSERT INTO TBL_SERVICIOS_CITAS (Id_Servicio, Id_Cita) VALUES (?, ?)",
     newServiceProvider:
-      "INSERT INTO TBL_SERVICIOS_PROVEEDORES (Id_Servicio, Id_cita) VALUES (?, ?)",
+      "INSERT INTO TBL_SERVICIOS_PROVEEDORES (Id_Servicio, Id_Proveedor) VALUES (?, ?)",
     allServiceHistory:
       "SELECT  ths.Id_HistorialServicio, ths.Id_Servicio, ts.Nombre_Servicio, tp.Nombre AS Proveedor, \
         ths.Cantidad, ths.Tipo_Modificacion, ths.Descripcion_Servicio, ths.Fecha_HoraModificacion, \
@@ -440,6 +440,10 @@ const queries = {
       "UPDATE TBL_CARGOS \
       SET Cargo = ? \
       WHERE Id_Cargo = ?",
+  },
+  otp : {
+    newOtp:
+    "INSERT",
   },
   ifExist: "SELECT * FROM ? WHERE ? = ?",
 };
