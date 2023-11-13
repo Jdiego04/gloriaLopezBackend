@@ -4,8 +4,9 @@ const queries = require("../scripts/queries");
 const pool = require("../views/database");
 const { body, validationResult } = require("express-validator");
 const messages = require("../scripts/messages");
+const validation = require("../scripts/util/validation");
 
-router.get("/all", (req, res) => {
+router.get("/all", validation.validateToken, (req, res) => {
   pool.query(queries.documentType.allDocumentType, (err, rows, fields) => {
     if (err) throw err;
     else {
@@ -14,7 +15,7 @@ router.get("/all", (req, res) => {
   });
 });
 
-router.get("/documentType", (req, res) => {
+router.get("/documentType", validation.validateToken, (req, res) => {
   const { idDocumentType } = req.query;
   pool.query(
     queries.documentType.documentType,
@@ -31,6 +32,7 @@ router.get("/documentType", (req, res) => {
 router.post(
   "/documentType",
   body("documentType").not().isEmpty().trim().escape(),
+  validation.validateToken,
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -55,7 +57,7 @@ router.post(
   },
 );
 
-router.put("/deactivate", (req, res) => {
+router.put("/deactivate", validation.validateToken, (req, res) => {
   const { idDocumentType } = req.body;
 
   pool.query(

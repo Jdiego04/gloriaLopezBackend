@@ -3,8 +3,8 @@ const router = express.Router();
 const pool = require("../views/database");
 const queries = require("../scripts/queries");
 const messages = require("../scripts/messages");
-
-router.get("/all", (req, res) => {
+const validation = require("../scripts/util/validation");
+router.get("/all", validation.validateToken, (req, res) => {
   pool.query(queries.client.all, (err, rows, fields) => {
     if (err) throw err;
     else {
@@ -13,7 +13,7 @@ router.get("/all", (req, res) => {
   });
 });
 
-router.get("/client", (req, res) => {
+router.get("/client", validation.validateToken, (req, res) => {
   const { idClient, idDocumentType } = req.body;
   pool.query(
     queries.client.client,
@@ -27,7 +27,7 @@ router.get("/client", (req, res) => {
   );
 });
 
-router.put("/deactivate", (req, res) => {
+router.put("/deactivate", validation.validateToken, (req, res) => {
   const { documentTypeId, clientId, otp } = req.body;
 
   pool.query(

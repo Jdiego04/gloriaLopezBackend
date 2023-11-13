@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { body, validationResult } = require("express-validator");
 const messages = require("../scripts/messages");
+const validation = require("../scripts/util/validation");
 
 router.post(
   "/login",
@@ -178,7 +179,7 @@ router.post("/singUp", (req, res) => {
   }
 });
 
-router.put("/deactivate", (req, res) => {
+router.put("/deactivate", validation.validateToken, (req, res) => {
   const { idCollaborator, idDocumentType } = req.body;
 
   pool.query(
@@ -197,7 +198,7 @@ router.put("/deactivate", (req, res) => {
 });
 
 //Actualizar registro
-router.put("/update", (req, res) => {
+router.put("/update", validation.validateToken, (req, res) => {
   const {
     names,
     firstLastname,
@@ -231,7 +232,7 @@ router.put("/update", (req, res) => {
   );
 });
 
-router.post("/collaboratorCategory", (req, res) => {
+router.post("/collaboratorCategory", validation.validateToken, (req, res) => {
   const { idCategory, idCollaborator, idDocumentType } = req.body;
 
   pool.query(

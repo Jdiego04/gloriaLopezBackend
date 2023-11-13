@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const queries = require("../queries");
 const pool = require("../../views/database");
+const jwt = require("jsonwebtoken");
+const keys = require("../../views/keys");
 
 async function simultaneousService(services) {
   return new Promise((resolve, reject) => {
@@ -63,9 +65,41 @@ async function newDate(appointmentDate, duration) {
   return new Date(dateHour.getTime() + durationInMilliseconds);
 }
 
+// Middleware para validar el token en las solicitudes protegidas
+const validateToken = (req, res, next) => {
+  const token = req.headers.authorization; // Obtén el token del encabezado Authorization
+
+  if (!token) {
+    return res
+      .status(401)
+      .json({ status: 401, data: "Token no proporcionado" });
+  }
+
+  const secrets = [keys.secretEmp, keys.secretUsu];
+
+  let validToken = false;
+
+  // Verifica el token con cada uno de los secretos
+  for (const secret of secrets) {
+    jwt.verify(token.split(" ")[1], secret, (err, decoded) => {
+      if (!err) {
+        // El token es válido con uno de los secretos
+        validToken = true;
+        next();
+      }
+    });
+  }
+
+  // Si no se validó con ningún secreto, el token es inválido
+  if (!validToken) {
+    return res.status(401).json({ status: 401, data: "Token inválido" });
+  }
+};
+
 module.exports = {
   simultaneousService,
   duration,
   newDate,
   availability,
+  validateToken,
 };

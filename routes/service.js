@@ -5,8 +5,9 @@ const pool = require("../views/database");
 const { body, validationResult } = require("express-validator");
 const messages = require("../scripts/messages");
 const util = require("../scripts/util/util");
+const validation = require("../scripts/util/validation");
 
-router.get("/all", (req, res) => {
+router.get("/all", validation.validateToken, (req, res) => {
   pool.query(queries.service.allService, (err, rows, fields) => {
     if (err) throw err;
     else {
@@ -18,7 +19,7 @@ router.get("/all", (req, res) => {
   });
 });
 
-router.get("/service", (req, res) => {
+router.get("/service", validation.validateToken, (req, res) => {
   const { idService } = req.body;
   pool.query(queries.service.service, idService, (err, rows, fields) => {
     if (err) throw err;
@@ -31,7 +32,7 @@ router.get("/service", (req, res) => {
   });
 });
 
-router.get("/serviceByAppointment", (req, res) => {
+router.get("/serviceByAppointment", validation.validateToken, (req, res) => {
   const { idAppointment } = req.body;
   pool.query(
     queries.service.serviceByAppointment,
@@ -48,7 +49,7 @@ router.get("/serviceByAppointment", (req, res) => {
   );
 });
 
-router.get("/serviceByCategory", (req, res) => {
+router.get("/serviceByCategory", validation.validateToken, (req, res) => {
   const { idCategory } = req.body;
   pool.query(
     queries.service.serviceByCategory,
@@ -65,7 +66,7 @@ router.get("/serviceByCategory", (req, res) => {
   );
 });
 
-router.post("/service", (req, res) => {
+router.post("/service", validation.validateToken, (req, res) => {
   const {
     idCategory,
     serviceName,
@@ -121,7 +122,7 @@ router.post("/service", (req, res) => {
   }
 });
 
-router.put("/deactivate", (req, res) => {
+router.put("/deactivate", validation.validateToken, (req, res) => {
   const { idService } = req.body;
 
   pool.query(queries.service.deactivate, idService, (err, rows, fields) => {
@@ -135,7 +136,7 @@ router.put("/deactivate", (req, res) => {
   });
 });
 
-router.put("/update", (req, res) => {
+router.put("/update", validation.validateToken, (req, res) => {
   const {
     idCategory,
     serviceName,
@@ -171,6 +172,7 @@ router.post(
   "/serviceAppointment",
   body("idService").not().isEmpty().trim().escape(),
   body("idAppointment").not().isEmpty().trim().escape(),
+  validation.validateToken,
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -199,6 +201,7 @@ router.post(
   "/serviceProvider",
   body("idService").not().isEmpty().trim().escape(),
   body("idProvider").not().isEmpty().trim().escape(),
+  validation.validateToken,
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -223,7 +226,7 @@ router.post(
   },
 );
 
-router.get("/allServiceHistory", (req, res) => {
+router.get("/allServiceHistory", validation.validateToken, (req, res) => {
   pool.query(queries.service.allServiceHistory, (err, rows, fields) => {
     if (err) throw err;
     else {
@@ -235,7 +238,7 @@ router.get("/allServiceHistory", (req, res) => {
   });
 });
 
-router.get("/serviceHistory", (req, res) => {
+router.get("/serviceHistory", validation.validateToken, (req, res) => {
   const { idserviceHistory } = req.body;
   pool.query(
     queries.service.serviceHistory,
@@ -252,41 +255,49 @@ router.get("/serviceHistory", (req, res) => {
   );
 });
 
-router.get("/serviceHistoryByCollaborator", (req, res) => {
-  const { idCollaborator, idDocumentType } = req.body;
-  pool.query(
-    queries.service.serviceHistoryByCollaborator,
-    [idCollaborator, idDocumentType],
-    (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        res.json({
-          status: 200,
-          data: rows,
-        });
-      }
-    },
-  );
-});
+router.get(
+  "/serviceHistoryByCollaborator",
+  validation.validateToken,
+  (req, res) => {
+    const { idCollaborator, idDocumentType } = req.body;
+    pool.query(
+      queries.service.serviceHistoryByCollaborator,
+      [idCollaborator, idDocumentType],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: rows,
+          });
+        }
+      },
+    );
+  },
+);
 
-router.get("/serviceHistoryByProvider", (req, res) => {
-  const { idProvider } = req.body;
-  pool.query(
-    queries.service.serviceHistoryByProvider,
-    idProvider,
-    (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        res.json({
-          status: 200,
-          data: rows,
-        });
-      }
-    },
-  );
-});
+router.get(
+  "/serviceHistoryByProvider",
+  validation.validateToken,
+  (req, res) => {
+    const { idProvider } = req.body;
+    pool.query(
+      queries.service.serviceHistoryByProvider,
+      idProvider,
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: rows,
+          });
+        }
+      },
+    );
+  },
+);
 
-router.get("/serviceHistoryByService", (req, res) => {
+router.get("/serviceHistoryByService", validation.validateToken, (req, res) => {
   const { idService } = req.body;
   pool.query(
     queries.service.serviceHistoryByService,
@@ -311,6 +322,7 @@ router.post(
   body("serviceDescription").not().isEmpty().trim().escape(),
   body("idCollaborator").not().isEmpty().trim().escape(),
   body("idDocumentType").not().isEmpty().trim().escape(),
+  validation.validateToken,
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -349,24 +361,28 @@ router.post(
   },
 );
 
-router.get("/accountAllServiceHistory", (req, res) => {
-  const { idService } = req.body;
-  pool.query(
-    queries.service.accountAllServiceHistory,
-    idService,
-    (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        res.json({
-          status: 200,
-          data: rows,
-        });
-      }
-    },
-  );
-});
+router.get(
+  "/accountAllServiceHistory",
+  validation.validateToken,
+  (req, res) => {
+    const { idService } = req.body;
+    pool.query(
+      queries.service.accountAllServiceHistory,
+      idService,
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: rows,
+          });
+        }
+      },
+    );
+  },
+);
 
-router.get("/accountServiceHistory", (req, res) => {
+router.get("/accountServiceHistory", validation.validateToken, (req, res) => {
   const { idService } = req.body;
   pool.query(
     queries.service.accountServiceHistory,
@@ -383,19 +399,23 @@ router.get("/accountServiceHistory", (req, res) => {
   );
 });
 
-router.get("/accountAllServiceHistory", (req, res) => {
-  pool.query(queries.service.accountServiceHistory, (err, rows, fields) => {
-    if (err) throw err;
-    else {
-      res.json({
-        status: 200,
-        data: rows,
-      });
-    }
-  });
-});
+router.get(
+  "/accountAllServiceHistory",
+  validation.validateToken,
+  (req, res) => {
+    pool.query(queries.service.accountServiceHistory, (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: rows,
+        });
+      }
+    });
+  },
+);
 
-router.get("/allProduct", (req, res) => {
+router.get("/allProduct", validation.validateToken, (req, res) => {
   pool.query(queries.service.allProduct, (err, rows, fields) => {
     if (err) throw err;
     else {
@@ -407,7 +427,7 @@ router.get("/allProduct", (req, res) => {
   });
 });
 
-router.get("/product", (req, res) => {
+router.get("/product", validation.validateToken, (req, res) => {
   const { idService } = req.body;
   pool.query(queries.service.product, idService, (err, rows, fields) => {
     if (err) throw err;
@@ -420,7 +440,7 @@ router.get("/product", (req, res) => {
   });
 });
 
-router.get("/productByProvider", (req, res) => {
+router.get("/productByProvider", validation.validateToken, (req, res) => {
   const { idProvider } = req.body;
   pool.query(
     queries.service.productByProvider,

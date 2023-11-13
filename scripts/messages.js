@@ -4,7 +4,9 @@ const messages = {
     notExist: "No existe.",
     notAvailable: "No esta disponible ese horario.",
     exist: "Este registro ya existe",
+    noPermission: "No tienes permiso para realizar esa acción",
   },
+  success: {},
   succesMessage: {
     insertedSuccessfully: "Elemento insertado correctamente.",
     disabledSuccessfully: "Elemento desactivado correctamente.",

@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { body, validationResult } = require("express-validator");
 const messages = require("../scripts/messages");
+const validation = require("../scripts/util/validation");
 
 router.post(
   "/login",
@@ -90,7 +91,7 @@ router.post("/recoverPassword", (req, res) => {
   });
 });
 
-router.post("/updatePassword", (req, res) => {
+router.post("/updatePassword", validation.validateToken, (req, res) => {
   const { password, email } = req.body;
 
   // Verificar si el token está presente en la cookie
@@ -188,7 +189,7 @@ router.post("/singUp", (req, res) => {
 });
 
 //Actualizar registro
-router.put("/update", (req, res) => {
+router.put("/update", validation.validateToken, (req, res) => {
   const {
     names,
     firstLastname,

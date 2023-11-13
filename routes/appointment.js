@@ -6,7 +6,7 @@ const { body, validationResult } = require("express-validator");
 const messages = require("../scripts/messages");
 const validation = require("../scripts/util/validation");
 
-router.get("/all", (req, res) => {
+router.get("/all", validation.validateToken, (req, res) => {
   pool.query(queries.appointment.allAppointment, (err, rows, fields) => {
     if (err) throw err;
     else {
@@ -15,7 +15,7 @@ router.get("/all", (req, res) => {
   });
 });
 
-router.get("/appointment", (req, res) => {
+router.get("/appointment", validation.validateToken, (req, res) => {
   const { idAppoinment } = req.body;
   pool.query(
     queries.appointment.appointment,
@@ -29,7 +29,7 @@ router.get("/appointment", (req, res) => {
   );
 });
 
-router.get("/appointmentByCliente", (req, res) => {
+router.get("/appointmentByCliente", validation.validateToken, (req, res) => {
   const { idClient, idDocumentType } = req.body;
   pool.query(
     queries.appointment.appointmentByCliente,
@@ -43,21 +43,25 @@ router.get("/appointmentByCliente", (req, res) => {
   );
 });
 
-router.get("/appointmentByColaborador", (req, res) => {
-  const { idCollaborator, idDocumentType } = req.body;
-  pool.query(
-    queries.appointment.appointmentByColaborador,
-    [idCollaborator, idDocumentType],
-    (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        res.json({ status: 200, data: rows });
-      }
-    },
-  );
-});
+router.get(
+  "/appointmentByColaborador",
+  validation.validateToken,
+  (req, res) => {
+    const { idCollaborator, idDocumentType } = req.body;
+    pool.query(
+      queries.appointment.appointmentByColaborador,
+      [idCollaborator, idDocumentType],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({ status: 200, data: rows });
+        }
+      },
+    );
+  },
+);
 
-router.put("/change", (req, res) => {
+router.put("/change", validation.validateToken, (req, res) => {
   const { idAppoinment } = req.body;
 
   pool.query(queries.appointment.change, idAppoinment, (err, rows, fields) => {
@@ -71,7 +75,7 @@ router.put("/change", (req, res) => {
   });
 });
 
-router.put("/updateAppointment", (req, res) => {
+router.put("/updateAppointment", validation.validateToken, (req, res) => {
   const { idCollaborator, appointmentDate, idDocumentType, idAppoinment } =
     req.body;
 
@@ -99,6 +103,7 @@ router.post(
   body("idDocumentTypeClient").not().isEmpty().trim().escape(),
   body("idDocumentTypeCollaborator").not().isEmpty().trim().escape(),
   body("services").not().isEmpty(),
+  validation.validateToken,
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

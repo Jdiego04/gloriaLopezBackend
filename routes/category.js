@@ -5,8 +5,9 @@ const pool = require("../views/database");
 const { body, validationResult } = require("express-validator");
 const messages = require("../scripts/messages");
 const util = require("../scripts/util/util");
+const validation = require("../scripts/util/validation");
 
-router.get("/all", (req, res) => {
+router.get("/all", validation.validateToken, (req, res) => {
   pool.query(queries.categoy.allCategorys, (err, rows, fields) => {
     if (err) throw err;
     else {
@@ -18,7 +19,7 @@ router.get("/all", (req, res) => {
   });
 });
 
-router.get("/categoy", (req, res) => {
+router.get("/categoy", validation.validateToken, (req, res) => {
   const { idCategory } = req.body;
   pool.query(queries.categoy.category, idCategory, (err, rows, fields) => {
     if (err) throw err;
@@ -34,6 +35,7 @@ router.get("/categoy", (req, res) => {
 router.post(
   "/category",
   body("category").not().isEmpty().trim().escape(),
+  validation.validateToken,
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -66,7 +68,7 @@ router.post(
   },
 );
 
-router.put("/deactivate", (req, res) => {
+router.put("/deactivate", validation.validateToken, (req, res) => {
   const { idCategory } = req.body;
 
   pool.query(
@@ -84,7 +86,7 @@ router.put("/deactivate", (req, res) => {
   );
 });
 
-router.put("/update", (req, res) => {
+router.put("/update", validation.validateToken, (req, res) => {
   const { category, idCategory } = req.body;
 
   pool.query(
@@ -107,6 +109,7 @@ router.post(
   body("idCategory").not().isEmpty().trim().escape(),
   body("idCollaborator").not().isEmpty().trim().escape(),
   body("idDocumentType").not().isEmpty().trim().escape(),
+  validation.validateToken,
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

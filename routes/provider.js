@@ -5,8 +5,9 @@ const pool = require("../views/database");
 const { body, validationResult } = require("express-validator");
 const messages = require("../scripts/messages");
 const util = require("../scripts/util/util");
+const validation = require("../scripts/util/validation");
 
-router.get("/all", (req, res) => {
+router.get("/all", validation.validateToken, (req, res) => {
   pool.query(queries.provider.allProvider, (err, rows, fields) => {
     if (err) throw err;
     else {
@@ -15,7 +16,7 @@ router.get("/all", (req, res) => {
   });
 });
 
-router.get("/provider", (req, res) => {
+router.get("/provider", validation.validateToken, (req, res) => {
   const { idProvider } = req.body;
   pool.query(queries.provider.provider, idProvider, (err, rows, fields) => {
     if (err) throw err;
@@ -25,7 +26,7 @@ router.get("/provider", (req, res) => {
   });
 });
 
-router.post("/provider", (req, res) => {
+router.post("/provider", validation.validateToken, (req, res) => {
   const { name, contactNumber, address } = req.body;
   const verifyNumber = util.checkIfExists(
     messages.tables.tblProvider,
@@ -54,7 +55,7 @@ router.post("/provider", (req, res) => {
   }
 });
 
-router.post("/deactivate", (req, res) => {
+router.post("/deactivate", validation.validateToken, (req, res) => {
   const { idProvider } = req.body;
   pool.query(queries.provider.deactivate, [idProvider], (err, rows, fields) => {
     if (err) throw err;
@@ -67,7 +68,7 @@ router.post("/deactivate", (req, res) => {
   });
 });
 
-router.put("/update", (req, res) => {
+router.put("/update", validation.validateToken, (req, res) => {
   const { name, contactNumber, address, idProvider } = req.body;
 
   pool.query(
