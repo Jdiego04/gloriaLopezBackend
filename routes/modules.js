@@ -166,4 +166,14 @@ router.put("/updatePermissionModule", validation.validateToken, (req, res) => {
   );
 });
 
+
+router.get("/allPermissionModule", validation.validateToken, (req, res) => {
+  pool.query(queries.module.permissionModule, (err, rows, fields) => {
+    if (err) throw err;
+    else {
+      res.json({ status: 200, data: rows });
+    }
+  });
+});
+
 module.exports = router;

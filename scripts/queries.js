@@ -294,6 +294,18 @@ const queries = {
     updatePermissionModule:
       "UPDATE TBL_MODULOS_PERMISOS SET Id_Permiso = ? WHERE Id_Modulo = ? \
       AND Numero_DocumentoColaborador = ? AND Id_TipoDocumento = ?",
+    permissionModule:
+      "SELECT tc.Nombres, \
+      CONCAT(tc.Primer_Apellido, ' ', tc.Segundo_Apellido) AS Apellidos, \
+      tc.Id_TipoDocumento, \
+      tc.Numero_DocumentoColaborador, \
+      COALESCE(GROUP_CONCAT(CONCAT(tm.Nombre_Modulo, '_', tp.valor_permiso) SEPARATOR ', '), 'NULL') AS permissions \
+    FROM \
+      TBL_MODULOS tm \
+      LEFT JOIN TBL_MODULOS_PERMISOS tmp ON tmp.Id_Modulo = tm.Id_Modulo \
+      LEFT JOIN TBL_PERMISOS tp ON tp.Id_Permiso = tmp.Id_Permiso \
+      LEFT JOIN TBL_COLABORADORES tc ON tc.Id_TipoDocumento = tmp.Id_TipoDocumento \
+        AND tc.Numero_DocumentoColaborador = tmp.Numero_DocumentoColaborador ",
   },
   client: {
     all: "SELECT Nombres,	Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento,	ttd.Tipo_Documento, \
