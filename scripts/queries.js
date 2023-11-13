@@ -325,6 +325,15 @@ const queries = {
         Segundo_Apellido = ?, \
         Numero_Contacto = ? \
       WHERE Numero_DocumentoColaborador = ? AND Id_TipoDocumento = ?",
+    otp: "SELECT COUNT(*)  FROM  TBL_CLIENTE_CODIGO tcc WHERE Numero_DocumentoCliente = ? \
+      AND Id_TipoDocumento = ?	Codigo = ?",
+    deactivate:
+      "UPDATE TBL_CLIENTES \
+      SET Activo = CASE \
+        WHEN Activo = 'N' THEN 'S' \
+        WHEN Activo = 'S' THEN 'N' \
+      END \
+      WHERE Id_TipoDocumento = ? AND Numero_DocumentoCliente = ?",
   },
   appointment: {
     allAppointment:
@@ -441,9 +450,8 @@ const queries = {
       SET Cargo = ? \
       WHERE Id_Cargo = ?",
   },
-  otp : {
-    newOtp:
-    "INSERT",
+  otp: {
+    newOtp: "INSERT",
   },
   ifExist: "SELECT * FROM ? WHERE ? = ?",
 };

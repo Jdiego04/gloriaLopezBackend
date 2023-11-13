@@ -130,60 +130,61 @@ router.post("/singUp", (req, res) => {
     birthDate,
   } = req.body;
 
-  /* const validaCorreo = util.checkIfExists(
-      correo,
-      consultas.VERIFICARCORREOEMPLEADO,
-    );
-    const validaDocumento = util.checkIfExists(
-      numeroDocumento,
-      consultas.VERIFICARDOCUMENTOEMPLEADO,
-    );*/
+  const validateEmail = util.checkIfExists(
+    messages.tables.tblClient,
+    "Correo_Electronico",
+    email,
+  );
+
   const hashedPassword = crypto
     .createHash("sha256")
     .update(password)
     .digest("hex");
-  // if (!validaCorreo && !validaDocumento) {
-  pool.query(
-    queries.client.newClient,
-    [
-      names,
-      firstLastname,
-      secondLastname,
-      documentTypeId,
-      clientId,
-      contactNumber,
-      email,
-      hashedPassword,
-      birthDate,
-    ],
-    (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        const otp = util.generateOTP;
-        const subject = "Codigo de verificacion";
-        const content = ` Su codigo de verificacion es: ${otp} 
+  if (!validateEmail) {
+    pool.query(
+      queries.client.newClient,
+      [
+        names,
+        firstLastname,
+        secondLastname,
+        documentTypeId,
+        clientId,
+        contactNumber,
+        email,
+        hashedPassword,
+        birthDate,
+      ],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          const otp = util.generateOTP;
+          const subject = "Codigo de verificacion";
+          const content = ` Su codigo de verificacion es: ${otp} 
               Por favor, cambie su contraseña en cuanto pueda. `;
-        //Envia el correo
-        util.sendMail(email, subject, content);
-        pool.query(
-          queries.documentType.newDocumentType,
-          [clientId, documentTypeId, otp],
-          (err, rows, fields) => {
-            if (err) throw err;
-            else {
-              res.json({
-                status: 200,
-                data: messages.succesMessage.insertedSuccessfully,
-              });
-            }
-          },
-        );
-      }
-    },
-  );
-  /* } else {
-      res.json("Este usuario ya esta registrado");
-    }*/
+          //Envia el correo
+          util.sendMail(email, subject, content);
+          pool.query(
+            queries.documentType.newDocumentType,
+            [clientId, documentTypeId, otp],
+            (err, rows, fields) => {
+              if (err) throw err;
+              else {
+                res.json({
+                  status: 200,
+                  data: messages.succesMessage.insertedSuccessfully,
+                });
+              }
+            },
+          );
+        }
+      },
+    );
+  } else {
+    res.json({
+      status: 400,
+      data: messages.errors.exist,
+    });
+  }
 });
 
 //Actualizar registro

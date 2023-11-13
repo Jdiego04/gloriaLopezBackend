@@ -4,6 +4,7 @@ const queries = require("../scripts/queries");
 const pool = require("../views/database");
 const { body, validationResult } = require("express-validator");
 const messages = require("../scripts/messages");
+const util = require("../scripts/util/util");
 
 router.get("/all", (req, res) => {
   pool.query(queries.service.allService, (err, rows, fields) => {
@@ -74,38 +75,50 @@ router.post("/service", (req, res) => {
     idProvider,
   } = req.body;
 
-  pool.query(
-    queries.service.newService,
-    [
-      idCategory,
-      serviceName,
-      serviceValue,
-      serviceDescription,
-      serviceDuration,
-    ],
-    (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        const idService = rows.insertId;
-        if (idProvider != null) {
-          pool.query(
-            queries.service.newServiceProvider,
-            [idService, idProvider],
-            (err, rows, fields) => {
-              if (err) throw err;
-              else {
-                res.json({
-                  status: 200,
-                  data: messages.succesMessage.insertedSuccessfully,
-                });
-              }
-            },
-          );
-        }
-      }
-    },
+  const verifyName = util.checkIfExists(
+    messages.tables.tblService,
+    "Nombre_Servicio",
+    serviceName,
   );
 
+  if (!verifyName) {
+    pool.query(
+      queries.service.newService,
+      [
+        idCategory,
+        serviceName,
+        serviceValue,
+        serviceDescription,
+        serviceDuration,
+      ],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          const idService = rows.insertId;
+          if (idProvider != null) {
+            pool.query(
+              queries.service.newServiceProvider,
+              [idService, idProvider],
+              (err, rows, fields) => {
+                if (err) throw err;
+                else {
+                  res.json({
+                    status: 200,
+                    data: messages.succesMessage.insertedSuccessfully,
+                  });
+                }
+              },
+            );
+          }
+        }
+      },
+    );
+  } else {
+    res.json({
+      status: 400,
+      data: messages.errors.exist,
+    });
+  }
 });
 
 router.put("/deactivate", (req, res) => {

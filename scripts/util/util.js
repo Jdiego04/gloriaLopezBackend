@@ -4,6 +4,7 @@ const pool = require("../../views/database");
 const OAuth2 = google.auth.OAuth2;
 
 const accountTransport = require("./acountTransport.json");
+const queries = require("../queries");
 
 //Generar contraseñas
 function generatePassword() {
@@ -90,8 +91,8 @@ function sendMail(recipient, subject, content) {
 }
 
 //Funcion generica para verificar si existe un registro
-function checkIfExists(dato, consulta) {
-  pool.query(consulta, dato, (err, rows, fields) => {
+function checkIfExists(dato1, dato2, dato3) {
+  pool.query(queries.ifExist, [dato1, dato2, dato3], (err, rows, fields) => {
     if (err) throw err;
     else {
       if (rows.length > 0) {

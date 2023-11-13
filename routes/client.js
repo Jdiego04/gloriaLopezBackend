@@ -27,4 +27,28 @@ router.get("/client", (req, res) => {
   );
 });
 
+router.put("/deactivate", (req, res) => {
+  const { documentTypeId, clientId, otp } = req.body;
+
+  pool.query(
+    queries.client.otp,
+    [clientId, documentTypeId, otp],
+    (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        pool.query(
+          queries.client.deactivate,
+          [documentTypeId, clientId],
+          (err, rows, fields) => {
+            if (err) throw err;
+          },
+        );
+        res.json({
+          status: 200,
+          data: messages.succesMessage.disabledSuccessfully,
+        });
+      }
+    },
+  );
+});
 module.exports = router;

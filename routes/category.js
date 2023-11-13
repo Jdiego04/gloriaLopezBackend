@@ -4,6 +4,7 @@ const queries = require("../scripts/queries");
 const pool = require("../views/database");
 const { body, validationResult } = require("express-validator");
 const messages = require("../scripts/messages");
+const util = require("../scripts/util/util");
 
 router.get("/all", (req, res) => {
   pool.query(queries.categoy.allCategorys, (err, rows, fields) => {
@@ -41,15 +42,27 @@ router.post(
 
     const { category } = req.body;
 
-    pool.query(queries.categoy.newCategory, category, (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        res.json({
-          status: 200,
-          data: messages.succesMessage.insertedSuccessfully,
-        });
-      }
-    });
+    const validateCategory = util.checkIfExists(
+      messages.tables.tblCategory,
+      "Categoria",
+      category,
+    );
+    if (!validateCategory) {
+      pool.query(queries.categoy.newCategory, category, (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: messages.succesMessage.insertedSuccessfully,
+          });
+        }
+      });
+    } else {
+      res.json({
+        status: 400,
+        data: messages.errors.exist,
+      });
+    }
   },
 );
 

@@ -3,6 +3,7 @@ const messages = {
     invalidCredentials: "Usuario o contraseña incorrectos.",
     notExist: "No existe.",
     notAvailable: "No esta disponible ese horario.",
+    exist: "Este registro ya existe",
   },
   succesMessage: {
     insertedSuccessfully: "Elemento insertado correctamente.",
@@ -11,7 +12,13 @@ const messages = {
     sendSuccessfully: "Correo enviado correctamene.",
     logoutSuccessfully: "Se cerro la sesion correctamente.",
   },
-  tables: {},
+  tables: {
+    tblCategory: "TBL_CATEGORIAS",
+    tblClient: "TBL_CITAS",
+    tblCollaborator: "TBL_COLABORADORES",
+    tblProvider: "TBL_PROVEEDORES",
+    tblService: "TBL_SERVICIOS",
+  },
 };
 
 module.exports = messages;

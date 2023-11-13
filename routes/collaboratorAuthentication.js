@@ -135,47 +135,47 @@ router.post("/singUp", (req, res) => {
     positionId,
   } = req.body;
 
-  /* const validaCorreo = util.checkIfExists(
-    correo,
-    consultas.VERIFICARCORREOEMPLEADO,
+  const validateEmail = util.checkIfExists(
+    messages.tables.tblCollaborator,
+    "Correo_Electronico",
+    email,
   );
-  const validaDocumento = util.checkIfExists(
-    numeroDocumento,
-    consultas.VERIFICARDOCUMENTOEMPLEADO,
-  );*/
   const hashedPassword = crypto
     .createHash("sha256")
     .update(password)
     .digest("hex");
-  // if (!validaCorreo && !validaDocumento) {
-  pool.query(
-    queries.collaborator.newCollaborator,
-    [
-      names,
-      firstLastname,
-      secondLastname,
-      documentTypeId,
-      collaboratorId,
-      contactNumber,
-      email,
-      hashedPassword,
-      entryDate,
-      birthDate,
-      positionId,
-    ],
-    (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        res.json({
-          status: 200,
-          data: messages.succesMessage.insertedSuccessfully,
-        });
-      }
-    },
-  );
-  /* } else {
-    res.json("Este usuario ya esta registrado");
-  }*/
+  if (!validateEmail) {
+    pool.query(
+      queries.collaborator.newCollaborator,
+      [
+        names,
+        firstLastname,
+        secondLastname,
+        documentTypeId,
+        collaboratorId,
+        contactNumber,
+        email,
+        hashedPassword,
+        entryDate,
+        birthDate,
+        positionId,
+      ],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: messages.succesMessage.insertedSuccessfully,
+          });
+        }
+      },
+    );
+  } else {
+    res.json({
+      status: 400,
+      data: messages.errors.exist,
+    });
+  }
 });
 
 router.put("/deactivate", (req, res) => {
