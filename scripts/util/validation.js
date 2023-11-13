@@ -32,23 +32,15 @@ async function duration(idService) {
 }
 
 async function availability(
-  idClient,
   idCollaborator,
   appointmentDate,
-  idDocumentTypeClient,
+  newDate,
   idDocumentTypeCollaborator,
 ) {
   return new Promise((resolve, reject) => {
     pool.query(
       queries.appointment.availability,
-      [
-        idClient,
-        idCollaborator,
-        appointmentDate,
-        appointmentDate,
-        idDocumentTypeClient,
-        idDocumentTypeCollaborator,
-      ],
+      [idCollaborator, appointmentDate, newDate, idDocumentTypeCollaborator],
       (err, rows, fields) => {
         if (err) {
           reject(err);

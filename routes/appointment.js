@@ -136,10 +136,9 @@ router.post(
 
     if (
       (await validation.availability(
-        idClient,
         idCollaborator,
         appointmentDate,
-        idDocumentTypeClient,
+        newDate,
         idDocumentTypeCollaborator,
       )) > 0
     ) {

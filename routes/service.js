@@ -71,6 +71,7 @@ router.post("/service", (req, res) => {
     serviceValue,
     serviceDescription,
     serviceDuration,
+    idProvider,
   } = req.body;
 
   pool.query(
@@ -92,6 +93,22 @@ router.post("/service", (req, res) => {
       }
     },
   );
+
+  if (idProvider != null) {
+    pool.query(
+      queries.service.newServiceProvider,
+      [idService, idProvider],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: messages.succesMessage.insertedSuccessfully,
+          });
+        }
+      },
+    );
+  }
 });
 
 router.put("/deactivate", (req, res) => {

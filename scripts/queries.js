@@ -401,9 +401,9 @@ const queries = {
         WHERE (Id_Servicio IN (?) AND Id_ServicioAsociado IN (?))",
     availability:
       "SELECT COUNT(*) AS AVAILABILITY FROM TBL_CITAS tc \
-      WHERE  tc.Numero_DocumentoCliente = ? AND tc.Numero_DocumentoColaborador = ? \
+      WHERE tc.Numero_DocumentoColaborador = ? \
         AND (tc.Fecha_Cita  BETWEEN ? AND ?) \
-        AND tc.Id_TipoDocumentoCliente = ? AND tc.Id_TipoDocumentoColaborador =1 AND tc.Id_Cita = 1",
+        AND tc.Id_TipoDocumentoColaborador = ? AND tc.Id_Cita <> 2",
   },
   categoy: {
     allCategorys: "SELECT * FROM TBL_CATEGORIAS WHERE Activo = 'S'",
@@ -441,6 +441,7 @@ const queries = {
       SET Cargo = ? \
       WHERE Id_Cargo = ?",
   },
+  ifExist: "SELECT * FROM ? WHERE ? = ?",
 };
 
 module.exports = queries;

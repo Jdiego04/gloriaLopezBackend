@@ -11,6 +11,7 @@ const messages = {
     sendSuccessfully: "Correo enviado correctamene.",
     logoutSuccessfully: "Se cerro la sesion correctamente.",
   },
+  tables: {},
 };
 
 module.exports = messages;
