@@ -86,6 +86,22 @@ router.post("/service", (req, res) => {
     (err, rows, fields) => {
       if (err) throw err;
       else {
+        const idService = rows.insertId;
+        if (idProvider != null) {
+          pool.query(
+            queries.service.newServiceProvider,
+            [idService, idProvider],
+            (err, rows, fields) => {
+              if (err) throw err;
+              else {
+                res.json({
+                  status: 200,
+                  data: messages.succesMessage.insertedSuccessfully,
+                });
+              }
+            },
+          );
+        }
         res.json({
           status: 200,
           data: messages.succesMessage.insertedSuccessfully,
@@ -94,21 +110,7 @@ router.post("/service", (req, res) => {
     },
   );
 
-  if (idProvider != null) {
-    pool.query(
-      queries.service.newServiceProvider,
-      [idService, idProvider],
-      (err, rows, fields) => {
-        if (err) throw err;
-        else {
-          res.json({
-            status: 200,
-            data: messages.succesMessage.insertedSuccessfully,
-          });
-        }
-      },
-    );
-  }
+  
 });
 
 router.put("/deactivate", (req, res) => {

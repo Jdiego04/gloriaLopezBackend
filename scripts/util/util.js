@@ -103,8 +103,21 @@ function checkIfExists(dato, consulta) {
   });
 }
 
+function generateOTP() {
+  const characters = "0123456789";
+  let otp = "";
+
+  for (let i = 0; i < 6; i++) {
+    const randomCharacters =
+      characters[Math.floor(Math.random() * characters.length)];
+    otp += randomCharacters;
+  }
+  return otp;
+}
+
 module.exports = {
   generatePassword,
   sendMail,
   checkIfExists,
+  generateOTP,
 };
