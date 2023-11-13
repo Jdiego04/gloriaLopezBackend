@@ -299,7 +299,8 @@ const queries = {
       CONCAT(tc.Primer_Apellido, ' ', tc.Segundo_Apellido) AS Apellidos, \
       tc.Id_TipoDocumento, \
       tc.Numero_DocumentoColaborador, \
-      COALESCE(GROUP_CONCAT(CONCAT(tm.Nombre_Modulo, '_', tp.valor_permiso) SEPARATOR ', '), 'NULL') AS permissions \
+      COALESCE(GROUP_CONCAT(CONCAT(tm.Nombre_Modulo, '_', tp.valor_permiso) SEPARATOR ', '), 'NULL') AS permissions, \
+      COALESCE(GROUP_CONCAT(CONCAT(tm.Id_Modulo , '_', tp.Id_Permiso) SEPARATOR ', '), 'NULL') AS ids \
     FROM \
       TBL_MODULOS tm \
       LEFT JOIN TBL_MODULOS_PERMISOS tmp ON tmp.Id_Modulo = tm.Id_Modulo \
