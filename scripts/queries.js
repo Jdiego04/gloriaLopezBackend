@@ -296,12 +296,12 @@ const queries = {
       AND Numero_DocumentoColaborador = ? AND Id_TipoDocumento = ?",
     permissionModule:
       "SELECT tc.Nombres, \
-      CONCAT(tc.Primer_Apellido, ' ', tc.Segundo_Apellido) AS Apellidos, \
-      tc.Id_TipoDocumento, \
-      tc.Numero_DocumentoColaborador, \
-      COALESCE(GROUP_CONCAT(CONCAT(tm.Nombre_Modulo, '_', tp.valor_permiso) SEPARATOR ', '), 'NULL') AS permissions, \
-      COALESCE(GROUP_CONCAT(CONCAT(tm.Id_Modulo , '_', tp.Id_Permiso) SEPARATOR ', '), 'NULL') AS ids_permissions \
-    FROM \
+        CONCAT(tc.Primer_Apellido, ' ', tc.Segundo_Apellido) AS Apellidos, \
+        tc.Id_TipoDocumento, \
+        tc.Numero_DocumentoColaborador, \
+        COALESCE(GROUP_CONCAT(CONCAT(tm.Nombre_Modulo, '_', tp.valor_permiso) SEPARATOR ', '), 'NULL') AS permissions, \
+        COALESCE(GROUP_CONCAT(CONCAT(tm.Id_Modulo , '_', tp.Id_Permiso) SEPARATOR ', '), 'NULL') AS ids_permissions \
+      FROM \
       TBL_MODULOS tm \
       LEFT JOIN TBL_MODULOS_PERMISOS tmp ON tmp.Id_Modulo = tm.Id_Modulo \
       LEFT JOIN TBL_PERMISOS tp ON tp.Id_Permiso = tmp.Id_Permiso \
@@ -310,6 +310,8 @@ const queries = {
       GROUP BY \
         tc.Id_TipoDocumento, \
         tc.Numero_DocumentoColaborador",
+    allPermission:
+        "SELECT * FROM TBL_PERMISOS tp"
   },
   client: {
     all: "SELECT Nombres,	Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento,	ttd.Tipo_Documento, \
