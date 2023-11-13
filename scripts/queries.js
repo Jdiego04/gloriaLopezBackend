@@ -305,7 +305,10 @@ const queries = {
       LEFT JOIN TBL_MODULOS_PERMISOS tmp ON tmp.Id_Modulo = tm.Id_Modulo \
       LEFT JOIN TBL_PERMISOS tp ON tp.Id_Permiso = tmp.Id_Permiso \
       LEFT JOIN TBL_COLABORADORES tc ON tc.Id_TipoDocumento = tmp.Id_TipoDocumento \
-        AND tc.Numero_DocumentoColaborador = tmp.Numero_DocumentoColaborador ",
+        AND tc.Numero_DocumentoColaborador = tmp.Numero_DocumentoColaborador \
+      GROUP BY \
+        tc.Id_TipoDocumento, \
+        tc.Numero_DocumentoColaborador",
   },
   client: {
     all: "SELECT Nombres,	Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento,	ttd.Tipo_Documento, \
