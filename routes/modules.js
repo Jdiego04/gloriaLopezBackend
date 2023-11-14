@@ -151,7 +151,7 @@ router.get(
 router.put(
   "/updatePermissionModule",
   validation.validateToken,
-  body("idmodule").not().isEmpty().trim().escape(),
+  body("idModule").not().isEmpty().trim().escape(),
   body("idCollaborator").not().isEmpty().trim().escape(),
   body("idDocumentType").not().isEmpty().trim().escape(),
   body("idPermission").not().isEmpty().trim().escape(),
