@@ -302,7 +302,7 @@ const queries = {
       AND Numero_DocumentoColaborador = ? AND Id_TipoDocumento = ?",
     permissionModule:
       "SELECT tc.Nombres, \
-        CONCAT(tc.Primer_Apellido, ' ', tc.Segundo_Apellido) AS Apellidos, \
+      COALESCE(CONCAT(Primer_Apellido, ' ', Segundo_Apellido), Primer_Apellido) AS Apellidos, \
         tc.Id_TipoDocumento, \
         tc.Numero_DocumentoColaborador, \
         COALESCE(GROUP_CONCAT(CONCAT(tm.Nombre_Modulo, '_', tp.valor_permiso) SEPARATOR ', '), 'NULL') AS permissions, \
