@@ -25,6 +25,25 @@ router.get("/module", validation.validateToken, (req, res) => {
   });
 });
 
+router.get(
+  "/moduleByCollaborator",
+  validation.validateToken,
+  body("idCollaborator").not().isEmpty().trim().escape(),
+  body("idDocumentType").not().isEmpty().trim().escape(),
+  (req, res) => {
+    const { idCollaborator, idDocumentType } = req.query;
+    pool.query(
+      queries.module.moduleByCollaborator,
+      [idCollaborator, idDocumentType],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({ status: 200, data: rows });
+        }
+      },
+    );
+  },
+);
 router.post(
   "/module",
   body("moduleName").not().isEmpty().trim().escape(),

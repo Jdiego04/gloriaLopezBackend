@@ -265,6 +265,12 @@ const queries = {
     all: "SELECT Id_Modulo, Nombre_Modulo  from TBL_MODULOS WHERE Activo = 'S'",
     module:
       "SELECT Id_Modulo, Nombre_Modulo FROM TBL_MODULOS WHERE Activo = 'S' AND Id_Modulo = ?",
+    moduleByCollaborator:
+      "SELECT tm.Id_Modulo, tm.Nombre_Modulo  FROM TBL_MODULOS tm \
+      LEFT JOIN TBL_MODULOS_PERMISOS tmp ON tmp.Id_Modulo = tm.Id_Modulo \
+      LEFT JOIN TBL_COLABORADORES tc ON tc.Numero_DocumentoColaborador = tmp.Numero_DocumentoColaborador \
+        AND tc.Id_TipoDocumento = tmp.Id_TipoDocumento \
+      WHERE tm.Activo = 'S' AND tc.Numero_DocumentoColaborador = ? AND tc.Id_TipoDocumento = ?",
     deactivate:
       "UPDATE TBL_MODULOS \
       SET Activo = CASE \
