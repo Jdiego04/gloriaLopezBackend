@@ -310,8 +310,7 @@ const queries = {
       GROUP BY \
         tc.Id_TipoDocumento, \
         tc.Numero_DocumentoColaborador",
-    allPermission:
-        "SELECT * FROM TBL_PERMISOS tp"
+    allPermission: "SELECT * FROM TBL_PERMISOS tp",
   },
   client: {
     all: "SELECT Nombres,	Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento,	ttd.Tipo_Documento, \

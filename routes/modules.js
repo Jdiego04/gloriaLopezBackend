@@ -148,24 +148,31 @@ router.get(
   },
 );
 
-router.put("/updatePermissionModule", validation.validateToken, (req, res) => {
-  const { idPermission, idModule, idCollaborator, idDocumentType } = req.body;
+router.put(
+  "/updatePermissionModule",
+  validation.validateToken,
+  body("idmodule").not().isEmpty().trim().escape(),
+  body("idCollaborator").not().isEmpty().trim().escape(),
+  body("idDocumentType").not().isEmpty().trim().escape(),
+  body("idPermission").not().isEmpty().trim().escape(),
+  (req, res) => {
+    const { idPermission, idModule, idCollaborator, idDocumentType } = req.body;
 
-  pool.query(
-    queries.module.updatePermissionModule,
-    [idPermission, idModule, idCollaborator, idDocumentType],
-    (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        res.json({
-          status: 200,
-          data: messages.succesMessage.updatedSuccessfully,
-        });
-      }
-    },
-  );
-});
-
+    pool.query(
+      queries.module.updatePermissionModule,
+      [idPermission, idModule, idCollaborator, idDocumentType],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: messages.succesMessage.updatedSuccessfully,
+          });
+        }
+      },
+    );
+  },
+);
 
 router.get("/allPermissionModule", validation.validateToken, (req, res) => {
   pool.query(queries.module.permissionModule, (err, rows, fields) => {
