@@ -58,36 +58,59 @@ async function configureMailTransport(callback) {
 
     oauth2Client.setCredentials({
       refresh_token: accountTransport.auth.refreshToken,
-      tls: {
-        rejectUnauthorized: false,
-      },
+      access_token: accountTransport.auth.accessToken, // Añade el accessToken actual
     });
 
-    oauth2Client.getAccessToken((err, token) => {
-      if (err) return console.log(err);
-      accountTransport.auth.accessToken = token;
-      callback(nodemailer.createTransport(accountTransport));
-    });
+    // Verificar la fecha de vencimiento del token antes de cada solicitud
+    const expirationDate = new Date(accountTransport.auth.expiryDate);
+    const currentDate = new Date();
+
+    if (currentDate >= expirationDate) {
+      // El token ha caducado, obtén uno nuevo
+      const tokenResponse = await oauth2Client.getAccessToken();
+      const newAccessToken = tokenResponse.token;
+
+      // Actualiza el token en tu configuración
+      accountTransport.auth.accessToken = newAccessToken;
+
+      // Actualiza la fecha de vencimiento en tu configuración
+      const newExpirationDate = new Date();
+      newExpirationDate.setSeconds(newExpirationDate.getSeconds() + tokenResponse.res.data.expires_in);
+      accountTransport.auth.expiryDate = newExpirationDate.toISOString();
+    }
+
+    // Llama al callback con el transporter configurado
+    callback(nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        type: 'OAuth2',
+        user: 'glorialopezautomatico@gmail.com',
+        clientId: accountTransport.auth.clientId,
+        clientSecret: accountTransport.auth.clientSecret,
+        refreshToken: accountTransport.auth.refreshToken,
+        accessToken: accountTransport.auth.accessToken,
+      },
+    }));
   } catch (error) {
-    console.error(error);
+    console.error('Error al configurar el transporte de correo:', error);
   }
 }
 
-//Correos automaticos
+// Correos automáticos
 function sendMail(recipient, subject, content) {
   configureMailTransport(function (emailTransporter) {
     const mailOptions = {
-      mail: emailTransporter,
-      from: "glorialopezautomatico@gmail.com",
+      from: 'glorialopezautomatico@gmail.com',
       to: recipient,
       subject: subject,
       text: content,
     };
+
     emailTransporter.sendMail(mailOptions, function (error, info) {
       if (error) {
-        console.error("Error al enviar el correo electrónico:", error);
+        console.error('Error al enviar el correo electrónico:', error);
       } else {
-        console.log("Correo electrónico enviado:", info);
+        console.log('Correo electrónico enviado:', info);
       }
     });
   });
