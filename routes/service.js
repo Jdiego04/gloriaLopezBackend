@@ -66,7 +66,7 @@ router.get("/serviceByCategory", validation.validateToken, (req, res) => {
   );
 });
 
-router.post("/service", validation.validateToken, (req, res) => {
+router.post("/service", validation.validateToken, async (req, res) => {
   const {
     idCategory,
     serviceName,
@@ -76,7 +76,7 @@ router.post("/service", validation.validateToken, (req, res) => {
     idProvider,
   } = req.body;
 
-  const verifyName = util.checkIfExists(
+  const verifyName = await util.checkIfExists(
     messages.tables.tblService,
     "Nombre_Servicio",
     serviceName,

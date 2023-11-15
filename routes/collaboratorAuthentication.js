@@ -121,7 +121,7 @@ router.post("/updatePassword", (req, res) => {
   }*/
 });
 
-router.post("/singUp", (req, res) => {
+router.post("/singUp", async (req, res) => {
   const {
     names,
     firstLastname,
@@ -136,7 +136,7 @@ router.post("/singUp", (req, res) => {
     positionId,
   } = req.body;
 
-  const validateEmail = util.checkIfExists(
+  const validateEmail = await util.checkIfExists(
     messages.tables.tblCollaborator,
     "Correo_Electronico",
     email,

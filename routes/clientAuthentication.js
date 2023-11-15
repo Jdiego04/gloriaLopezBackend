@@ -118,7 +118,7 @@ router.post("/updatePassword", validation.validateToken, (req, res) => {
     }*/
 });
 
-router.post("/singUp", (req, res) => {
+router.post("/singUp", async(req, res) => {
   const {
     names,
     firstLastname,
@@ -131,7 +131,7 @@ router.post("/singUp", (req, res) => {
     birthDate,
   } = req.body;
 
-  const validateEmail = util.checkIfExists(
+  const validateEmail = await util.checkIfExists(
     messages.tables.tblClient,
     "Correo_Electronico",
     email,

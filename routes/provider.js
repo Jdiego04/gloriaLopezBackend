@@ -26,31 +26,41 @@ router.get("/provider", validation.validateToken, (req, res) => {
   });
 });
 
-router.post("/provider", validation.validateToken, (req, res) => {
+router.post("/provider", validation.validateToken, async (req, res) => {
   const { name, contactNumber, address } = req.body;
-  const verifyNumber = util.checkIfExists(
-    messages.tables.tblProvider,
-    "Numero_Contacto",
-    contactNumber,
-  );
-  if (!verifyNumber) {
-    pool.query(
-      queries.provider.newProvider,
-      [name, contactNumber, address],
-      (err, rows, fields) => {
-        if (err) throw err;
-        else {
-          res.json({
-            status: 200,
-            data: messages.succesMessage.insertedSuccessfully,
-          });
-        }
-      },
+
+  try {
+    const verifyNumber = await util.checkIfExists(
+      messages.tables.tblProvider,
+      "Numero_Contacto",
+      contactNumber,
     );
-  } else {
+
+    if (!verifyNumber) {
+      pool.query(
+        queries.provider.newProvider,
+        [name, contactNumber, address],
+        (err, rows, fields) => {
+          if (err) throw err;
+          else {
+            res.json({
+              status: 200,
+              data: messages.succesMessage.insertedSuccessfully,
+            });
+          }
+        },
+      );
+    } else {
+      res.json({
+        status: 400,
+        data: messages.errors.exist,
+      });
+    }
+  } catch (error) {
+    console.error('Error en la validación:', error);
     res.json({
-      status: 400,
-      data: messages.errors.exist,
+      status: 500,
+      data: messages.errors.internalServerError,
     });
   }
 });

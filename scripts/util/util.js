@@ -92,17 +92,18 @@ function sendMail(recipient, subject, content) {
 }
 
 //Funcion generica para verificar si existe un registro
-function checkIfExists(dato1, dato2, dato3) {
-  pool.query(`SELECT * FROM ${mysql.escapeId(dato1)} WHERE ${mysql.escapeId(dato2)} = ${dato3}`,  (err, rows, fields) => {
-    if (err) throw err;
-    else {
-      if (rows.length > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  });
+async function checkIfExists(dato1, dato2, dato3) {
+  try {
+    // Realizar la consulta usando async/await
+    const rows = await pool.query(`SELECT * FROM ${mysql.escapeId(dato1)} WHERE ${mysql.escapeId(dato2)} = ?`, [dato3]);
+
+    // Verificar si hay resultados
+    return rows.length > 0;
+  } catch (error) {
+    // Manejar errores
+    console.error('Error en la consulta:', error);
+    throw error;
+  }
 }
 
 function generateOTP() {

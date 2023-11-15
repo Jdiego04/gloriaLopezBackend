@@ -190,7 +190,7 @@ const queries = {
       FROM TBL_PROVEEDORES WHERE Activo = 'S' AND Id_Proveedor = ?",
     newProvider:
       "INSERT INTO TBL_PROVEEDORES \
-        (Nombre, Numero_Contacto,	Direccion) \
+        (Nombre, Numero_Contacto, Direccion) \
       VALUES (?, ?, ?)",
     deactivate:
       "UPDATE TBL_PROVEEDORES \

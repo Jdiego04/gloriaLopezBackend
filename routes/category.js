@@ -36,7 +36,7 @@ router.post(
   "/category",
   body("category").not().isEmpty().trim().escape(),
   validation.validateToken,
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.json({ status: 400, data: errors.array() });
@@ -44,7 +44,7 @@ router.post(
 
     const { category } = req.body;
 
-    const validateCategory = util.checkIfExists(
+    const validateCategory = await util.checkIfExists(
       messages.tables.tblCategory,
       "Categoria",
       category,
