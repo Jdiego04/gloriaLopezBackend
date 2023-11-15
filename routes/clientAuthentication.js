@@ -158,7 +158,7 @@ router.post("/singUp", async(req, res) => {
       (err, rows, fields) => {
         if (err) throw err;
         else {
-          const otp = util.generateOTP;
+          const otp = util.generateOTP();
           const subject = "Codigo de verificacion";
           const content = ` Su codigo de verificacion es: ${otp} 
               Por favor, cambie su contraseña en cuanto pueda. `;

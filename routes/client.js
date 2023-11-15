@@ -27,7 +27,7 @@ router.get("/client", validation.validateToken, (req, res) => {
   );
 });
 
-router.put("/deactivate", validation.validateToken, (req, res) => {
+router.put("/deactivate", (req, res) => {
   const { documentTypeId, clientId, otp } = req.body;
 
   pool.query(
