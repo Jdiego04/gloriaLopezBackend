@@ -5,7 +5,7 @@ const OAuth2 = google.auth.OAuth2;
 const mysql = require('mysql');
 
 const accountTransport = require("./acountTransport.json");
-const queries = require("../queries");
+
 
 //Generar contraseñas
 function generatePassword() {
@@ -48,19 +48,21 @@ function generatePassword() {
   return password;
 }
 
-const mail = async (callback) => {
+async function configureMailTransport(callback) {
   try {
-    const oauth2Client = new OAuth2(
+    const oauth2Client = new google.auth.OAuth2(
       accountTransport.auth.clientId,
       accountTransport.auth.clientSecret,
-      "https://developers.google.com/oauthplayground",
+      accountTransport.auth.redirectUri
     );
+
     oauth2Client.setCredentials({
       refresh_token: accountTransport.auth.refreshToken,
       tls: {
         rejectUnauthorized: false,
       },
     });
+
     oauth2Client.getAccessToken((err, token) => {
       if (err) return console.log(err);
       accountTransport.auth.accessToken = token;
@@ -69,11 +71,11 @@ const mail = async (callback) => {
   } catch (error) {
     console.error(error);
   }
-};
+}
 
 //Correos automaticos
 function sendMail(recipient, subject, content) {
-  mail(function (emailTransporter) {
+  configureMailTransport(function (emailTransporter) {
     const mailOptions = {
       mail: emailTransporter,
       from: "glorialopezautomatico@gmail.com",

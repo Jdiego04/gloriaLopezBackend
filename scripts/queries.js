@@ -330,7 +330,7 @@ const queries = {
       LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON ttd.Id_TipoDocumento = tc.Id_TipoDocumento AND ttd.Activo = 'S' \
       WHERE Numero_DocumentoCliente = ? AND tc.Id_TipoDocumento = ?",
     clientAuthentication:
-      "SELECT * FROM TBL_CLIENTES tc WHERE tc.Correo_Electronico = ? AND tc.Contrasennia = ?",
+      "SELECT * FROM TBL_CLIENTES tc WHERE tc.Correo_Electronico = ? AND tc.Contrasennia = ? AND ACTIVO ='S'",
     recoverPassword:
       "SELECT * FROM TBL_CLIENTES tc WHERE tc.Correo_Electronico = ?",
     updatePassword:
