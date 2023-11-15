@@ -16,7 +16,7 @@ const messages = {
   },
   tables: {
     tblCategory: "TBL_CATEGORIAS",
-    tblClient: "TBL_CITAS",
+    tblClient: "TBL_CLIENTES",
     tblCollaborator: "TBL_COLABORADORES",
     tblProvider: "TBL_PROVEEDORES",
     tblService: "TBL_SERVICIOS",
