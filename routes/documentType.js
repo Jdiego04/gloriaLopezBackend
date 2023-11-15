@@ -6,7 +6,7 @@ const { body, validationResult } = require("express-validator");
 const messages = require("../scripts/messages");
 const validation = require("../scripts/util/validation");
 
-router.get("/all", validation.validateToken, (req, res) => {
+router.get("/all", (req, res) => {
   pool.query(queries.documentType.allDocumentType, (err, rows, fields) => {
     if (err) throw err;
     else {
