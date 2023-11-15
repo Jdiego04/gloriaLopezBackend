@@ -70,7 +70,7 @@ router.post("/recoverPassword", (req, res) => {
           //Actualiza la contraseña
           pool.query(
             queries.collaborator.updatePassword,
-            [password, email],
+            [hashedPassword, email],
             (err, rows, fields) => {
               if (err) throw err;
               else {
