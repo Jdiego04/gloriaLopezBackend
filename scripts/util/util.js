@@ -2,6 +2,7 @@ const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const pool = require("../../views/database");
 const OAuth2 = google.auth.OAuth2;
+const mysql = require('mysql');
 
 const accountTransport = require("./acountTransport.json");
 const queries = require("../queries");
@@ -92,7 +93,7 @@ function sendMail(recipient, subject, content) {
 
 //Funcion generica para verificar si existe un registro
 function checkIfExists(dato1, dato2, dato3) {
-  pool.query(queries.ifExist, [dato1, dato2, dato3], (err, rows, fields) => {
+  pool.query(`SELECT * FROM ${mysql.escapeId(dato1)} WHERE ${mysql.escapeId(dato2)} = ${dato3}`,  (err, rows, fields) => {
     if (err) throw err;
     else {
       if (rows.length > 0) {

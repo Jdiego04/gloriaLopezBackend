@@ -476,7 +476,6 @@ const queries = {
   otp: {
     newOtp: "INSERT",
   },
-  ifExist: "SELECT * FROM ? WHERE ? = ?",
 };
 
 module.exports = queries;
