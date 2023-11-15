@@ -165,7 +165,7 @@ router.post("/singUp", async(req, res) => {
           //Envia el correo
           util.sendMail(email, subject, content);
           pool.query(
-            queries.documentType.newDocumentType,
+            queries.otp.newOtp,
             [clientId, documentTypeId, otp],
             (err, rows, fields) => {
               if (err) throw err;
