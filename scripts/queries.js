@@ -349,7 +349,7 @@ const queries = {
         Numero_Contacto = ? \
       WHERE Numero_DocumentoColaborador = ? AND Id_TipoDocumento = ?",
     otp: "SELECT COUNT(*)  FROM  TBL_CLIENTE_CODIGO tcc WHERE Numero_DocumentoCliente = ? \
-      AND Id_TipoDocumento = ?	Codigo = ?",
+      AND Id_TipoDocumento = ?	AND Codigo = ?",
     deactivate:
       "UPDATE TBL_CLIENTES \
       SET Activo = CASE \
