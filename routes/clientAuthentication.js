@@ -15,218 +15,243 @@ router.post(
   body("username").not().isEmpty().trim().escape().isEmail(),
   body("password").not().isEmpty().trim().escape(),
   (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.json({ status: 400, data: errors.array() });
-    }
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.json({ status: 400, data: errors.array() });
+      }
 
-    const { username, password } = req.body;
-    const hashedPassword = crypto
-      .createHash("sha256")
-      .update(password)
-      .digest("hex");
-    pool.query(
-      queries.client.clientAuthentication,
-      [username, hashedPassword],
-      (err, rows, fields) => {
-        if (!err) {
-          if (rows.length > 0) {
-            let data = JSON.stringify(rows[0]);
-            const token = jwt.sign({ data: data }, keys.secretUsu, {
-              expiresIn: "1h",
-            });
-            res.cookie("token", token, { httpOnly: true });
-            res.json({ status: 200, data: { token } });
+      const { username, password } = req.body;
+      const hashedPassword = crypto
+        .createHash("sha256")
+        .update(password)
+        .digest("hex");
+      pool.query(
+        queries.client.clientAuthentication,
+        [username, hashedPassword],
+        (err, rows, fields) => {
+          if (!err) {
+            if (rows.length > 0) {
+              let data = JSON.stringify(rows[0]);
+              const token = jwt.sign({ data: data }, keys.secretUsu, {
+                expiresIn: "1h",
+              });
+              res.cookie("token", token, { httpOnly: true });
+              res.json({ status: 200, data: { token } });
+            } else {
+              res.json({
+                status: 400,
+                data: messages.errors.invalidCredentials,
+              });
+            }
           } else {
-            res.json({ status: 200, data: messages.errors.invalidCredentials });
           }
-        } else {
-          console.log(err);
-        }
-      },
-    );
+        },
+      );
+    } catch (error) {
+      res.json({ status: 400, data: error });
+    }
   },
 );
 
-//Para recuperar contraseña
 router.post("/recoverPassword", (req, res) => {
-  const { email } = req.body;
+  try {
+    const { email } = req.body;
 
-  // Verificar si el token está presente en la cookie
-  //const token = req.cookies.token;
-  // if (token) {
-  pool.query(queries.client.recoverPassword, email, (err, rows, fields) => {
-    if (err) throw err;
-    else {
-      if (rows.length > 0) {
-        //Genera una contraseña provicional
-        const password = util.generatePassword();
-        const hashedPassword = crypto
-          .createHash("sha256")
-          .update(password)
-          .digest("hex");
-        //Actualiza la contraseña
-        pool.query(
-          queries.client.updatePassword,
-          [hashedPassword, email],
-          (err, rows, fields) => {
-            if (err) throw err;
-            else {
-              const subject = "Nueva contraseña Gloria Lopez";
-              const content = ` Su nueva contraseña provisional es: ${password} 
-                    Por favor, cambie su contraseña en cuanto pueda. `;
-              //Envia el correo
-              util.sendMail(email, subject, content);
-              res.json({
-                status: 200,
-                data: messages.succesMessage.updatedSuccessfully,
-              });
-            }
-          },
-        );
-      } else {
-        res.json({ status: 200, data: messages.errors.notExist });
-      }
-    }
-  });
-});
-
-router.post("/updatePassword", validation.validateToken, (req, res) => {
-  const { password, email } = req.body;
-
-  // Verificar si el token está presente en la cookie
-  //const token = req.cookies.token;
-  // if (token) {
-
-  pool.query(
-    queries.client.updatePassword,
-    [password, email],
-    (err, rows, fields) => {
+    pool.query(queries.client.recoverPassword, email, (err, rows, fields) => {
       if (err) throw err;
       else {
-        res.json({
-          status: 200,
-          data: messages.succesMessage.updatedSuccessfully,
-        });
-      }
-    },
-  );
-
-  /* } else {
-        // Redirigir a la página de inicio de sesión
-        res.redirect('/logout');
-    }*/
-});
-
-router.post("/singUp", async(req, res) => {
-  const {
-    names,
-    firstLastname,
-    secondLastname,
-    documentTypeId,
-    clientId,
-    contactNumber,
-    email,
-    password,
-    birthDate,
-  } = req.body;
-
-  const validateEmail = await util.checkIfExists(
-    messages.tables.tblClient,
-    "Correo_Electronico",
-    email,
-  );
-
-  const hashedPassword = crypto
-    .createHash("sha256")
-    .update(password)
-    .digest("hex");
-  if (!validateEmail) {
-    pool.query(
-      queries.client.newClient,
-      [
-        names,
-        firstLastname,
-        secondLastname,
-        documentTypeId,
-        clientId,
-        contactNumber,
-        email,
-        hashedPassword,
-        birthDate,
-      ],
-      (err, rows, fields) => {
-        if (err) throw err;
-        else {
-          const otp = util.generateOTP();
-          const subject = "Codigo de verificacion";
-          const content = ` Su codigo de verificacion es: ${otp} 
-              Por favor, cambie su contraseña en cuanto pueda. `;
-          //Envia el correo
-          util.sendMail(email, subject, content);
+        if (rows.length > 0) {
+          //Genera una contraseña provicional
+          const password = util.generatePassword();
+          const hashedPassword = crypto
+            .createHash("sha256")
+            .update(password)
+            .digest("hex");
+          //Actualiza la contraseña
           pool.query(
-            queries.otp.newOtp,
-            [clientId, documentTypeId, otp],
+            queries.client.updatePassword,
+            [hashedPassword, email],
             (err, rows, fields) => {
               if (err) throw err;
               else {
+                const subject = "Nueva contraseña Gloria Lopez";
+                const content = ` Su nueva contraseña provisional es: ${password} 
+                      Por favor, cambie su contraseña en cuanto pueda. `;
+                //Envia el correo
+                util.sendMail(email, subject, content);
                 res.json({
                   status: 200,
-                  data: messages.succesMessage.insertedSuccessfully,
+                  data: messages.succesMessage.updatedSuccessfully,
                 });
               }
             },
           );
+        } else {
+          res.json({ status: 400, data: messages.errors.notExist });
+        }
+      }
+    });
+  } catch (error) {
+    res.json({ status: 400, data: error });
+  }
+});
+
+router.post("/updatePassword", validation.validateToken, (req, res) => {
+  try {
+    const { password, email } = req.body;
+
+    pool.query(
+      queries.client.updatePassword,
+      [password, email],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: messages.succesMessage.updatedSuccessfully,
+          });
         }
       },
     );
-  } else {
+  } catch (error) {
     res.json({
       status: 400,
-      data: messages.errors.exist,
+      data: error,
+    });
+  }
+});
+
+router.post("/singUp", async (req, res) => {
+  try {
+    const {
+      names,
+      firstLastname,
+      secondLastname,
+      documentTypeId,
+      clientId,
+      contactNumber,
+      email,
+      password,
+      birthDate,
+    } = req.body;
+
+    const validateEmail = await util.checkIfExists(
+      messages.tables.tblClient,
+      "Correo_Electronico",
+      email,
+    );
+
+    const hashedPassword = crypto
+      .createHash("sha256")
+      .update(password)
+      .digest("hex");
+    if (!validateEmail) {
+      pool.query(
+        queries.client.newClient,
+        [
+          names,
+          firstLastname,
+          secondLastname,
+          documentTypeId,
+          clientId,
+          contactNumber,
+          email,
+          hashedPassword,
+          birthDate,
+        ],
+        (err, rows, fields) => {
+          if (err) throw err;
+          else {
+            const otp = util.generateOTP();
+            const subject = "Codigo de verificacion";
+            const content = ` Su codigo de verificacion es: ${otp} 
+                Por favor, cambie su contraseña en cuanto pueda. `;
+            //Envia el correo
+            util.sendMail(email, subject, content);
+            pool.query(
+              queries.otp.newOtp,
+              [clientId, documentTypeId, otp],
+              (err, rows, fields) => {
+                if (err) throw err;
+                else {
+                  res.json({
+                    status: 201,
+                    data: messages.succesMessage.insertedSuccessfully,
+                  });
+                }
+              },
+            );
+          }
+        },
+      );
+    } else {
+      res.json({
+        status: 400,
+        data: messages.errors.exist,
+      });
+    }
+  } catch (error) {
+    res.json({
+      status: 400,
+      data: error,
     });
   }
 });
 
 //Actualizar registro
 router.put("/update", validation.validateToken, (req, res) => {
-  const {
-    names,
-    firstLastname,
-    secondLastname,
-    contactNumber,
-    clientId,
-    documentTypeId,
-  } = req.body;
-
-  pool.query(
-    queries.client.updateClient,
-    [
+  try {
+    const {
       names,
       firstLastname,
       secondLastname,
       contactNumber,
       clientId,
       documentTypeId,
-    ],
-    (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        res.json({
-          status: 200,
-          data: messages.succesMessage.updatedSuccessfully,
-        });
-      }
-    },
-  );
+    } = req.body;
+
+    pool.query(
+      queries.client.updateClient,
+      [
+        names,
+        firstLastname,
+        secondLastname,
+        contactNumber,
+        clientId,
+        documentTypeId,
+      ],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: messages.succesMessage.updatedSuccessfully,
+          });
+        }
+      },
+    );
+  } catch (error) {
+    res.json({
+      status: 200,
+      data: error,
+    });
+  }
 });
 
 router.get("/logout", (req, res) => {
-  res.clearCookie("token");
-  res.json({
-    status: 200,
-    data: messages.succesMessage.logoutSuccessfully,
-  });
+  try {
+    res.clearCookie("token");
+    res.json({
+      status: 200,
+      data: messages.succesMessage.logoutSuccessfully,
+    });
+  } catch (error) {
+    res.json({
+      status: 400,
+      data: error,
+    });
+  }
 });
 
 //JSON con mensajes de errores

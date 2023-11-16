@@ -8,28 +8,38 @@ const util = require("../scripts/util/util");
 const validation = require("../scripts/util/validation");
 
 router.get("/all", validation.validateToken, (req, res) => {
-  pool.query(queries.categoy.allCategorys, (err, rows, fields) => {
-    if (err) throw err;
-    else {
-      res.json({
-        status: 200,
-        data: rows,
-      });
-    }
-  });
+  try {
+    pool.query(queries.categoy.allCategorys, (err, rows, fields) => {
+      if (err) throw err;
+      else {
+      }
+    });
+  } catch (error) {
+    res.json({
+      status: 400,
+      data: error,
+    });
+  }
 });
 
 router.get("/categoy", validation.validateToken, (req, res) => {
-  const { idCategory } = req.body;
-  pool.query(queries.categoy.category, idCategory, (err, rows, fields) => {
-    if (err) throw err;
-    else {
-      res.json({
-        status: 200,
-        data: rows,
-      });
-    }
-  });
+  try {
+    const { idCategory } = req.body;
+    pool.query(queries.categoy.category, idCategory, (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: rows,
+        });
+      }
+    });
+  } catch (error) {
+    res.json({
+      status: 400,
+      data: error,
+    });
+  }
 });
 
 router.post(
@@ -37,29 +47,40 @@ router.post(
   body("category").not().isEmpty().trim().escape(),
   validation.validateToken,
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.json({ status: 400, data: errors.array() });
-    }
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.json({ status: 400, data: errors.array() });
+      }
 
-    const { category } = req.body;
+      const { category } = req.body;
 
-    const validateCategory = await util.checkIfExists(
-      messages.tables.tblCategory,
-      "Categoria",
-      category,
-    );
-    if (!validateCategory) {
-      pool.query(queries.categoy.newCategory, category, (err, rows, fields) => {
-        if (err) throw err;
-        else {
-          res.json({
-            status: 200,
-            data: messages.succesMessage.insertedSuccessfully,
-          });
-        }
-      });
-    } else {
+      const validateCategory = await util.checkIfExists(
+        messages.tables.tblCategory,
+        "Categoria",
+        category,
+      );
+      if (!validateCategory) {
+        pool.query(
+          queries.categoy.newCategory,
+          category,
+          (err, rows, fields) => {
+            if (err) throw err;
+            else {
+              res.json({
+                status: 201,
+                data: messages.succesMessage.insertedSuccessfully,
+              });
+            }
+          },
+        );
+      } else {
+        res.json({
+          status: 400,
+          data: messages.errors.exist,
+        });
+      }
+    } catch (error) {
       res.json({
         status: 400,
         data: messages.errors.exist,
@@ -69,39 +90,52 @@ router.post(
 );
 
 router.put("/deactivate", validation.validateToken, (req, res) => {
-  const { idCategory } = req.body;
-
-  pool.query(
-    queries.documentType.deactivate,
-    idCategory,
-    (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        res.json({
-          status: 200,
-          data: messages.succesMessage.disabledSuccessfully,
-        });
-      }
-    },
-  );
+  try {
+    const { idCategory } = req.body;
+    pool.query(
+      queries.documentType.deactivate,
+      idCategory,
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: messages.succesMessage.disabledSuccessfully,
+          });
+        }
+      },
+    );
+  } catch (error) {
+    res.json({
+      status: 400,
+      data: messages.succesMessage.disabledSuccessfully,
+    });
+  }
 });
 
 router.put("/update", validation.validateToken, (req, res) => {
-  const { category, idCategory } = req.body;
+  try {
+    const { category, idCategory } = req.body;
 
-  pool.query(
-    queries.categoy.update,
-    [category, idCategory],
-    (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        res.json({
-          status: 200,
-          data: messages.succesMessage.updatedSuccessfully,
-        });
-      }
-    },
-  );
+    pool.query(
+      queries.categoy.update,
+      [category, idCategory],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: messages.succesMessage.updatedSuccessfully,
+          });
+        }
+      },
+    );
+  } catch (error) {
+    res.json({
+      status: 400,
+      data: messages.succesMessage.updatedSuccessfully,
+    });
+  }
 });
 
 router.post(
@@ -111,26 +145,30 @@ router.post(
   body("idDocumentType").not().isEmpty().trim().escape(),
   validation.validateToken,
   (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.json({ status: 400, data: errors.array() });
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.json({ status: 400, data: errors.array() });
+      }
+
+      const { idCategory, idCollaborator, idDocumentType } = req.body;
+
+      pool.query(
+        queries.categoy.newCategory,
+        [idCategory, idCollaborator, idDocumentType],
+        (err, rows, fields) => {
+          if (err) throw err;
+          else {
+            res.json({
+              status: 201,
+              data: messages.succesMessage.insertedSuccessfully,
+            });
+          }
+        },
+      );
+    } catch (error) {
+      return res.json({ status: 400, data: error });
     }
-
-    const { idCategory, idCollaborator, idDocumentType } = req.body;
-
-    pool.query(
-      queries.categoy.newCategory,
-      [idCategory, idCollaborator, idDocumentType],
-      (err, rows, fields) => {
-        if (err) throw err;
-        else {
-          res.json({
-            status: 200,
-            data: messages.succesMessage.insertedSuccessfully,
-          });
-        }
-      },
-    );
   },
 );
 

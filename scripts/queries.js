@@ -474,7 +474,8 @@ const queries = {
       WHERE Id_Cargo = ?",
   },
   otp: {
-    newOtp: "INSERT TBL_CLIENTE_CODIGO (Numero_DocumentoCliente,	Id_TipoDocumento,	Codigo) VALUES (?, ?, ?)",
+    newOtp:
+      "INSERT TBL_CLIENTE_CODIGO (Numero_DocumentoCliente,	Id_TipoDocumento,	Codigo) VALUES (?, ?, ?)",
   },
 };
 

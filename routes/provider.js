@@ -8,28 +8,36 @@ const util = require("../scripts/util/util");
 const validation = require("../scripts/util/validation");
 
 router.get("/all", validation.validateToken, (req, res) => {
-  pool.query(queries.provider.allProvider, (err, rows, fields) => {
-    if (err) throw err;
-    else {
-      res.json({ status: 200, data: rows });
-    }
-  });
+  try {
+    pool.query(queries.provider.allProvider, (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({ status: 200, data: rows });
+      }
+    });
+  } catch (error) {
+    res.json({ status: 400, data: error });
+  }
 });
 
 router.get("/provider", validation.validateToken, (req, res) => {
-  const { idProvider } = req.body;
-  pool.query(queries.provider.provider, idProvider, (err, rows, fields) => {
-    if (err) throw err;
-    else {
-      res.json({ status: 200, data: rows });
-    }
-  });
+  try {
+    const { idProvider } = req.body;
+    pool.query(queries.provider.provider, idProvider, (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({ status: 200, data: rows });
+      }
+    });
+  } catch (error) {
+    res.json({ status: 400, data: error });
+  }
 });
 
 router.post("/provider", validation.validateToken, async (req, res) => {
-  const { name, contactNumber, address } = req.body;
-
   try {
+    const { name, contactNumber, address } = req.body;
+
     const verifyNumber = await util.checkIfExists(
       messages.tables.tblProvider,
       "Numero_Contacto",
@@ -44,7 +52,7 @@ router.post("/provider", validation.validateToken, async (req, res) => {
           if (err) throw err;
           else {
             res.json({
-              status: 200,
+              status: 201,
               data: messages.succesMessage.insertedSuccessfully,
             });
           }
@@ -57,43 +65,54 @@ router.post("/provider", validation.validateToken, async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Error en la validación:', error);
     res.json({
-      status: 500,
-      data: messages.errors.internalServerError,
+      status: 400,
+      data: error,
     });
   }
 });
 
 router.post("/deactivate", validation.validateToken, (req, res) => {
-  const { idProvider } = req.body;
-  pool.query(queries.provider.deactivate, [idProvider], (err, rows, fields) => {
-    if (err) throw err;
-    else {
-      res.json({
-        status: 200,
-        data: messages.succesMessage.disabledSuccessfully,
-      });
-    }
-  });
+  try {
+    const { idProvider } = req.body;
+    pool.query(
+      queries.provider.deactivate,
+      [idProvider],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: messages.succesMessage.disabledSuccessfully,
+          });
+        }
+      },
+    );
+  } catch (error) {
+    res.json({ status: 400, data: error });
+  }
 });
 
 router.put("/update", validation.validateToken, (req, res) => {
-  const { name, contactNumber, address, idProvider } = req.body;
+  try {
+    const { name, contactNumber, address, idProvider } = req.body;
 
-  pool.query(
-    queries.provider.updateProvider,
-    [name, contactNumber, address, idProvider],
-    (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        res.json({
-          status: 200,
-          data: messages.succesMessage.updatedSuccessfully,
-        });
-      }
-    },
-  );
+    pool.query(
+      queries.provider.updateProvider,
+      [name, contactNumber, address, idProvider],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: messages.succesMessage.updatedSuccessfully,
+          });
+        }
+      },
+    );
+  } catch (error) {
+    res.json({ status: 400, data: error });
+  }
 });
 
 module.exports = router;
