@@ -418,7 +418,6 @@ const queries = {
       "UPDATE TBL_CITAS \
       SET \
         Numero_DocumentoColaborador = ?, \
-        Fecha_Cita = ?, \
         Id_TipoDocumentoColaborador = ? \
       WHERE Id_Cita = ?",
     change:
