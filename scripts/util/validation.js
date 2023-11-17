@@ -62,7 +62,7 @@ async function newDate(appointmentDate, duration) {
 
   const dateHour = new Date(appointmentDate);
 
-  return new Date(dateHour.getTime() + durationInMilliseconds + 24 * 60 * 60 * 1000);
+  return new Date(dateHour.getTime() + durationInMilliseconds);
 }
 
 // Middleware para validar el token en las solicitudes protegidas
