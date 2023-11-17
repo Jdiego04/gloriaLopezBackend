@@ -12,6 +12,10 @@ router.get("/all", validation.validateToken, (req, res) => {
     pool.query(queries.categoy.allCategorys, (err, rows, fields) => {
       if (err) throw err;
       else {
+        res.json({
+          status: 200,
+          data: rows,
+        });
       }
     });
   } catch (error) {
