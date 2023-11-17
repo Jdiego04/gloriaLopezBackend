@@ -79,11 +79,11 @@ router.get(
 
 router.put("/change", validation.validateToken, (req, res) => {
   try {
-    const { idAppoinment } = req.body;
+    const { idState, idAppoinment } = req.body;
 
     pool.query(
       queries.appointment.change,
-      idAppoinment,
+      [idState,idAppoinment],
       (err, rows, fields) => {
         if (err) throw err;
         else {
