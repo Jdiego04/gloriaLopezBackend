@@ -28,7 +28,7 @@ router.get("/all", validation.validateToken, (req, res) => {
 
 router.get("/categoy", validation.validateToken, (req, res) => {
   try {
-    const { idCategory } = req.body;
+    const { idCategory } = req.query;
     pool.query(queries.categoy.category, idCategory, (err, rows, fields) => {
       if (err) throw err;
       else {

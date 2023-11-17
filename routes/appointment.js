@@ -21,7 +21,7 @@ router.get("/all", validation.validateToken, (req, res) => {
 
 router.get("/appointment", validation.validateToken, (req, res) => {
   try {
-    const { idAppoinment } = req.body;
+    const { idAppoinment } = req.query;
     pool.query(
       queries.appointment.appointment,
       idAppoinment,
@@ -39,7 +39,7 @@ router.get("/appointment", validation.validateToken, (req, res) => {
 
 router.get("/appointmentByCliente", validation.validateToken, (req, res) => {
   try {
-    const { idClient, idDocumentType } = req.body;
+    const { idClient, idDocumentType } = req.query;
     pool.query(
       queries.appointment.appointmentByCliente,
       [idClient, idDocumentType],
@@ -60,7 +60,7 @@ router.get(
   validation.validateToken,
   (req, res) => {
     try {
-      const { idCollaborator, idDocumentType } = req.body;
+      const { idCollaborator, idDocumentType } = req.query;
       pool.query(
         queries.appointment.appointmentByColaborador,
         [idCollaborator, idDocumentType],

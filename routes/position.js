@@ -27,7 +27,7 @@ router.get("/all", validation.validateToken, (req, res) => {
 
 router.get("/position", validation.validateToken, (req, res) => {
   try {
-    const { idPosition } = req.body;
+    const { idPosition } = req.query;
     pool.query(queries.position.position, idPosition, (err, rows, fields) => {
       if (err) throw err;
       else {

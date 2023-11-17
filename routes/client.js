@@ -19,7 +19,7 @@ router.get("/all", validation.validateToken, (req, res) => {
 
 router.get("/client", validation.validateToken, (req, res) => {
   try {
-    const { idClient, idDocumentType } = req.body;
+    const { idClient, idDocumentType } = req.query;
     pool.query(
       queries.client.client,
       [idClient, idDocumentType],

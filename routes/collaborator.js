@@ -20,7 +20,7 @@ router.get("/all", validation.validateToken, (req, res) => {
 
 router.get("/collaborator", validation.validateToken, (req, res) => {
   try {
-    const { idCollaborator, idDocumentType } = req.body;
+    const { idCollaborator, idDocumentType } = req.query;
     pool.query(
       queries.collaborator.collaborator,
       [idCollaborator, idDocumentType],

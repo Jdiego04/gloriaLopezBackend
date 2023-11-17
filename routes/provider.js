@@ -22,7 +22,7 @@ router.get("/all", validation.validateToken, (req, res) => {
 
 router.get("/provider", validation.validateToken, (req, res) => {
   try {
-    const { idProvider } = req.body;
+    const { idProvider } = req.query;
     pool.query(queries.provider.provider, idProvider, (err, rows, fields) => {
       if (err) throw err;
       else {
