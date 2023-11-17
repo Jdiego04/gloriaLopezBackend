@@ -61,8 +61,7 @@ async function newDate(appointmentDate, duration) {
     1000;
 
   const dateHour = new Date(appointmentDate);
-  dateHour.setHours(dateHour.getHours() + 24); // Sumar un día
-  
+
   return new Date(dateHour.getTime() + durationInMilliseconds);
 }
 
