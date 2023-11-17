@@ -9,6 +9,25 @@ const validation = require("../scripts/util/validation");
 
 router.get("/all", validation.validateToken, (req, res) => {
   try {
+    pool.query(queries.service.all, (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: rows,
+        });
+      }
+    });
+  } catch (error) {
+    res.json({
+      status: 400,
+      data: error,
+    });
+  }
+});
+
+router.get("/allService", validation.validateToken, (req, res) => {
+  try {
     pool.query(queries.service.allService, (err, rows, fields) => {
       if (err) throw err;
       else {
