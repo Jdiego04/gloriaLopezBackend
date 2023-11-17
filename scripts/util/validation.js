@@ -42,7 +42,14 @@ async function availability(
   return new Promise((resolve, reject) => {
     pool.query(
       queries.appointment.availability,
-      [idCollaborator, appointmentDate, newDate, idDocumentTypeCollaborator],
+      [
+        idCollaborator,
+        appointmentDate,
+        newDate,
+        appointmentDate,
+        newDate,
+        idDocumentTypeCollaborator,
+      ],
       (err, rows, fields) => {
         if (err) {
           reject(err);

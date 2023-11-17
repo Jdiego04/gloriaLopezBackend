@@ -24,16 +24,12 @@ router.get("/all", (req, res) => {
 router.get("/state", validation.validateToken, (req, res) => {
   try {
     const { idState } = req.query;
-    pool.query(
-      queries.state.state,
-      idState,
-      (err, rows, fields) => {
-        if (err) throw err;
-        else {
-          res.json({ status: 200, data: rows });
-        }
-      },
-    );
+    pool.query(queries.state.state, idState, (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({ status: 200, data: rows });
+      }
+    });
   } catch (error) {
     res.json({
       status: 400,
@@ -41,6 +37,5 @@ router.get("/state", validation.validateToken, (req, res) => {
     });
   }
 });
-
 
 module.exports = router;

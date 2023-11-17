@@ -83,7 +83,7 @@ router.put("/change", validation.validateToken, (req, res) => {
 
     pool.query(
       queries.appointment.change,
-      [idState,idAppoinment],
+      [idState, idAppoinment],
       (err, rows, fields) => {
         if (err) throw err;
         else {
@@ -104,8 +104,7 @@ router.put("/change", validation.validateToken, (req, res) => {
 
 router.put("/updateAppointment", validation.validateToken, (req, res) => {
   try {
-    const { idCollaborator, idDocumentType, idAppoinment } =
-      req.body;
+    const { idCollaborator, idDocumentType, idAppoinment } = req.body;
 
     pool.query(
       queries.appointment.updateAppointment,

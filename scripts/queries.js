@@ -15,8 +15,7 @@ const queries = {
       WHERE Id_TipoDocumento = ?",
   },
   service: {
-    all:
-      "SELECT ts.Id_Servicio, ts.Id_Categoria,tc.Categoria,ts.Nombre_Servicio, ts.Valor_Servicio ,ts.Descripcion_Servicio, \
+    all: "SELECT ts.Id_Servicio, ts.Id_Categoria,tc.Categoria,ts.Nombre_Servicio, ts.Valor_Servicio ,ts.Descripcion_Servicio, \
         ts.Duracion_Servicio  FROM  TBL_SERVICIOS ts \
       JOIN TBL_CATEGORIAS tc ON tc.Id_Categoria = ts.Id_Categoria AND tc.Activo = 'S'  \
       WHERE ts.Activo = 'S'",
@@ -438,8 +437,9 @@ const queries = {
     availability:
       "SELECT COUNT(*) AS AVAILABILITY FROM TBL_CITAS tc \
       WHERE tc.Numero_DocumentoColaborador = ? \
-        AND (tc.Fecha_Cita  BETWEEN ? AND ?) \
-        AND tc.Id_TipoDocumentoColaborador = ? AND tc.Id_Cita <> 4",
+        AND ((tc.Fecha_Cita  BETWEEN ? AND ?) \
+        OR (tc.Fecha_Final  BETWEEN ? AND ?)) \
+        AND tc.Id_TipoDocumentoColaborador = ? AND tc.Id_Cita <> 2",
   },
   categoy: {
     allCategorys: "SELECT * FROM TBL_CATEGORIAS WHERE Activo = 'S'",
@@ -482,11 +482,9 @@ const queries = {
       "INSERT TBL_CLIENTE_CODIGO (Numero_DocumentoCliente,	Id_TipoDocumento,	Codigo) VALUES (?, ?, ?)",
   },
   state: {
-    all:
-      "SELECT * FROM TBL_ESTADO_CITAS tec",
-    state:
-      "SELECT * FROM TBL_ESTADO_CITAS tec WHERE Id_EstadoCita = ?"
-  }
+    all: "SELECT * FROM TBL_ESTADO_CITAS tec",
+    state: "SELECT * FROM TBL_ESTADO_CITAS tec WHERE Id_EstadoCita = ?",
+  },
 };
 
 module.exports = queries;
