@@ -439,7 +439,7 @@ const queries = {
       "SELECT COUNT(*) AS AVAILABILITY FROM TBL_CITAS tc \
       WHERE tc.Numero_DocumentoColaborador = ? \
         AND (tc.Fecha_Cita  BETWEEN ? AND ?) \
-        AND tc.Id_TipoDocumentoColaborador = ? AND tc.Id_Cita <> 2",
+        AND tc.Id_TipoDocumentoColaborador = ? AND tc.Id_Cita <> 4",
   },
   categoy: {
     allCategorys: "SELECT * FROM TBL_CATEGORIAS WHERE Activo = 'S'",
