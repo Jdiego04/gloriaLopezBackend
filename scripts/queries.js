@@ -477,6 +477,12 @@ const queries = {
     newOtp:
       "INSERT TBL_CLIENTE_CODIGO (Numero_DocumentoCliente,	Id_TipoDocumento,	Codigo) VALUES (?, ?, ?)",
   },
+  state: {
+    all:
+      "SELECT * FROM TBL_ESTADO_CITAS tec",
+    state:
+      "SELECT * FROM TBL_ESTADO_CITAS tec WHERE Id_EstadoCita = ?"
+  }
 };
 
 module.exports = queries;
