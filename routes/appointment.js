@@ -34,7 +34,7 @@ router.get("/appointment", validation.validateToken, (req, res) => {
       },
     );
   } catch (error) {
-    res.json({ status: 200, data: error });
+    res.json({ status: 400, data: error });
   }
 });
 
