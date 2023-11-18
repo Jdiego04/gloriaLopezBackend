@@ -1,7 +1,7 @@
 const queries = {
   documentType: {
     allDocumentType:
-      "SELECT Id_TipoDocumento, Tipo_Documento  FROM TBL_TIPO_DOCUMENTOS WHERE Activo = 'S'",
+      "SELECT Id_TipoDocumento, Tipo_Documento, Activo  FROM TBL_TIPO_DOCUMENTOS ",
     documentType:
       "SELECT Id_TipoDocumento, Tipo_Documento  FROM TBL_TIPO_DOCUMENTOS WHERE Activo = 'S' AND Id_TipoDocumento = ?",
     newDocumentType:
@@ -188,8 +188,8 @@ const queries = {
   },
   provider: {
     allProvider:
-      "SELECT Id_Proveedor, Nombre, Numero_Contacto,	Direccion \
-       FROM TBL_PROVEEDORES WHERE Activo = 'S'",
+      "SELECT Id_Proveedor, Nombre, Numero_Contacto,	Direccion, Activo \
+       FROM TBL_PROVEEDORES",
     provider:
       "SELECT Id_Proveedor, Nombre, Numero_Contacto,	Direccion \
       FROM TBL_PROVEEDORES WHERE Activo = 'S' AND Id_Proveedor = ?",
@@ -250,11 +250,10 @@ const queries = {
       WHERE Numero_DocumentoColaborador = ? AND Id_TipoDocumento = ?",
     all: "SELECT Nombres, Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento, ttd.Tipo_Documento, \
         Numero_DocumentoColaborador, Numero_Contacto,	Correo_Electronico,	Fecha_Ingreso,	Fecha_Nacimiento,	\
-        tc.Id_Cargo,  tc2.Cargo \
+        tc.Id_Cargo,  tc2.Cargo, tc.Activo \
       FROM TBL_COLABORADORES tc \
       LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON ttd.Id_TipoDocumento = tc.Id_TipoDocumento AND ttd.Activo = 'S' \
-      LEFT JOIN TBL_CARGOS tc2 ON tc2.Id_Cargo = tc.Id_Cargo AND tc2.Activo = 'S' \
-      WHERE tc.Activo = 'S'",
+      LEFT JOIN TBL_CARGOS tc2 ON tc2.Id_Cargo = tc.Id_Cargo AND tc2.Activo = 'S'",
     collaborator:
       "SELECT Nombres, Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento, ttd.Tipo_Documento, \
         Numero_DocumentoColaborador, Numero_Contacto,	Correo_Electronico,	Fecha_Ingreso,	Fecha_Nacimiento,	\
@@ -267,7 +266,7 @@ const queries = {
       "INSERT INTO TBL_CATEGORIAS_COLABORADORES (Id_Categoria, Numero_DocumentoColaborador, Id_TipoDocumento) VALUES (?, ?, ?)",
   },
   module: {
-    all: "SELECT Id_Modulo, Nombre_Modulo  from TBL_MODULOS WHERE Activo = 'S'",
+    all: "SELECT Id_Modulo, Nombre_Modulo, Activo  from TBL_MODULOS",
     module:
       "SELECT Id_Modulo, Nombre_Modulo FROM TBL_MODULOS WHERE Activo = 'S' AND Id_Modulo = ?",
     moduleByCollaborator:
@@ -325,7 +324,7 @@ const queries = {
   },
   client: {
     all: "SELECT Nombres,	Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento,	ttd.Tipo_Documento, \
-        Numero_DocumentoCliente,	Numero_Contacto,	Correo_Electronico,	Fecha_Nacimiento \
+        Numero_DocumentoCliente,	Numero_Contacto,	Correo_Electronico,	Fecha_Nacimiento, tc.Activo \
       FROM TBL_CLIENTES tc \
       LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON ttd.Id_TipoDocumento = tc.Id_TipoDocumento AND ttd.Activo = 'S'",
     client:
@@ -432,9 +431,6 @@ const queries = {
       WHERE Id_Cita = ?",
     duration:
       "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(Duracion_Servicio))) AS DURACION FROM TBL_SERVICIOS WHERE Id_Servicio = ?",
-    simultaneous:
-      "SELECT COUNT(*) AS SIMULTANEOS FROM TBL_SERVICIOS_SIMULTANEOS tss \
-        WHERE (Id_Servicio IN (?) AND Id_ServicioAsociado IN (?))",
     availability:
       "SELECT COUNT(*) AS AVAILABILITY FROM TBL_CITAS tc \
       WHERE tc.Numero_DocumentoColaborador = ? \
@@ -443,7 +439,7 @@ const queries = {
         AND tc.Id_TipoDocumentoColaborador = ? AND tc.Id_Cita <> 2",
   },
   categoy: {
-    allCategorys: "SELECT * FROM TBL_CATEGORIAS WHERE Activo = 'S'",
+    allCategorys: "SELECT * FROM TBL_CATEGORIAS WHERE",
     category:
       "SELECT * FROM TBL_CATEGORIAS WHERE Activo = 'S' AND Id_Categoria = ?",
     deactivate:
@@ -463,7 +459,7 @@ const queries = {
       VALUES(?,?,?)",
   },
   position: {
-    all: "SELECT * FROM TBL_CARGOS WHERE Activo = 'S'",
+    all: "SELECT * FROM TBL_CARGOS WHERE",
     position: "SELECT * FROM TBL_CARGOS WHERE Activo = 'S' AND Id_Cargo = ?",
     newPosition: "INSERT INTO TBL_CARGOS (Cargo) VALUES (?)",
     deactivate:
