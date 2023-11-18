@@ -5,6 +5,7 @@ const pool = require("../views/database");
 const { body, validationResult } = require("express-validator");
 const messages = require("../scripts/messages");
 const validation = require("../scripts/util/validation");
+const util = require("../scripts/util/util");
 
 router.get("/all", validation.validateToken, (req, res) => {
   try {
@@ -190,10 +191,13 @@ router.post(
             idDocumentTypeClient,
             idDocumentTypeCollaborator,
           ],
-          (err, rows, fields) => {
+          async (err, rows, fields) => {
             if (err) {
               throw err;
             } else {
+              const idAppointment = rows.insertId;
+              await util.newServiceAppointment(services,idAppointment);
+
               res.json({
                 status: 201,
                 data: messages.succesMessage.insertedSuccessfully,

@@ -15,6 +15,8 @@ const queries = {
       WHERE Id_TipoDocumento = ?",
   },
   service: {
+    valueService:
+      "SELECT Valor_Servicio FROM TBL_SERVICIOS ts WHERE Id_Servicio = ?",
     all: "SELECT ts.Id_Servicio, ts.Id_Categoria,tc.Categoria,ts.Nombre_Servicio, ts.Valor_Servicio ,ts.Descripcion_Servicio, \
         ts.Duracion_Servicio, ts.Activo  FROM  TBL_SERVICIOS ts \
       JOIN TBL_CATEGORIAS tc ON tc.Id_Categoria = ts.Id_Categoria AND tc.Activo = 'S'",

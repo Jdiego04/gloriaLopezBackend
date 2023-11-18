@@ -5,6 +5,7 @@ const OAuth2 = google.auth.OAuth2;
 const mysql = require("mysql2");
 
 const accountTransport = require("./acountTransport.json");
+const queries = require("../queries");
 
 //Generar contraseñas
 function generatePassword() {
@@ -151,9 +152,59 @@ function generateOTP() {
   return otp;
 }
 
+
+
+function valueService(idService) {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      queries.service.valueService,
+      [idService],
+      (err, rows, fields) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows[0].Valor_Servicio);
+        }
+      }
+    );
+  });
+}
+
+async function newServiceAppointment(services, idAppointment) {
+  const promises = services.map(async (service) => {
+    try {
+      let value = await valueService(service);
+
+      return new Promise((resolve, reject) => {
+        pool.query(
+          queries.service.newServiceAppointment,
+          [service, idAppointment, value],
+          (err, rows, fields) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(rows);
+            }
+          },
+        );
+      });
+    } catch (error) {
+      console.error(error);
+      throw error; // Puedes manejar el error según sea necesario
+    }
+  });
+  try {
+    const results = await Promise.all(promises);
+  } catch (error) {
+    
+  }
+
+}
+
 module.exports = {
   generatePassword,
   sendMail,
   checkIfExists,
   generateOTP,
+  newServiceAppointment,
 };
