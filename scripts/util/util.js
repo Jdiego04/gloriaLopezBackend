@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const pool = require("../../views/database");
 const OAuth2 = google.auth.OAuth2;
-const mysql = require("mysql");
+const mysql = require("mysql2");
 
 const accountTransport = require("./acountTransport.json");
 
