@@ -158,16 +158,9 @@ router.post(
       if (services.length > 1) {
         let time1 = await validation.duration(services[0]);
         let time2 = await validation.duration(services[1]);
-        if (await validation.simultaneousService(services)) {
-          if (time1 > time2) {
-            newDate = await validation.newDate(appointmentDate, time1);
-          } else {
-            newDate = await validation.newDate(appointmentDate, time2);
-          }
-        } else {
-          let aux = await validation.newDate(appointmentDate, time1);
-          newDate = await validation.newDate(aux, time2);
-        }
+
+        let aux = await validation.newDate(appointmentDate, time1);
+        newDate = await validation.newDate(aux, time2);
       } else {
         let time1 = await validation.duration(services[0]);
         newDate = await validation.newDate(appointmentDate, time1);

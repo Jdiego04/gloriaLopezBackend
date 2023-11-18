@@ -5,22 +5,6 @@ const pool = require("../../views/database");
 const jwt = require("jsonwebtoken");
 const keys = require("../../views/keys");
 
-async function simultaneousService(services) {
-  return new Promise((resolve, reject) => {
-    pool.query(
-      queries.appointment.simultaneous,
-      [services, services],
-      (err, rows, fields) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(rows[0].SIMULTANEOS);
-        }
-      },
-    );
-  });
-}
-
 async function duration(idService) {
   return new Promise((resolve, reject) => {
     pool.query(queries.appointment.duration, idService, (err, rows, fields) => {
@@ -104,7 +88,6 @@ const validateToken = (req, res, next) => {
 };
 
 module.exports = {
-  simultaneousService,
   duration,
   newDate,
   availability,
