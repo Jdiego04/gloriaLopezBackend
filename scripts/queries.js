@@ -378,7 +378,7 @@ const queries = {
         tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
         tc.Numero_Contacto, c.Fecha_Cita, c.Fecha_Final, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
         c.Id_TipoDocumentoColaborador, tc2.Nombres AS Nombre_Colaborador, \
-        tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador \
+        tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador, c.Valor_Cita \
       FROM TBL_CITAS c \
       LEFT JOIN TBL_CLIENTES tc ON tc.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
         AND tc.Numero_DocumentoCliente = c.Numero_DocumentoCliente \
@@ -391,7 +391,7 @@ const queries = {
         tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
         tc.Numero_Contacto,c.Fecha_Cita, c.Fecha_Final, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
         c.Id_TipoDocumentoColaborador, tc2.Nombres AS Nombre_Colaborador, \
-        tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador \
+        tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador, c.Valor_Cita \
       FROM TBL_CITAS c \
       LEFT JOIN TBL_CLIENTES tc ON tc.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
         AND tc.Numero_DocumentoCliente = c.Numero_DocumentoCliente \
@@ -404,7 +404,7 @@ const queries = {
         tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
         tc.Numero_Contacto,,c.Fecha_Cita, c.Fecha_Final, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
         c.Id_TipoDocumentoColaborador, tc2.Nombres AS Nombre_Colaborador, \
-        tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador \
+        tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador, c.Valor_Cita \
       FROM TBL_CITAS c \
       LEFT JOIN TBL_CLIENTES tc ON tc.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
         AND tc.Numero_DocumentoCliente = c.Numero_DocumentoCliente \
@@ -417,7 +417,7 @@ const queries = {
         tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
         tc.Numero_Contacto,c.Fecha_Cita, c.Fecha_Final, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
         c.Id_TipoDocumentoColaborador, tc2.Nombres AS Nombre_Colaborador, \
-        tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador \
+        tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador, c.Valor_Cita \
       FROM TBL_CITAS c \
       LEFT JOIN TBL_CLIENTES tc ON tc.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
         AND tc.Numero_DocumentoCliente = c.Numero_DocumentoCliente \
