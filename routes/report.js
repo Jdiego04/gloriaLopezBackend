@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const queries = require("../scripts/queries");
 const pool = require("../views/database");
-
+const validation = require("../scripts/util/validation")
 
 router.get("/appointmentByState", validation.validateToken, (req, res) => {
   try {
