@@ -437,7 +437,7 @@ const queries = {
     change:
       "UPDATE TBL_CITAS \
       SET \
-        Id_EstadoCita = ? \
+        Id_EstadoCita = ?, \
         Valor_Cita = ? \
       WHERE Id_Cita = ?",
     duration:
