@@ -725,6 +725,24 @@ const queries = {
           COUNT(*) > 0 \
         ORDER BY \
           c.Numero_DocumentoCliente",
+    totalByCollaborator:
+      "SELECT \
+        tc.Nombres, \
+        tc.Primer_Apellido, \
+        tc.Segundo_Apellido, \
+        c.Numero_DocumentoColaborador, \
+        ttd.Tipo_Documento, \
+        SUM(c.Valor_Cita) AS TOTAL \
+      FROM \
+        TBL_CITAS c \
+      LEFT JOIN TBL_COLABORADORES tc ON tc.Id_TipoDocumento = c.Id_TipoDocumentoColaborador  AND \
+        tc.Numero_DocumentoColaborador = c.Numero_DocumentoColaborador \
+      LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON ttd.Id_TipoDocumento = c.Id_TipoDocumentoColaborador \
+      WHERE \
+        ((c.Fecha_Cita BETWEEN ? AND ?) \
+          OR (c.Fecha_Final BETWEEN ? AND ?)) \
+      GROUP BY \
+        c.Numero_DocumentoColaborador",  
   },
 };
 

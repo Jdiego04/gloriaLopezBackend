@@ -78,4 +78,25 @@ router.get("/appointmentByClient", validation.validateToken, (req, res) => {
   }
 });
 
+router.get("/totalByCollaborator", validation.validateToken, (req, res) => {
+    try {
+      const { startDate, endDate } = req.query;
+      pool.query(
+        queries.report.totalByCollaborator,
+        [startDate, endDate, startDate, endDate],
+        (err, rows, fields) => {
+          if (err) throw err;
+          else {
+            res.json({ status: 200, data: rows });
+          }
+        },
+      );
+    } catch (error) {
+      res.json({
+        status: 400,
+        data: error,
+      });
+    }
+  });
+
 module.exports = router;
