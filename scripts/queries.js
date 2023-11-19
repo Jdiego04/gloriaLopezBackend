@@ -439,7 +439,7 @@ const queries = {
         AND tc.Id_TipoDocumentoColaborador = ? AND tc.Id_Cita <> 2",
   },
   categoy: {
-    allCategorys: "SELECT * FROM TBL_CATEGORIAS WHERE",
+    allCategorys: "SELECT * FROM TBL_CATEGORIAS",
     category:
       "SELECT * FROM TBL_CATEGORIAS WHERE Activo = 'S' AND Id_Categoria = ?",
     deactivate:
