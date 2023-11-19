@@ -196,7 +196,7 @@ router.post(
               throw err;
             } else {
               const idAppointment = rows.insertId;
-              await util.newServiceAppointment(services,idAppointment);
+              await util.newServiceAppointment(services, idAppointment);
 
               res.json({
                 status: 201,

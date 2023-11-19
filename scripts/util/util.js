@@ -152,8 +152,6 @@ function generateOTP() {
   return otp;
 }
 
-
-
 function valueService(idService) {
   return new Promise((resolve, reject) => {
     pool.query(
@@ -165,7 +163,7 @@ function valueService(idService) {
         } else {
           resolve(rows[0].Valor_Servicio);
         }
-      }
+      },
     );
   });
 }
@@ -195,10 +193,7 @@ async function newServiceAppointment(services, idAppointment) {
   });
   try {
     const results = await Promise.all(promises);
-  } catch (error) {
-    
-  }
-
+  } catch (error) {}
 }
 
 module.exports = {

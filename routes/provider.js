@@ -72,7 +72,7 @@ router.post("/provider", validation.validateToken, async (req, res) => {
   }
 });
 
-router.post("/deactivate", validation.validateToken, (req, res) => {
+router.put("/deactivate", validation.validateToken, (req, res) => {
   try {
     const { idProvider } = req.body;
     pool.query(
