@@ -18,6 +18,19 @@ router.get("/all", validation.validateToken, (req, res) => {
   }
 });
 
+router.get("/allActivate", validation.validateToken, (req, res) => {
+  try {
+    pool.query(queries.collaborator.allActivate, (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({ status: 200, data: rows });
+      }
+    });
+  } catch (error) {
+    res.json({ status: 400, data: error });
+  }
+});
+
 router.get("/collaborator", validation.validateToken, (req, res) => {
   try {
     const { idCollaborator, idDocumentType } = req.query;

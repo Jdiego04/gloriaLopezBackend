@@ -248,12 +248,22 @@ const queries = {
         Numero_Contacto = ?, \
         Id_Cargo = ? \
       WHERE Numero_DocumentoColaborador = ? AND Id_TipoDocumento = ?",
-    all: "SELECT Nombres, Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento, ttd.Tipo_Documento, \
+    all: 
+      "SELECT Nombres, Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento, ttd.Tipo_Documento, \
         Numero_DocumentoColaborador, Numero_Contacto,	Correo_Electronico,	Fecha_Ingreso,	Fecha_Nacimiento,	\
         tc.Id_Cargo,  tc2.Cargo, tc.Activo \
       FROM TBL_COLABORADORES tc \
       LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON ttd.Id_TipoDocumento = tc.Id_TipoDocumento AND ttd.Activo = 'S' \
-      LEFT JOIN TBL_CARGOS tc2 ON tc2.Id_Cargo = tc.Id_Cargo AND tc2.Activo = 'S'",
+      LEFT JOIN TBL_CARGOS tc2 ON tc2.Id_Cargo = tc.Id_Cargo AND tc2.Activo = 'S' \
+      WHERE tc.Numero_DocumentoColaborador <> '123456789'",
+    allActivate:
+      "SELECT Nombres, Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento, ttd.Tipo_Documento, \
+        Numero_DocumentoColaborador, Numero_Contacto,	Correo_Electronico,	Fecha_Ingreso,	Fecha_Nacimiento,	\
+        tc.Id_Cargo,  tc2.Cargo, tc.Activo \
+      FROM TBL_COLABORADORES tc \
+      LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON ttd.Id_TipoDocumento = tc.Id_TipoDocumento AND ttd.Activo = 'S' \
+      LEFT JOIN TBL_CARGOS tc2 ON tc2.Id_Cargo = tc.Id_Cargo AND tc2.Activo = 'S' \
+      WHERE tc.Numero_DocumentoColaborador <> '123456789' AND tc.Activo = 'S'",
     collaborator:
       "SELECT Nombres, Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento, ttd.Tipo_Documento, \
         Numero_DocumentoColaborador, Numero_Contacto,	Correo_Electronico,	Fecha_Ingreso,	Fecha_Nacimiento,	\
