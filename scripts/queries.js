@@ -366,7 +366,7 @@ const queries = {
     allAppointment:
       "SELECT c.Id_Cita, c.Numero_DocumentoCliente, c.Id_TipoDocumentoCliente, tc.Nombres AS Nombre_Cliente, \
         tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
-        c.Fecha_Cita, c.Fecha_Final, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
+        tc.Numero_Contacto, c.Fecha_Cita, c.Fecha_Final, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
         c.Id_TipoDocumentoColaborador, tc2.Nombres AS Nombre_Colaborador, \
         tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador \
       FROM TBL_CITAS c \
@@ -379,7 +379,7 @@ const queries = {
     appointment:
       "SELECT c.Id_Cita, c.Numero_DocumentoCliente, c.Id_TipoDocumentoCliente, tc.Nombres AS Nombre_Cliente, \
         tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
-        c.Fecha_Cita, c.Fecha_Final, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
+        tc.Numero_Contacto,c.Fecha_Cita, c.Fecha_Final, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
         c.Id_TipoDocumentoColaborador, tc2.Nombres AS Nombre_Colaborador, \
         tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador \
       FROM TBL_CITAS c \
@@ -392,7 +392,7 @@ const queries = {
     appointmentByCliente:
       "SELECT c.Id_Cita, c.Numero_DocumentoCliente, c.Id_TipoDocumentoCliente, tc.Nombres AS Nombre_Cliente, \
         tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
-        c.Fecha_Cita, c.Fecha_Final, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
+        tc.Numero_Contacto,,c.Fecha_Cita, c.Fecha_Final, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
         c.Id_TipoDocumentoColaborador, tc2.Nombres AS Nombre_Colaborador, \
         tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador \
       FROM TBL_CITAS c \
@@ -405,7 +405,7 @@ const queries = {
     appointmentByColaborador:
       "SELECT c.Id_Cita, c.Numero_DocumentoCliente, c.Id_TipoDocumentoCliente, tc.Nombres AS Nombre_Cliente, \
         tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
-        c.Fecha_Cita, c.Fecha_Final, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
+        tc.Numero_Contacto,c.Fecha_Cita, c.Fecha_Final, c.Id_EstadoCita, tec.Estado_Cita, c.Numero_DocumentoColaborador, \
         c.Id_TipoDocumentoColaborador, tc2.Nombres AS Nombre_Colaborador, \
         tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador \
       FROM TBL_CITAS c \

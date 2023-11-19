@@ -165,8 +165,7 @@ router.post("/singUp", async (req, res) => {
           else {
             const otp = util.generateOTP();
             const subject = "Codigo de verificacion";
-            const content = ` Su codigo de verificacion es: ${otp} 
-                Por favor, cambie su contraseña en cuanto pueda. `;
+            const content = ` Su codigo de verificacion es: ${otp} `;
             //Envia el correo
             util.sendMail(email, subject, content);
             pool.query(
