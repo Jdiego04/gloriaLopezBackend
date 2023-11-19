@@ -156,15 +156,20 @@ router.post(
       } = req.body;
 
       let newDate;
+      let valorCita;
       if (services.length > 1) {
         let time1 = await validation.duration(services[0]);
         let time2 = await validation.duration(services[1]);
 
         let aux = await validation.newDate(appointmentDate, time1);
         newDate = await validation.newDate(aux, time2);
+
+        let auxValue = await util.valueService(services[0]);
+        valorCita = parseFloat(await util.valueService(services[1])) + parseFloat(auxValue);
       } else {
         let time1 = await validation.duration(services[0]);
         newDate = await validation.newDate(appointmentDate, time1);
+        valorCita = parseFloat(await util.valueService(services[0]));
       }
 
       if (
@@ -190,6 +195,7 @@ router.post(
             state,
             idDocumentTypeClient,
             idDocumentTypeCollaborator,
+            valorCita,
           ],
           async (err, rows, fields) => {
             if (err) {

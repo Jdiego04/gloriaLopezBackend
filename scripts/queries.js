@@ -427,8 +427,8 @@ const queries = {
       WHERE c.Numero_DocumentoColaborador = ? AND c.Id_TipoDocumentoColaborador = ?",
     newAppointment:
       "INSERT INTO TBL_CITAS (Numero_DocumentoCliente, Numero_DocumentoColaborador, \
-        Fecha_Cita, Fecha_Final,Id_EstadoCita,Id_TipoDocumentoCliente, Id_TipoDocumentoColaborador) \
-      VALUES (?, ?, ?, ?, ?, ?, ?)",
+        Fecha_Cita, Fecha_Final,Id_EstadoCita,Id_TipoDocumentoCliente, Id_TipoDocumentoColaborador, Valor_Cita) \
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
     updateAppointment:
       "UPDATE TBL_CITAS \
       SET \

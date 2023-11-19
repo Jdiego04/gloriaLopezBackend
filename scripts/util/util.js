@@ -202,4 +202,5 @@ module.exports = {
   checkIfExists,
   generateOTP,
   newServiceAppointment,
+  valueService,
 };
