@@ -30,7 +30,7 @@ app.use(require("../routes/appointment"));
 app.use(require("../routes/position"));
 app.use(require("../routes/category"));
 app.use(require("../routes/state"));
-app.use(require('../routes/report'));
+app.use(require("../routes/report"));
 
 app.use("/documentType", require("../routes/documentType"));
 app.use("/service", require("../routes/service"));
@@ -49,7 +49,7 @@ app.use("/appointment", require("../routes/appointment"));
 app.use("/position", require("../routes/position"));
 app.use("/category", require("../routes/category"));
 app.use("/state", require("../routes/state"));
-app.use('/report', require('../routes/report'));
+app.use("/report", require("../routes/report"));
 
 //Starting the server
 app.listen(app.get("port"), (err) => {

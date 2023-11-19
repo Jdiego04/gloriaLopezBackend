@@ -13,6 +13,7 @@ const messages = {
     updatedSuccessfully: "Elemento actualizado correctamente.",
     sendSuccessfully: "Correo enviado correctamene.",
     logoutSuccessfully: "Se cerro la sesion correctamente.",
+    notResult: "No se encontraron resultados.",
   },
   tables: {
     tblCategory: "TBL_CATEGORIAS",

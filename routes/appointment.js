@@ -103,7 +103,6 @@ router.put("/change", validation.validateToken, (req, res) => {
   }
 });
 
-
 router.post(
   "/appointment",
   body("idClient").not().isEmpty().trim().escape(),

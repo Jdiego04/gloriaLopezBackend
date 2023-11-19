@@ -742,7 +742,52 @@ const queries = {
         ((c.Fecha_Cita BETWEEN ? AND ?) \
           OR (c.Fecha_Final BETWEEN ? AND ?)) \
       GROUP BY \
-        c.Numero_DocumentoColaborador",  
+        c.Numero_DocumentoColaborador",
+    historyProduct:
+      "SELECT \
+        ROW_NUMBER() OVER (ORDER BY ths.Id_Servicio) AS ID, \
+        ts.Nombre_Servicio,	\
+        Cantidad,	\
+        Tipo_Modificacion,\
+        ths.Descripcion_Servicio,	\
+        Fecha_HoraModificacion,	\
+        ths.Numero_DocumentoColaborador, \
+        ttd.Tipo_Documento, \
+        tc.Nombres, \
+        tc.Primer_Apellido, \
+        tc.Segundo_Apellido  \
+      FROM  TBL_HISTORIAL_SERVICIOS ths \
+      LEFT JOIN TBL_SERVICIOS ts ON ts.Id_Servicio = ths.Id_Servicio \
+      LEFT JOIN TBL_COLABORADORES tc ON tc.Numero_DocumentoColaborador = ths.Numero_DocumentoColaborador \
+        AND tc.Id_TipoDocumento = ths.Id_TipoDocumento \
+      LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON ttd.Id_TipoDocumento = ths.Id_TipoDocumento  \
+      HAVING \
+          COUNT(*) > 0 \
+      ORDER BY \
+        ths.Id_Servicio",
+    historyProductByProduct:
+      "SELECT \
+        ROW_NUMBER() OVER (ORDER BY ths.Id_Servicio) AS ID, \
+        ts.Nombre_Servicio,	\
+        Cantidad,	\
+        Tipo_Modificacion,\
+        ths.Descripcion_Servicio,	\
+        Fecha_HoraModificacion,	\
+        ths.Numero_DocumentoColaborador, \
+        ttd.Tipo_Documento, \
+        tc.Nombres, \
+        tc.Primer_Apellido, \
+        tc.Segundo_Apellido  \
+      FROM  TBL_HISTORIAL_SERVICIOS ths \
+      LEFT JOIN TBL_SERVICIOS ts ON ts.Id_Servicio = ths.Id_Servicio \
+      LEFT JOIN TBL_COLABORADORES tc ON tc.Numero_DocumentoColaborador = ths.Numero_DocumentoColaborador \
+        AND tc.Id_TipoDocumento = ths.Id_TipoDocumento \
+      LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON ttd.Id_TipoDocumento = ths.Id_TipoDocumento  \
+      WHERE ths.Id_Servicio = ? \
+      HAVING \
+        COUNT(*) > 0 \
+      ORDER BY \
+        ths.Id_Servicio",
   },
 };
 
