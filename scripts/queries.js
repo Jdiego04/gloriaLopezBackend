@@ -438,6 +438,7 @@ const queries = {
       "UPDATE TBL_CITAS \
       SET \
         Id_EstadoCita = ? \
+        Valor_Cita = ? \
       WHERE Id_Cita = ?",
     duration:
       "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(Duracion_Servicio))) AS DURACION FROM TBL_SERVICIOS WHERE Id_Servicio = ?",

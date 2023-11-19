@@ -80,11 +80,11 @@ router.get(
 
 router.put("/change", validation.validateToken, (req, res) => {
   try {
-    const { idState, idAppoinment } = req.body;
+    const { idState, value, idAppoinment } = req.body;
 
     pool.query(
       queries.appointment.change,
-      [idState, idAppoinment],
+      [idState, value, idAppoinment],
       (err, rows, fields) => {
         if (err) throw err;
         else {
@@ -103,30 +103,6 @@ router.put("/change", validation.validateToken, (req, res) => {
   }
 });
 
-router.put("/updateAppointment", validation.validateToken, (req, res) => {
-  try {
-    const { idCollaborator, idDocumentType, idAppoinment } = req.body;
-
-    pool.query(
-      queries.appointment.updateAppointment,
-      [idCollaborator, idDocumentType, idAppoinment],
-      (err, rows, fields) => {
-        if (err) throw err;
-        else {
-          res.json({
-            status: 200,
-            data: messages.succesMessage.disabledSuccessfully,
-          });
-        }
-      },
-    );
-  } catch (error) {
-    res.json({
-      status: 400,
-      data: error,
-    });
-  }
-});
 
 router.post(
   "/appointment",
