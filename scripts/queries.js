@@ -460,7 +460,7 @@ const queries = {
       VALUES(?,?,?)",
   },
   position: {
-    all: "SELECT * FROM TBL_CARGOS WHERE",
+    all: "SELECT * FROM TBL_CARGOS",
     position: "SELECT * FROM TBL_CARGOS WHERE Activo = 'S' AND Id_Cargo = ?",
     newPosition: "INSERT INTO TBL_CARGOS (Cargo) VALUES (?)",
     deactivate:
