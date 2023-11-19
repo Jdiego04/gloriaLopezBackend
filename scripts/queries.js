@@ -248,8 +248,7 @@ const queries = {
         Numero_Contacto = ?, \
         Id_Cargo = ? \
       WHERE Numero_DocumentoColaborador = ? AND Id_TipoDocumento = ?",
-    all: 
-      "SELECT Nombres, Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento, ttd.Tipo_Documento, \
+    all: "SELECT Nombres, Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento, ttd.Tipo_Documento, \
         Numero_DocumentoColaborador, Numero_Contacto,	Correo_Electronico,	Fecha_Ingreso,	Fecha_Nacimiento,	\
         tc.Id_Cargo,  tc2.Cargo, tc.Activo \
       FROM TBL_COLABORADORES tc \
@@ -492,6 +491,239 @@ const queries = {
   state: {
     all: "SELECT * FROM TBL_ESTADO_CITAS tec",
     state: "SELECT * FROM TBL_ESTADO_CITAS tec WHERE Id_EstadoCita = ?",
+  },
+  report: {
+    appointmentByState:
+      "SELECT \
+        ROW_NUMBER() OVER ( \
+          ORDER BY \
+        c.Numero_DocumentoCliente) AS ID, \
+        c.Numero_DocumentoCliente, \
+        ttd.Tipo_Documento AS Tipo_DocumentoCliente, \
+        tc.Nombres AS Nombre_Cliente, \
+        tc.Primer_Apellido AS Primer_ApellidoCliente, \
+        tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
+        tc.Numero_Contacto, \
+        c.Fecha_Cita, \
+        c.Fecha_Final, \
+        tec.Estado_Cita, \
+        c.Numero_DocumentoColaborador, \
+        ttd2.Tipo_Documento AS Tipo_DocumentoColaborado, \
+        tc2.Nombres AS Nombre_Colaborador, \
+        tc2.Primer_Apellido AS Primer_ApellidoColaborador, \
+        tc2.Segundo_Apellido AS Segundo_ApellidoColaborador, \
+        GROUP_CONCAT(ts.Nombre_Servicio SEPARATOR ', ') AS servicios \
+      FROM \
+        TBL_CITAS c \
+      LEFT JOIN TBL_CLIENTES tc ON \
+        tc.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
+        AND tc.Numero_DocumentoCliente = c.Numero_DocumentoCliente \
+      LEFT JOIN TBL_COLABORADORES tc2 ON \
+        tc2.Id_TipoDocumento = c.Id_TipoDocumentoColaborador \
+        AND tc2.Numero_DocumentoColaborador = c.Numero_DocumentoColaborador \
+      LEFT JOIN TBL_ESTADO_CITAS tec ON \
+        tec.Id_EstadoCita = c.Id_EstadoCita \
+        AND tec.Activo = 'S' \
+      LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON \
+        ttd.Id_TipoDocumento = tc.Id_TipoDocumento \
+      LEFT JOIN TBL_TIPO_DOCUMENTOS ttd2 ON \
+        ttd2.Id_TipoDocumento = tc2.Id_TipoDocumento \
+      LEFT JOIN TBL_SERVICIOS_CITAS tsc ON \
+        tsc.Id_Cita = c.Id_Cita \
+      LEFT JOIN TBL_SERVICIOS ts ON \
+        ts.Id_Servicio = tsc.Id_Servicio \
+      WHERE \
+        c.Id_EstadoCita = ? \
+        AND ((c.Fecha_Cita BETWEEN ? AND ?) \
+          OR (c.Fecha_Final BETWEEN ? AND ?)) \
+      ORDER BY \
+        c.Numero_DocumentoCliente",
+    appointmentByState:
+      "SELECT \
+        ROW_NUMBER() OVER ( \
+          ORDER BY \
+        c.Numero_DocumentoCliente) AS ID, \
+        c.Numero_DocumentoCliente, \
+        ttd.Tipo_Documento AS Tipo_DocumentoCliente, \
+        tc.Nombres AS Nombre_Cliente, \
+        tc.Primer_Apellido AS Primer_ApellidoCliente, \
+        tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
+        tc.Numero_Contacto, \
+        c.Fecha_Cita, \
+        c.Fecha_Final, \
+        tec.Estado_Cita, \
+        c.Numero_DocumentoColaborador, \
+        ttd2.Tipo_Documento AS Tipo_DocumentoColaborado, \
+        tc2.Nombres AS Nombre_Colaborador, \
+        tc2.Primer_Apellido AS Primer_ApellidoColaborador, \
+        tc2.Segundo_Apellido AS Segundo_ApellidoColaborador, \
+        GROUP_CONCAT(ts.Nombre_Servicio SEPARATOR ', ') AS servicios \
+      FROM \
+        TBL_CITAS c \
+      LEFT JOIN TBL_CLIENTES tc ON \
+        tc.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
+        AND tc.Numero_DocumentoCliente = c.Numero_DocumentoCliente \
+      LEFT JOIN TBL_COLABORADORES tc2 ON \
+        tc2.Id_TipoDocumento = c.Id_TipoDocumentoColaborador \
+        AND tc2.Numero_DocumentoColaborador = c.Numero_DocumentoColaborador \
+      LEFT JOIN TBL_ESTADO_CITAS tec ON \
+        tec.Id_EstadoCita = c.Id_EstadoCita \
+        AND tec.Activo = 'S' \
+      LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON \
+        ttd.Id_TipoDocumento = tc.Id_TipoDocumento \
+      LEFT JOIN TBL_TIPO_DOCUMENTOS ttd2 ON \
+        ttd2.Id_TipoDocumento = tc2.Id_TipoDocumento \
+      LEFT JOIN TBL_SERVICIOS_CITAS tsc ON \
+        tsc.Id_Cita = c.Id_Cita \
+      LEFT JOIN TBL_SERVICIOS ts ON \
+        ts.Id_Servicio = tsc.Id_Servicio \
+      WHERE \
+        c.Id_EstadoCita = ? \
+        AND ((c.Fecha_Cita BETWEEN ? AND ?) \
+          OR (c.Fecha_Final BETWEEN ? AND ?)) \
+      ORDER BY \
+        c.Numero_DocumentoCliente",
+    appointmentByState:
+      "SELECT \
+        ROW_NUMBER() OVER ( \
+          ORDER BY \
+        c.Numero_DocumentoCliente) AS ID, \
+        c.Numero_DocumentoCliente, \
+        ttd.Tipo_Documento AS Tipo_DocumentoCliente, \
+        tc.Nombres AS Nombre_Cliente, \
+        tc.Primer_Apellido AS Primer_ApellidoCliente, \
+        tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
+        tc.Numero_Contacto, \
+        c.Fecha_Cita, \
+        c.Fecha_Final, \
+        tec.Estado_Cita, \
+        c.Numero_DocumentoColaborador, \
+        ttd2.Tipo_Documento AS Tipo_DocumentoColaborado, \
+        tc2.Nombres AS Nombre_Colaborador, \
+        tc2.Primer_Apellido AS Primer_ApellidoColaborador, \
+        tc2.Segundo_Apellido AS Segundo_ApellidoColaborador, \
+        GROUP_CONCAT(ts.Nombre_Servicio SEPARATOR ', ') AS servicios \
+      FROM \
+        TBL_CITAS c \
+      LEFT JOIN TBL_CLIENTES tc ON \
+        tc.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
+        AND tc.Numero_DocumentoCliente = c.Numero_DocumentoCliente \
+      LEFT JOIN TBL_COLABORADORES tc2 ON \
+        tc2.Id_TipoDocumento = c.Id_TipoDocumentoColaborador \
+        AND tc2.Numero_DocumentoColaborador = c.Numero_DocumentoColaborador \
+      LEFT JOIN TBL_ESTADO_CITAS tec ON \
+        tec.Id_EstadoCita = c.Id_EstadoCita \
+        AND tec.Activo = 'S' \
+      LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON \
+        ttd.Id_TipoDocumento = tc.Id_TipoDocumento \
+      LEFT JOIN TBL_TIPO_DOCUMENTOS ttd2 ON \
+        ttd2.Id_TipoDocumento = tc2.Id_TipoDocumento \
+      LEFT JOIN TBL_SERVICIOS_CITAS tsc ON \
+        tsc.Id_Cita = c.Id_Cita \
+      LEFT JOIN TBL_SERVICIOS ts ON \
+        ts.Id_Servicio = tsc.Id_Servicio \
+      WHERE \
+        c.Id_EstadoCita = ? \
+        AND ((c.Fecha_Cita BETWEEN ? AND ?) \
+          OR (c.Fecha_Final BETWEEN ? AND ?)) \
+      HAVING \
+        COUNT(*) > 0 \
+      ORDER BY \
+        c.Numero_DocumentoCliente",
+    appointmentByCollaborator:
+      "SELECT \
+        ROW_NUMBER() OVER ( \
+          ORDER BY \
+        c.Numero_DocumentoCliente) AS ID, \
+        c.Numero_DocumentoCliente, \
+        ttd.Tipo_Documento AS Tipo_DocumentoCliente, \
+        tc.Nombres AS Nombre_Cliente, \
+        tc.Primer_Apellido AS Primer_ApellidoCliente, \
+        tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
+        tc.Numero_Contacto, \
+        c.Fecha_Cita, \
+        c.Fecha_Final, \
+        tec.Estado_Cita, \
+        c.Numero_DocumentoColaborador, \
+        ttd2.Tipo_Documento AS Tipo_DocumentoColaborado, \
+        tc2.Nombres AS Nombre_Colaborador, \
+        tc2.Primer_Apellido AS Primer_ApellidoColaborador, \
+        tc2.Segundo_Apellido AS Segundo_ApellidoColaborador, \
+        GROUP_CONCAT(ts.Nombre_Servicio SEPARATOR ', ') AS servicios \
+      FROM \
+        TBL_CITAS c \
+      LEFT JOIN TBL_CLIENTES tc ON \
+        tc.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
+        AND tc.Numero_DocumentoCliente = c.Numero_DocumentoCliente \
+      LEFT JOIN TBL_COLABORADORES tc2 ON \
+        tc2.Id_TipoDocumento = c.Id_TipoDocumentoColaborador \
+        AND tc2.Numero_DocumentoColaborador = c.Numero_DocumentoColaborador \
+      LEFT JOIN TBL_ESTADO_CITAS tec ON \
+        tec.Id_EstadoCita = c.Id_EstadoCita \
+        AND tec.Activo = 'S' \
+      LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON \
+        ttd.Id_TipoDocumento = tc.Id_TipoDocumento \
+      LEFT JOIN TBL_TIPO_DOCUMENTOS ttd2 ON \
+        ttd2.Id_TipoDocumento = tc2.Id_TipoDocumento \
+      LEFT JOIN TBL_SERVICIOS_CITAS tsc ON \
+        tsc.Id_Cita = c.Id_Cita \
+      LEFT JOIN TBL_SERVICIOS ts ON \
+        ts.Id_Servicio = tsc.Id_Servicio \
+      WHERE \
+        (c.Numero_DocumentoColaborador = ? AND c.Id_TipoDocumentoColaborador = ?) \
+        AND ((c.Fecha_Cita BETWEEN ? AND ?) \
+          OR (c.Fecha_Final BETWEEN ? AND ?)) \
+      HAVING \
+        COUNT(*) > 0 \
+      ORDER BY \
+        c.Numero_DocumentoColaborador",
+    appointmentByClient:
+      "SELECT \
+        ROW_NUMBER() OVER ( \
+          ORDER BY \
+        c.Numero_DocumentoCliente) AS ID, \
+        c.Numero_DocumentoCliente, \
+        ttd.Tipo_Documento AS Tipo_DocumentoCliente, \
+        tc.Nombres AS Nombre_Cliente, \
+        tc.Primer_Apellido AS Primer_ApellidoCliente, \
+        tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
+        tc.Numero_Contacto, \
+        c.Fecha_Cita, \
+        c.Fecha_Final, \
+        tec.Estado_Cita, \
+        c.Numero_DocumentoColaborador, \
+        ttd2.Tipo_Documento AS Tipo_DocumentoColaborado, \
+        tc2.Nombres AS Nombre_Colaborador, \
+        tc2.Primer_Apellido AS Primer_ApellidoColaborador, \
+        tc2.Segundo_Apellido AS Segundo_ApellidoColaborador, \
+        GROUP_CONCAT(ts.Nombre_Servicio SEPARATOR ', ') AS servicios \
+      FROM \
+        TBL_CITAS c \
+        LEFT JOIN TBL_CLIENTES tc ON \
+          tc.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
+          AND tc.Numero_DocumentoCliente = c.Numero_DocumentoCliente \
+        LEFT JOIN TBL_COLABORADORES tc2 ON \
+          tc2.Id_TipoDocumento = c.Id_TipoDocumentoColaborador \
+          AND tc2.Numero_DocumentoColaborador = c.Numero_DocumentoColaborador \
+        LEFT JOIN TBL_ESTADO_CITAS tec ON \
+          tec.Id_EstadoCita = c.Id_EstadoCita \
+          AND tec.Activo = 'S' \
+        LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON \
+          ttd.Id_TipoDocumento = tc.Id_TipoDocumento \
+        LEFT JOIN TBL_TIPO_DOCUMENTOS ttd2 ON \
+          ttd2.Id_TipoDocumento = tc2.Id_TipoDocumento \
+        LEFT JOIN TBL_SERVICIOS_CITAS tsc ON \
+          tsc.Id_Cita = c.Id_Cita \
+        LEFT JOIN TBL_SERVICIOS ts ON \
+          ts.Id_Servicio = tsc.Id_Servicio \
+        WHERE \
+          (c.Numero_DocumentoCliente = ? AND c.Id_TipoDocumentoCliente = ?) \
+          AND ((c.Fecha_Cita BETWEEN ? AND ?) \
+            OR (c.Fecha_Final BETWEEN ? AND ?)) \
+        HAVING \
+          COUNT(*) > 0 \
+        ORDER BY \
+          c.Numero_DocumentoCliente",
   },
 };
 

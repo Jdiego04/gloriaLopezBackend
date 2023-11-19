@@ -165,7 +165,9 @@ router.post(
         newDate = await validation.newDate(aux, time2);
 
         let auxValue = await util.valueService(services[0]);
-        valorCita = parseFloat(await util.valueService(services[1])) + parseFloat(auxValue);
+        valorCita =
+          parseFloat(await util.valueService(services[1])) +
+          parseFloat(auxValue);
       } else {
         let time1 = await validation.duration(services[0]);
         newDate = await validation.newDate(appointmentDate, time1);
