@@ -74,7 +74,7 @@ router.get("/collaboratorByEmail", validation.validateToken, (req, res) => {
     const { eMailCollaborator } = req.query;
     pool.query(
       queries.collaborator.collaboratorByEmail,
-      [idCollaborator, idDocumentType],
+      [eMailCollaborator],
       (err, rows, fields) => {
         if (err) throw err;
         else {

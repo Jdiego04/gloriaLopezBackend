@@ -272,12 +272,8 @@ const queries = {
       LEFT JOIN TBL_CARGOS tc2 ON tc2.Id_Cargo = tc.Id_Cargo AND tc2.Activo = 'S' \
       WHERE tc.Numero_DocumentoColaborador = ? AND tc.Id_TipoDocumento = ? AND tc.Activo = 'S'",
       collaboratorByEmail:
-      "SELECT Nombres, Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento, ttd.Tipo_Documento, \
-        Numero_DocumentoColaborador, Numero_Contacto,	Correo_Electronico,	Fecha_Ingreso,	Fecha_Nacimiento,	\
-        tc.Id_Cargo,  tc2.Cargo \
+      "SELECT tc.Id_TipoDocumento,  Numero_DocumentoColaborador \
       FROM TBL_COLABORADORES tc \
-      LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON ttd.Id_TipoDocumento = tc.Id_TipoDocumento AND ttd.Activo = 'S' \
-      LEFT JOIN TBL_CARGOS tc2 ON tc2.Id_Cargo = tc.Id_Cargo AND tc2.Activo = 'S' \
       WHERE Correo_Electronico = ? AND tc.Activo = 'S'",
     newCollaboratorCategory:
       "INSERT INTO TBL_CATEGORIAS_COLABORADORES (Id_Categoria, Numero_DocumentoColaborador, Id_TipoDocumento) VALUES (?, ?, ?)",
