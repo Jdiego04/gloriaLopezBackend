@@ -428,7 +428,7 @@ const queries = {
       LEFT JOIN TBL_COLABORADORES tc2 ON tc2.Id_TipoDocumento = c.Id_TipoDocumentoCliente AND \
       tc2.Numero_DocumentoColaborador  = c.Numero_DocumentoColaborador LEFT JOIN TBL_ESTADO_CITAS tec ON \
       tec.Id_EstadoCita = c.Id_EstadoCita AND tec.Activo = 'S'   \
-      WHERE tc.Correo_Electronico = ?",
+      WHERE tc.Correo_Electronico = ? AND c.Id_EstadoCita <> 2",
     appointmentByColaborador:
       "SELECT c.Id_Cita, c.Numero_DocumentoCliente, c.Id_TipoDocumentoCliente, tc.Nombres AS Nombre_Cliente, \
         tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \
