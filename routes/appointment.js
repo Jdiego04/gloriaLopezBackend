@@ -31,7 +31,7 @@ router.get("/appointment", validation.validateToken, (req, res) => {
         else {
           res.json({ status: 200, data: rows });
         }
-      },
+      }
     );
   } catch (error) {
     res.json({ status: 400, data: error });
@@ -49,7 +49,7 @@ router.get("/appointmentByCliente", validation.validateToken, (req, res) => {
         else {
           res.json({ status: 200, data: rows });
         }
-      },
+      }
     );
   } catch (error) {
     res.json({ status: 400, data: error });
@@ -67,7 +67,7 @@ router.get("/appointmentByClientCorreo", (req, res) => {
         else {
           res.json({ status: 200, data: rows });
         }
-      },
+      }
     );
   } catch (error) {
     res.json({ status: 400, data: error });
@@ -88,12 +88,12 @@ router.get(
           else {
             res.json({ status: 200, data: rows });
           }
-        },
+        }
       );
     } catch (error) {
       res.json({ status: 400, data: error });
     }
-  },
+  }
 );
 
 router.put("/change", validation.validateToken, (req, res) => {
@@ -111,7 +111,7 @@ router.put("/change", validation.validateToken, (req, res) => {
             data: messages.succesMessage.disabledSuccessfully,
           });
         }
-      },
+      }
     );
   } catch (error) {
     res.json({
@@ -135,7 +135,7 @@ router.put("/changeCliente", (req, res) => {
             data: messages.succesMessage.disabledSuccessfully,
           });
         }
-      },
+      }
     );
   } catch (error) {
     res.json({
@@ -144,7 +144,6 @@ router.put("/changeCliente", (req, res) => {
     });
   }
 });
-
 
 router.post(
   "/appointmentClient",
@@ -159,7 +158,10 @@ router.post(
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.json({ status: 400, data: messages.errors.noCreationAppointment });
+        return res.json({
+          status: 400,
+          data: messages.errors.noCreationAppointment,
+        });
       }
 
       const {
@@ -196,7 +198,7 @@ router.post(
           idCollaborator,
           appointmentDate,
           newDate,
-          idDocumentTypeCollaborator,
+          idDocumentTypeCollaborator
         )) > 0
       ) {
         res.json({
@@ -228,16 +230,14 @@ router.post(
                 data: messages.succesMessage.insertedSuccessfully,
               });
             }
-          },
+          }
         );
       }
     } catch (error) {
-      res.json({ status: 400, data: error });
+      res.json({ status: 400, data: messages.errors.noCreationAppointment });
     }
-  },
+  }
 );
-
-
 
 router.post(
   "/appointment",
@@ -290,7 +290,7 @@ router.post(
           idCollaborator,
           appointmentDate,
           newDate,
-          idDocumentTypeCollaborator,
+          idDocumentTypeCollaborator
         )) > 0
       ) {
         res.json({
@@ -322,13 +322,13 @@ router.post(
                 data: messages.succesMessage.insertedSuccessfully,
               });
             }
-          },
+          }
         );
       }
     } catch (error) {
-      res.json({ status: 400, data: error });
+      res.json({ status: 400, data: messages.errors.noCreationAppointment });
     }
-  },
+  }
 );
 
 module.exports = router;

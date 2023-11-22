@@ -135,7 +135,7 @@ router.get("/serviceByCategory", validation.validateToken, (req, res) => {
     });
   }
 });
-router.get("/serviceByCategorycliente",  (req, res) => {
+router.get("/serviceByCategorycliente", (req, res) => {
   try {
     const { idCategory } = req.query;
     pool.query(
