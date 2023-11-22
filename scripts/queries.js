@@ -411,6 +411,18 @@ const queries = {
         AND tc2.Numero_DocumentoColaborador  = c.Numero_DocumentoColaborador \
       LEFT JOIN TBL_ESTADO_CITAS tec ON tec.Id_EstadoCita = c.Id_EstadoCita AND tec.Activo = 'S' \
       WHERE c.Numero_DocumentoCliente = ? AND c.Id_TipoDocumentoCliente = ?",
+      appointmentByClientCorreo:
+      "SELECT c.Id_Cita, c.Numero_DocumentoCliente, c.Id_TipoDocumentoCliente, tc.Nombres AS Nombre_Cliente,\
+      tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente,    \
+      tc.Numero_Contacto,c.Fecha_Cita, c.Fecha_Final, c.Id_EstadoCita, tec.Estado_Cita, \
+      c.Numero_DocumentoColaborador, c.Id_TipoDocumentoColaborador, tc2.Nombres AS Nombre_Colaborador,  \
+      tc2.Primer_Apellido AS Primer_ApellidoColaborador, tc2.Segundo_Apellido AS Segundo_ApellidoColaborador,\
+      c.Valor_Cita FROM TBL_CITAS c LEFT JOIN TBL_CLIENTES tc ON tc.Id_TipoDocumento = c.Id_TipoDocumentoCliente \
+      AND tc.Numero_DocumentoCliente = c.Numero_DocumentoCliente  \
+      LEFT JOIN TBL_COLABORADORES tc2 ON tc2.Id_TipoDocumento = c.Id_TipoDocumentoCliente AND \
+      tc2.Numero_DocumentoColaborador  = c.Numero_DocumentoColaborador LEFT JOIN TBL_ESTADO_CITAS tec ON \
+      tec.Id_EstadoCita = c.Id_EstadoCita AND tec.Activo = 'S'   \
+      WHERE tc.Correo_Electronico = ?",
     appointmentByColaborador:
       "SELECT c.Id_Cita, c.Numero_DocumentoCliente, c.Id_TipoDocumentoCliente, tc.Nombres AS Nombre_Cliente, \
         tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente, \

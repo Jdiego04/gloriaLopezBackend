@@ -56,6 +56,24 @@ router.get("/appointmentByCliente", validation.validateToken, (req, res) => {
   }
 });
 
+router.get("/appointmentByClientCorreo", (req, res) => {
+  try {
+    const { CorreoCliente } = req.query;
+    pool.query(
+      queries.appointment.appointmentByClientCorreo,
+      [CorreoCliente],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({ status: 200, data: rows });
+        }
+      },
+    );
+  } catch (error) {
+    res.json({ status: 400, data: error });
+  }
+});
+
 router.get(
   "/appointmentByColaborador",
   validation.validateToken,
