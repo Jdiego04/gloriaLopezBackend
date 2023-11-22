@@ -28,7 +28,7 @@ router.get("/client", validation.validateToken, (req, res) => {
         else {
           res.json({ status: 200, data: rows });
         }
-      },
+      }
     );
   } catch (error) {
     res.json({ status: 400, data: error });
@@ -50,17 +50,30 @@ router.put("/deactivate", (req, res) => {
             [documentTypeId, clientId],
             (err, rows, fields) => {
               if (err) throw err;
-            },
+            }
           );
           res.json({
             status: 200,
             data: messages.succesMessage.disabledSuccessfully,
           });
         }
-      },
+      }
     );
   } catch (error) {
     res.json({ status: 400, data: error });
+  }
+});
+
+router.get("/allCitasCliente", (req, res) => {
+  try {
+    pool.query(queries.client.all, (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({ status: 200, data: rows });
+      }
+    });
+  } catch (error) {
+    res.json({ status: 200, data: error });
   }
 });
 module.exports = router;

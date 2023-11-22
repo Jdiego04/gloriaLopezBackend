@@ -26,6 +26,26 @@ router.get("/all", validation.validateToken, (req, res) => {
   }
 });
 
+
+router.get("/allCategoryCliente",  (req, res) => {
+  try {
+    pool.query(queries.categoy.allCategorys, (err, rows, fields) => {
+      if (err) throw err;
+      else {
+        res.json({
+          status: 200,
+          data: rows,
+        });
+      }
+    });
+  } catch (error) {
+    res.json({
+      status: 400,
+      data: error,
+    });
+  }
+});
+
 router.get("/categoy", validation.validateToken, (req, res) => {
   try {
     const { idCategory } = req.query;

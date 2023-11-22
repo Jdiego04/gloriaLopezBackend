@@ -120,6 +120,124 @@ router.put("/change", validation.validateToken, (req, res) => {
     });
   }
 });
+router.put("/changeCliente", (req, res) => {
+  try {
+    const { idState, value, idAppoinment } = req.body;
+
+    pool.query(
+      queries.appointment.change,
+      [idState, value, idAppoinment],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({
+            status: 200,
+            data: messages.succesMessage.disabledSuccessfully,
+          });
+        }
+      },
+    );
+  } catch (error) {
+    res.json({
+      status: 400,
+      data: error,
+    });
+  }
+});
+
+
+router.post(
+  "/appointmentClient",
+  body("idClient").not().isEmpty().trim().escape(),
+  body("idCollaborator").not().isEmpty().trim().escape(),
+  body("appointmentDate").not().isEmpty().trim().escape(),
+  body("state").not().isEmpty().trim().escape(),
+  body("idDocumentTypeClient").not().isEmpty().trim().escape(),
+  body("idDocumentTypeCollaborator").not().isEmpty().trim().escape(),
+  body("services").not().isEmpty(),
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.json({ status: 400, data: errors.array() });
+      }
+
+      const {
+        idClient,
+        idCollaborator,
+        appointmentDate,
+        state,
+        idDocumentTypeClient,
+        idDocumentTypeCollaborator,
+        services,
+      } = req.body;
+
+      let newDate;
+      let valorCita;
+      if (services.length > 1) {
+        let time1 = await validation.duration(services[0]);
+        let time2 = await validation.duration(services[1]);
+
+        let aux = await validation.newDate(appointmentDate, time1);
+        newDate = await validation.newDate(aux, time2);
+
+        let auxValue = await util.valueService(services[0]);
+        valorCita =
+          parseFloat(await util.valueService(services[1])) +
+          parseFloat(auxValue);
+      } else {
+        let time1 = await validation.duration(services[0]);
+        newDate = await validation.newDate(appointmentDate, time1);
+        valorCita = parseFloat(await util.valueService(services[0]));
+      }
+
+      if (
+        (await validation.availability(
+          idCollaborator,
+          appointmentDate,
+          newDate,
+          idDocumentTypeCollaborator,
+        )) > 0
+      ) {
+        res.json({
+          status: 400,
+          data: messages.errors.notAvailable,
+        });
+      } else {
+        pool.query(
+          queries.appointment.newAppointment,
+          [
+            idClient,
+            idCollaborator,
+            appointmentDate,
+            newDate,
+            state,
+            idDocumentTypeClient,
+            idDocumentTypeCollaborator,
+            valorCita,
+          ],
+          async (err, rows, fields) => {
+            if (err) {
+              throw err;
+            } else {
+              const idAppointment = rows.insertId;
+              await util.newServiceAppointment(services, idAppointment);
+
+              res.json({
+                status: 201,
+                data: messages.succesMessage.insertedSuccessfully,
+              });
+            }
+          },
+        );
+      }
+    } catch (error) {
+      res.json({ status: 400, data: error });
+    }
+  },
+);
+
+
 
 router.post(
   "/appointment",
