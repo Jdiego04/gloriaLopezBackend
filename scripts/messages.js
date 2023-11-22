@@ -5,6 +5,7 @@ const messages = {
     notAvailable: "No esta disponible ese horario.",
     exist: "Este registro ya existe",
     noPermission: "No tienes permiso para realizar esa acción",
+    noCreationAppointment: "Error al crear la cita",
   },
   success: {},
   succesMessage: {

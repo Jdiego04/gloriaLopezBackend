@@ -159,7 +159,7 @@ router.post(
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.json({ status: 400, data: errors.array() });
+        return res.json({ status: 400, data: messages.errors.noCreationAppointment });
       }
 
       const {
