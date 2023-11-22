@@ -342,6 +342,12 @@ const queries = {
       FROM TBL_CLIENTES tc \
       LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON ttd.Id_TipoDocumento = tc.Id_TipoDocumento AND ttd.Activo = 'S' \
       WHERE Numero_DocumentoCliente = ? AND tc.Id_TipoDocumento = ?",
+    clientByEmail:
+      "SELECT Nombres,	Primer_Apellido,	Segundo_Apellido,	tc.Id_TipoDocumento,	ttd.Tipo_Documento, \
+        Numero_DocumentoCliente,	Numero_Contacto,	Correo_Electronico,	Fecha_Nacimiento \
+      FROM TBL_CLIENTES tc \
+      LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON ttd.Id_TipoDocumento = tc.Id_TipoDocumento AND ttd.Activo = 'S' \
+      WHERE Correo_Electronico = ?",
     clientAuthentication:
       "SELECT * FROM TBL_CLIENTES tc WHERE tc.Correo_Electronico = ? AND tc.Contrasennia = ? AND ACTIVO ='S'",
     recoverPassword:
@@ -411,7 +417,7 @@ const queries = {
         AND tc2.Numero_DocumentoColaborador  = c.Numero_DocumentoColaborador \
       LEFT JOIN TBL_ESTADO_CITAS tec ON tec.Id_EstadoCita = c.Id_EstadoCita AND tec.Activo = 'S' \
       WHERE c.Numero_DocumentoCliente = ? AND c.Id_TipoDocumentoCliente = ?",
-      appointmentByClientCorreo:
+    appointmentByClientCorreo:
       "SELECT c.Id_Cita, c.Numero_DocumentoCliente, c.Id_TipoDocumentoCliente, tc.Nombres AS Nombre_Cliente,\
       tc.Primer_Apellido AS Primer_ApellidoCliente, tc.Segundo_Apellido AS Segundo_ApeliidoCliente,    \
       tc.Numero_Contacto,c.Fecha_Cita, c.Fecha_Final, c.Id_EstadoCita, tec.Estado_Cita, \

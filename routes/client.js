@@ -35,6 +35,24 @@ router.get("/client", validation.validateToken, (req, res) => {
   }
 });
 
+router.get("/clientByEmail", (req, res) => {
+  try {
+    const { eMail } = req.query;
+    pool.query(
+      queries.client.clientByEmail,
+      [eMail],
+      (err, rows, fields) => {
+        if (err) throw err;
+        else {
+          res.json({ status: 200, data: rows });
+        }
+      }
+    );
+  } catch (error) {
+    res.json({ status: 400, data: error });
+  }
+});
+
 router.put("/deactivate", (req, res) => {
   try {
     const { documentTypeId, clientId, otp } = req.body;
