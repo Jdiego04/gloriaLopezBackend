@@ -18,8 +18,6 @@ router.get("/all", validation.validateToken, (req, res) => {
   }
 });
 
-
-
 router.get("/allActivate", validation.validateToken, (req, res) => {
   try {
     pool.query(queries.collaborator.allActivate, (err, rows, fields) => {
@@ -59,7 +57,7 @@ router.get("/collaborator", validation.validateToken, (req, res) => {
             data: messages.succesMessage.insertedSuccessfully,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({
@@ -83,7 +81,7 @@ router.get("/collaboratorByEmail", validation.validateToken, (req, res) => {
             data: messages.succesMessage.insertedSuccessfully,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({

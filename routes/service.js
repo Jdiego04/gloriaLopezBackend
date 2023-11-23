@@ -6,6 +6,42 @@ const { body, validationResult } = require("express-validator");
 const messages = require("../scripts/messages");
 const util = require("../scripts/util/util");
 const validation = require("../scripts/util/validation");
+const OracleDB = require("oracledb");
+
+const {
+  finallyConexion,
+  connectDataBase,
+  executeQuery,
+} = require("../views/database");
+const { database } = require("../views/keys");
+
+router.get("/allOracle", async (req, res) => {
+  const { idService } = req.query;
+  const params = { param1: idService };
+  try {
+    const connection = await OracleDB.getConnection(database);
+    const resultado = await connection.execute(
+      "SELECT * FROM tbl_servicios where ID_SERVICIO = :param1",
+      params,
+    );
+    await finallyConexion(connection);
+    res.json(resultado.rows);
+    // pool.query(queries.service.all, (err, rows, fields) => {
+    //   if (err) throw err;
+    //   else {
+    //     res.json({
+    //       status: 200,
+    //       data: rows,
+    //     });
+    //   }
+    // });
+  } catch (error) {
+    res.json({
+      status: 400,
+      data: error,
+    });
+  }
+});
 
 router.get("/all", validation.validateToken, (req, res) => {
   try {
@@ -79,7 +115,7 @@ router.get("/serviceByAppointment", validation.validateToken, (req, res) => {
             data: rows,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({
@@ -102,7 +138,7 @@ router.get("/serviceByAppointmentCliente", (req, res) => {
             data: rows,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({
@@ -126,7 +162,7 @@ router.get("/serviceByCategory", validation.validateToken, (req, res) => {
             data: rows,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({
@@ -149,7 +185,7 @@ router.get("/serviceByCategorycliente", (req, res) => {
             data: rows,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({
@@ -173,7 +209,7 @@ router.post("/service", validation.validateToken, async (req, res) => {
     const verifyName = await util.checkIfExists(
       messages.tables.tblService,
       "Nombre_Servicio",
-      serviceName
+      serviceName,
     );
 
     if (!verifyName) {
@@ -202,11 +238,11 @@ router.post("/service", validation.validateToken, async (req, res) => {
                       data: messages.succesMessage.insertedSuccessfully,
                     });
                   }
-                }
+                },
               );
             }
           }
-        }
+        },
       );
     } else {
       res.json({
@@ -272,7 +308,7 @@ router.put("/update", validation.validateToken, (req, res) => {
             data: messages.succesMessage.updatedSuccessfully,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({
@@ -307,7 +343,7 @@ router.post(
               data: messages.succesMessage.insertedSuccessfully,
             });
           }
-        }
+        },
       );
     } catch (error) {
       res.json({
@@ -315,7 +351,7 @@ router.post(
         data: error,
       });
     }
-  }
+  },
 );
 
 router.post(
@@ -343,7 +379,7 @@ router.post(
               data: messages.succesMessage.insertedSuccessfully,
             });
           }
-        }
+        },
       );
     } catch (error) {
       res.json({
@@ -351,7 +387,7 @@ router.post(
         data: error,
       });
     }
-  }
+  },
 );
 
 router.get("/allServiceHistory", validation.validateToken, (req, res) => {
@@ -387,7 +423,7 @@ router.get("/serviceHistory", validation.validateToken, (req, res) => {
             data: rows,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({
@@ -414,7 +450,7 @@ router.get(
               data: rows,
             });
           }
-        }
+        },
       );
     } catch (error) {
       res.json({
@@ -422,7 +458,7 @@ router.get(
         data: error,
       });
     }
-  }
+  },
 );
 
 router.get(
@@ -442,7 +478,7 @@ router.get(
               data: rows,
             });
           }
-        }
+        },
       );
     } catch (error) {
       res.json({
@@ -450,7 +486,7 @@ router.get(
         data: error,
       });
     }
-  }
+  },
 );
 
 router.get("/serviceHistoryByService", validation.validateToken, (req, res) => {
@@ -467,7 +503,7 @@ router.get("/serviceHistoryByService", validation.validateToken, (req, res) => {
             data: rows,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({
@@ -520,7 +556,7 @@ router.post(
               data: messages.succesMessage.insertedSuccessfully,
             });
           }
-        }
+        },
       );
     } catch (error) {
       res.json({
@@ -528,7 +564,7 @@ router.post(
         data: error,
       });
     }
-  }
+  },
 );
 
 router.get(
@@ -548,7 +584,7 @@ router.get(
               data: rows,
             });
           }
-        }
+        },
       );
     } catch (error) {
       res.json({
@@ -556,7 +592,7 @@ router.get(
         data: error,
       });
     }
-  }
+  },
 );
 
 router.get("/accountServiceHistory", validation.validateToken, (req, res) => {
@@ -573,7 +609,7 @@ router.get("/accountServiceHistory", validation.validateToken, (req, res) => {
             data: rows,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({
@@ -603,7 +639,7 @@ router.get(
         data: error,
       });
     }
-  }
+  },
 );
 
 router.get("/allProduct", validation.validateToken, (req, res) => {
@@ -659,7 +695,7 @@ router.get("/productByProvider", validation.validateToken, (req, res) => {
             data: rows,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({

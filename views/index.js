@@ -6,6 +6,8 @@ const cors = require("cors");
 const app = express();
 const port = process.env.port || 3000;
 
+const { connectDataBase } = require("./database");
+
 //Settings
 app.set("port", port);
 
@@ -50,6 +52,17 @@ app.use("/position", require("../routes/position"));
 app.use("/category", require("../routes/category"));
 app.use("/state", require("../routes/state"));
 app.use("/report", require("../routes/report"));
+
+async function llamadobd() {
+  try {
+    const connection = await connectDataBase;
+    console.log("coneccion");
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+llamadobd();
 
 //Starting the server
 app.listen(app.get("port"), (err) => {

@@ -46,12 +46,12 @@ router.post(
             }
           } else {
           }
-        }
+        },
       );
     } catch (error) {
       res.json({ status: 400, data: error });
     }
-  }
+  },
 );
 
 router.post("/recoverPassword", (req, res) => {
@@ -85,7 +85,7 @@ router.post("/recoverPassword", (req, res) => {
                   data: messages.succesMessage.updatedSuccessfully,
                 });
               }
-            }
+            },
           );
         } else {
           res.json({ status: 400, data: messages.errors.notExist });
@@ -112,7 +112,7 @@ router.post("/updatePassword", validation.validateToken, (req, res) => {
             data: messages.succesMessage.updatedSuccessfully,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({
@@ -139,7 +139,7 @@ router.post("/singUp", async (req, res) => {
     const validateEmail = await util.checkIfExists(
       messages.tables.tblClient,
       "Correo_Electronico",
-      email
+      email,
     );
 
     const hashedPassword = crypto
@@ -179,10 +179,10 @@ router.post("/singUp", async (req, res) => {
                     data: messages.succesMessage.insertedSuccessfully,
                   });
                 }
-              }
+              },
             );
           }
-        }
+        },
       );
     } else {
       res.json({
@@ -228,7 +228,7 @@ router.put("/update", validation.validateToken, (req, res) => {
             data: messages.succesMessage.updatedSuccessfully,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({

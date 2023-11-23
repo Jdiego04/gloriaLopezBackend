@@ -1,27 +1,37 @@
-const mysql = require("mysql2");
+const OracleDB = require("oracledb");
+
 const { database } = require("./keys");
-const { promisify } = require("util");
 
-const pool = mysql.createPool(database);
-
-pool.getConnection((err, connection) => {
-  if (err) {
-    if (err.code === "PROTOCOL_CONNECTION_LOST") {
-      console.errorr("DATABASE CONNECTION WAS CLOSED");
-    }
-    if (err.code === "ER_CON_COUNT_ERROR") {
-      console.error("DATABASE HAS TO MANY CONNECTION");
-    }
-    if (err.code === "ECONNREFUSED") {
-      console.error("DATABASE CONNECTION WAS REFUSED");
-    }
+async function connectDataBase() {
+  try {
+    const connection = await OracleDB.getConnection(database);
+    console.log("coneccion creada");
+    return connection;
+  } catch (error) {
+    console.log(error);
   }
-  if (connection) connection.release();
-  console.log("BD is Connected");
-  return;
-});
+}
+async function executeQuery(connection, sql, binds, options) {
+  try {
+    const result = await connection.execute(sql, binds, options);
+    console.log("query ejecutado");
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-//Promisify Pool Querys
-pool.query = promisify(pool.query);
+async function finallyConexion(connection) {
+  try {
+    await connection.close();
+    console.log("fin conexion");
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-module.exports = pool;
+module.exports = {
+  connectDataBase,
+  executeQuery,
+  finallyConexion,
+};
