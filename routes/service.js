@@ -509,8 +509,8 @@ router.post(
           amount,
           modificationType,
           serviceDescription,
-          idCollaborator,
           idDocumentType,
+          idCollaborator,
         ],
         (err, rows, fields) => {
           if (err) throw err;
