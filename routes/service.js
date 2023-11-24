@@ -502,8 +502,10 @@ router.post(
         idDocumentType,
       } = req.body;
 
-      const totalServiceAmount =
-        await validation.getTotalServiceAmount(idService);
+      const totalServiceAmount = await validation.getTotalServiceAmount(idService);
+
+      console.log(totalServiceAmount);
+      console.log(modificationType);
 
       if (modificationType === "S" && parseFloat(amount) > totalServiceAmount) {
         return res.json({
@@ -512,30 +514,20 @@ router.post(
         });
       }
 
-      pool.query(
+      const [rows, fields] = await pool.query(
         queries.service.newServiceHistory,
-        [
-          idService,
-          amount,
-          modificationType,
-          serviceDescription,
-          idDocumentType,
-          idCollaborator,
-        ],
-        (err, rows, fields) => {
-          if (err) throw err;
-          else {
-            res.json({
-              status: 201,
-              data: messages.succesMessage.insertedSuccessfully,
-            });
-          }
-        },
+        [idService, amount, modificationType, serviceDescription, idCollaborator, idDocumentType]
       );
+
+      res.json({
+        status: 201,
+        data: messages.succesMessage.insertedSuccessfully,
+      });
     } catch (error) {
+      console.error(error);
       res.json({
         status: 400,
-        data: error,
+        data: error, 
       });
     }
   },

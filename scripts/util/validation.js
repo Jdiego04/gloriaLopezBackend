@@ -96,7 +96,7 @@ async function getTotalServiceAmount(idService) {
         if (err) {
           reject(err);
         } else {
-          const totalAmount = rows[0] ? rows[0].Valor_Servicio : 0;
+          const totalAmount = rows[0] ? rows[0].CantidadTotal : 0;
           resolve(totalAmount);
         }
       },
