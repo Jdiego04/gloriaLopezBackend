@@ -232,16 +232,21 @@ router.post("/insert", async (req, res) => {
     dia_cita,
     hora_cita,
     minutos_cita,
+
     id_servicio } = req.body;
   const sql =
     `INSERT INTO tbl_citas 
       (id_estadocita, id_tipodocumentocliente, numero_documentocliente, 
        id_tipodocumentocolaborador, numero_documentocolaborador, annio_cita, mes_cita, dia_cita, 
-       hora_cita, minutos_cita, valor_cita) 
+       hora_cita, minutos_cita, valor_cita, fecha_final) 
      VALUES 
       (:id_estado_cita, :id_tipo_documento_cliente, :numero_documento_cliente, 
        :id_tipo_documento_colaborador, :numero_documento_colaborador, :annio_cita, 
-       :mes_cita, :dia_cita, :hora_cita, :minutos_cita, 0)`;
+       :mes_cita, :dia_cita, :hora_cita, :minutos_cita, :valor, :fecha_final)`;
+  const fechaInicio = new Date(annio_cita, mes_cita, dia_cita, hora_cita, minutos_cita);
+  const unaHoraEnMilisegundos = 60 * 60 * 1000; // 1 hora en milisegundos
+  const fechaFinal = new Date(fechaInicio.getTime() + unaHoraEnMilisegundos);
+  console.log(fechaFinal);
   const binds = {
     id_estado_cita: id_estado_cita,
     id_tipo_documento_cliente: id_tipo_documento_cliente,
@@ -253,17 +258,19 @@ router.post("/insert", async (req, res) => {
     dia_cita: dia_cita,
     hora_cita: hora_cita,
     minutos_cita: minutos_cita,
+    valor: "20000",
+    fecha_final: fechaFinal,
   };
- 
+
   try {
-    connection.execute(sql, binds, { autoCommit: true },  
+    connection.execute(sql, binds, { autoCommit: true },
       async (err, result) => {
         console.log(result)
         if (err) {
           throw err;
         } else {
-          const id_Appointment = result.lastRowid;
-          await util.newServiceAppointment(id_servicio, id_Appointment);
+          // const id_Appointment = result.lastRowid;
+          // await util.newServiceAppointment(id_servicio, id_Appointment);
           res.json({
             status: 201,
             data: messages.succesMessage.insertedSuccessfully

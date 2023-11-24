@@ -174,7 +174,7 @@ async function newServiceAppointment(services, idAppointment) {
     try {
       console.log(idAppointment)
       return new Promise((resolve, reject) => {
-        pool.query(
+        connection.execute(
           queries.service.newServiceAppointment,
 
           [service, idAppointment, { autoCommit: true }],
