@@ -141,11 +141,25 @@ router.get("/allOracleAppointment", async (req, res) => {
       queriesOracle.appointment.allAppointment
     );
     await finallyConexion(connection);
-    res.json({ status: 200, data: resultado.rows });
+
+    const citas = resultado.rows.map(row => {
+      return {
+        id_cita: row[0],
+        nombre_colaborador: row[1],
+        nombre_cliente: row[2],
+        fecha_inicio: row[3],
+        fecha_final: row[4],
+        valor_cita: row[5],
+        numero_contacto: row[6],
+        estado_cita: row[7]
+      };
+    });
+
+    res.json({ status: 200, data: citas });
   } catch (error) {
     res.json({ status: 400, data: error });
   }
-})
+});
 
 
 router.get("/allOracle", async (req, res) => {
