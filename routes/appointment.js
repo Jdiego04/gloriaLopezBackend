@@ -243,7 +243,7 @@ router.post("/insert", async (req, res) => {
       (:id_estado_cita, :id_tipo_documento_cliente, :numero_documento_cliente, 
        :id_tipo_documento_colaborador, :numero_documento_colaborador, :annio_cita, 
        :mes_cita, :dia_cita, :hora_cita, :minutos_cita, :valor, :fecha_final)`;
-  const fechaInicio = new Date(annio_cita, mes_cita- 1, dia_cita, hora_cita, minutos_cita);
+  const fechaInicio = new Date(annio_cita, mes_cita - 1, dia_cita, hora_cita, minutos_cita);
   const unaHoraEnMilisegundos = 60 * 60 * 1000; // 1 hora en milisegundos
   const fechaFinal = new Date(fechaInicio.getTime() + unaHoraEnMilisegundos);
   console.log(fechaFinal);
