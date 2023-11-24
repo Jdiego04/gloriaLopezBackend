@@ -516,7 +516,7 @@ router.post(
 
       const [rows, fields] = await pool.query(
         queries.service.newServiceHistory,
-        [idService, amount, modificationType, serviceDescription, idCollaborator, idDocumentType]
+        [idService, amount, modificationType, serviceDescription, idDocumentType, idCollaborator]
       );
 
       res.json({
