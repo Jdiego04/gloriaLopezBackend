@@ -26,15 +26,6 @@ router.get("/allOracle", async (req, res) => {
     );
     await finallyConexion(connection);
     res.json(resultado.rows);
-    // pool.query(queries.service.all, (err, rows, fields) => {
-    //   if (err) throw err;
-    //   else {
-    //     res.json({
-    //       status: 200,
-    //       data: rows,
-    //     });
-    //   }
-    // });
   } catch (error) {
     res.json({
       status: 400,

@@ -1,142 +1,52 @@
 const express = require("express");
 const router = express.Router();
 const queries = require("../scripts/queries");
+
+const queriesOracle = require("../scripts/queriesOracle");
+
 const pool = require("../views/database");
 const { body, validationResult } = require("express-validator");
 const messages = require("../scripts/messages");
 const validation = require("../scripts/util/validation");
 const util = require("../scripts/util/util");
 
-router.get("/all", validation.validateToken, (req, res) => {
+
+
+const OracleDB = require("oracledb");
+
+const {
+  finallyConexion,
+  connectDataBase,
+  executeQuery,
+} = require("../views/database");
+const { database } = require("../views/keys");
+
+
+
+router.get("/allOracleAppointment", async (req, res) => {
   try {
-    pool.query(queries.appointment.allAppointment, (err, rows, fields) => {
-      if (err) throw err;
-      else {
-        res.json({ status: 200, data: rows });
-      }
-    });
+    const connection = await OracleDB.getConnection(database);
+    const resultado = await connection.execute(
+      queriesOracle.appointment.allAppointment
+    );
+    await finallyConexion(connection);
+    res.json({ status: 200, data: resultado.rows });
   } catch (error) {
     res.json({ status: 400, data: error });
   }
-});
+})
 
-router.get("/appointment", validation.validateToken, (req, res) => {
+
+router.get("/allOracle", async (req, res) => {
+  const { idService } = req.query;
+  const params = { param1: idService };
   try {
-    const { idAppoinment } = req.query;
-    pool.query(
-      queries.appointment.appointment,
-      idAppoinment,
-      (err, rows, fields) => {
-        if (err) throw err;
-        else {
-          res.json({ status: 200, data: rows });
-        }
-      },
+    const connection = await OracleDB.getConnection(database);
+    const resultado = await connection.execute(
+      "SELECT * FROM tbl_servicios"
     );
-  } catch (error) {
-    res.json({ status: 400, data: error });
-  }
-});
-
-router.get("/appointmentByCliente", validation.validateToken, (req, res) => {
-  try {
-    const { idClient, idDocumentType } = req.query;
-    pool.query(
-      queries.appointment.appointmentByCliente,
-      [idClient, idDocumentType],
-      (err, rows, fields) => {
-        if (err) throw err;
-        else {
-          res.json({ status: 200, data: rows });
-        }
-      },
-    );
-  } catch (error) {
-    res.json({ status: 400, data: error });
-  }
-});
-
-router.get("/appointmentByClientCorreo", (req, res) => {
-  try {
-    const { CorreoCliente } = req.query;
-    pool.query(
-      queries.appointment.appointmentByClientCorreo,
-      [CorreoCliente],
-      (err, rows, fields) => {
-        if (err) throw err;
-        else {
-          res.json({ status: 200, data: rows });
-        }
-      },
-    );
-  } catch (error) {
-    res.json({ status: 400, data: error });
-  }
-});
-
-router.get(
-  "/appointmentByColaborador",
-  validation.validateToken,
-  (req, res) => {
-    try {
-      const { idCollaborator, idDocumentType } = req.query;
-      pool.query(
-        queries.appointment.appointmentByColaborador,
-        [idCollaborator, idDocumentType],
-        (err, rows, fields) => {
-          if (err) throw err;
-          else {
-            res.json({ status: 200, data: rows });
-          }
-        },
-      );
-    } catch (error) {
-      res.json({ status: 400, data: error });
-    }
-  },
-);
-
-router.put("/change", validation.validateToken, (req, res) => {
-  try {
-    const { idState, value, idAppoinment } = req.body;
-
-    pool.query(
-      queries.appointment.change,
-      [idState, value, idAppoinment],
-      (err, rows, fields) => {
-        if (err) throw err;
-        else {
-          res.json({
-            status: 200,
-            data: messages.succesMessage.disabledSuccessfully,
-          });
-        }
-      },
-    );
-  } catch (error) {
-    res.json({
-      status: 400,
-      data: error,
-    });
-  }
-});
-router.put("/changeCliente", (req, res) => {
-  try {
-    const { idState, value, idAppoinment } = req.body;
-
-    pool.query(
-      queries.appointment.change,
-      [idState, value, idAppoinment],
-      (err, rows, fields) => {
-        if (err) throw err;
-        else {
-          res.json({
-            status: 200,
-            data: messages.succesMessage.disabledSuccessfully,
-          });
-        }
-      },
-    );
+    await finallyConexion(connection);
+    res.json(resultado.rows);
   } catch (error) {
     res.json({
       status: 400,
@@ -145,190 +55,99 @@ router.put("/changeCliente", (req, res) => {
   }
 });
 
-router.post(
-  "/appointmentClient",
-  body("idClient").not().isEmpty().trim().escape(),
-  body("idCollaborator").not().isEmpty().trim().escape(),
-  body("appointmentDate").not().isEmpty().trim().escape(),
-  body("state").not().isEmpty().trim().escape(),
-  body("idDocumentTypeClient").not().isEmpty().trim().escape(),
-  body("idDocumentTypeCollaborator").not().isEmpty().trim().escape(),
-  body("services").not().isEmpty(),
-  async (req, res) => {
-    try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.json({
-          status: 400,
-          data: messages.errors.noCreationAppointment,
-        });
-      }
 
-      const {
-        idClient,
-        idCollaborator,
-        appointmentDate,
-        state,
-        idDocumentTypeClient,
-        idDocumentTypeCollaborator,
-        services,
-      } = req.body;
+router.put("/changeOracle", async (req, res) => {
+  try {
+    const { idState, valor, id_cita } = req.body;
 
-      let newDate;
-      let valorCita;
-      if (services.length > 1) {
-        let time1 = await validation.duration(services[0]);
-        let time2 = await validation.duration(services[1]);
+    // Obtener la conexión
+    const connection = await OracleDB.getConnection(database);
 
-        let aux = await validation.newDate(appointmentDate, time1);
-        newDate = await validation.newDate(aux, time2);
+    // Definir la sentencia SQL con placeholders
+    const sql = `
+      UPDATE TBL_CITAS
+      SET
+      ID_ESTADOCITA = :idState,
+      Valor_Cita = :valor
+      WHERE Id_Cita = :id_cita`;
 
-        let auxValue = await util.valueService(services[0]);
-        valorCita =
-          parseFloat(await util.valueService(services[1])) +
-          parseFloat(auxValue);
-      } else {
-        let time1 = await validation.duration(services[0]);
-        newDate = await validation.newDate(appointmentDate, time1);
-        valorCita = parseFloat(await util.valueService(services[0]));
-      }
+    // Ejecutar la sentencia SQL con los valores proporcionados
+    const result = await connection.execute(sql, {
+      idState: idState,
+      valor: valor,
+      id_cita: id_cita
+    }, {
+      autoCommit: true // Si quieres que se realice un commit automático
+    });
 
-      if (
-        (await validation.availability(
-          idCollaborator,
-          appointmentDate,
-          newDate,
-          idDocumentTypeCollaborator,
-        )) > 0
-      ) {
-        res.json({
-          status: 400,
-          data: messages.errors.notAvailable,
-        });
-      } else {
-        pool.query(
-          queries.appointment.newAppointment,
-          [
-            idClient,
-            idCollaborator,
-            appointmentDate,
-            newDate,
-            state,
-            idDocumentTypeClient,
-            idDocumentTypeCollaborator,
-            valorCita,
-          ],
-          async (err, rows, fields) => {
-            if (err) {
-              throw err;
-            } else {
-              const idAppointment = rows.insertId;
-              await util.newServiceAppointment(services, idAppointment);
+    // Liberar la conexión
+    await connection.close();
 
-              res.json({
-                status: 201,
-                data: messages.succesMessage.insertedSuccessfully,
-              });
-            }
-          },
-        );
-      }
-    } catch (error) {
-      res.json({ status: 400, data: messages.errors.noCreationAppointment });
+    // Verificar el resultado
+    if (result.rowsAffected && result.rowsAffected === 1) {
+      res.json({
+        status: 200,
+        data: messages.succesMessage.disabledSuccessfully,
+      });
+    } else {
+      res.json({
+        status: 400,
+        data: messages.errorMessage.invalidAppointmentId,
+      });
     }
-  },
-);
+  } catch (error) {
+    res.json({
+      status: 500,
+      data: error.message || messages.errorMessage.internalServerError,
+    });
+  }
+});
 
-router.post(
-  "/appointment",
-  body("idClient").not().isEmpty().trim().escape(),
-  body("idCollaborator").not().isEmpty().trim().escape(),
-  body("appointmentDate").not().isEmpty().trim().escape(),
-  body("state").not().isEmpty().trim().escape(),
-  body("idDocumentTypeClient").not().isEmpty().trim().escape(),
-  body("idDocumentTypeCollaborator").not().isEmpty().trim().escape(),
-  body("services").not().isEmpty(),
-  validation.validateToken,
-  async (req, res) => {
-    try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.json({ status: 400, data: errors.array() });
-      }
 
-      const {
-        idClient,
-        idCollaborator,
-        appointmentDate,
-        state,
-        idDocumentTypeClient,
-        idDocumentTypeCollaborator,
-        services,
-      } = req.body;
+router.post("/insert", async (req, res) => {
+  const connection = await OracleDB.getConnection(database);
+  const { id_estado_cita,
+    id_tipo_documento_cliente,
+    numero_documento_cliente,
+    id_tipo_documento_colaborador,
+    numero_documento_colaborador,
+    annio_cita,
+    mes_cita,
+    dia_cita,
+    hora_cita,
+    minutos_cita,
+    valor_cita} = req.body;
+  
+  const sql =
+    `INSERT INTO tbl_citas 
+      (id_estadocita, id_tipodocumentocliente, numero_documentocliente, 
+       id_tipodocumentocolaborador, numero_documentocolaborador, annio_cita, mes_cita, dia_cita, 
+       hora_cita, minutos_cita, valor_cita) 
+     VALUES 
+      (:id_estado_cita, :id_tipo_documento_cliente, :numero_documento_cliente, 
+       :id_tipo_documento_colaborador, :numero_documento_colaborador, :annio_cita, 
+       :mes_cita, :dia_cita, :hora_cita, :minutos_cita, :valor_cita)`;
+       
+  const binds = {
+    id_estado_cita: id_estado_cita,
+    id_tipo_documento_cliente: id_tipo_documento_cliente,
+    numero_documento_cliente: numero_documento_cliente,
+    id_tipo_documento_colaborador: id_tipo_documento_colaborador,
+    numero_documento_colaborador: numero_documento_colaborador,
+    annio_cita: annio_cita,
+    mes_cita: mes_cita,
+    dia_cita: dia_cita,
+    hora_cita: hora_cita,
+    minutos_cita: minutos_cita,
+    valor_cita: valor_cita
+  };
 
-      let newDate;
-      let valorCita;
-      if (services.length > 1) {
-        let time1 = await validation.duration(services[0]);
-        let time2 = await validation.duration(services[1]);
+  const result = await connection.execute(sql, binds, { autoCommit: true });
 
-        let aux = await validation.newDate(appointmentDate, time1);
-        newDate = await validation.newDate(aux, time2);
+  res.json(result.rows);
+});
 
-        let auxValue = await util.valueService(services[0]);
-        valorCita =
-          parseFloat(await util.valueService(services[1])) +
-          parseFloat(auxValue);
-      } else {
-        let time1 = await validation.duration(services[0]);
-        newDate = await validation.newDate(appointmentDate, time1);
-        valorCita = parseFloat(await util.valueService(services[0]));
-      }
 
-      if (
-        (await validation.availability(
-          idCollaborator,
-          appointmentDate,
-          newDate,
-          idDocumentTypeCollaborator,
-        )) > 0
-      ) {
-        res.json({
-          status: 400,
-          data: messages.errors.notAvailable,
-        });
-      } else {
-        pool.query(
-          queries.appointment.newAppointment,
-          [
-            idClient,
-            idCollaborator,
-            appointmentDate,
-            newDate,
-            state,
-            idDocumentTypeClient,
-            idDocumentTypeCollaborator,
-            valorCita,
-          ],
-          async (err, rows, fields) => {
-            if (err) {
-              throw err;
-            } else {
-              const idAppointment = rows.insertId;
-              await util.newServiceAppointment(services, idAppointment);
 
-              res.json({
-                status: 201,
-                data: messages.succesMessage.insertedSuccessfully,
-              });
-            }
-          },
-        );
-      }
-    } catch (error) {
-      res.json({ status: 400, data: messages.errors.noCreationAppointment });
-    }
-  },
-);
 
 module.exports = router;
