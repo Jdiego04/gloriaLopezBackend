@@ -31,7 +31,7 @@ router.get("/appointment", validation.validateToken, (req, res) => {
         else {
           res.json({ status: 200, data: rows });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({ status: 400, data: error });
@@ -49,7 +49,7 @@ router.get("/appointmentByCliente", validation.validateToken, (req, res) => {
         else {
           res.json({ status: 200, data: rows });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({ status: 400, data: error });
@@ -67,7 +67,7 @@ router.get("/appointmentByClientCorreo", (req, res) => {
         else {
           res.json({ status: 200, data: rows });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({ status: 400, data: error });
@@ -88,12 +88,12 @@ router.get(
           else {
             res.json({ status: 200, data: rows });
           }
-        }
+        },
       );
     } catch (error) {
       res.json({ status: 400, data: error });
     }
-  }
+  },
 );
 
 router.put("/change", validation.validateToken, (req, res) => {
@@ -111,7 +111,7 @@ router.put("/change", validation.validateToken, (req, res) => {
             data: messages.succesMessage.disabledSuccessfully,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({
@@ -135,7 +135,7 @@ router.put("/changeCliente", (req, res) => {
             data: messages.succesMessage.disabledSuccessfully,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({
@@ -193,12 +193,33 @@ router.post(
         valorCita = parseFloat(await util.valueService(services[0]));
       }
 
+      const maxTime = moment(newDate).set({ hour: 19, minute: 0, second: 0 });
+      if (moment(newDate).isAfter(maxTime)) {
+        return res.json({
+          status: 400,
+          data: messages.errors.invalidTime,
+        });
+      }
+      const dayOfWeek = moment(newDate).day();
+      if (dayOfWeek === 6) {
+        const maxSaturdayTime = moment(newDate).set({
+          hour: 18,
+          minute: 0,
+          second: 0,
+        });
+        if (moment(newDate).isAfter(maxSaturdayTime)) {
+          return res.json({
+            status: 400,
+            data: messages.errors.invalidTimeSaturday,
+          });
+        }
+      }
       if (
         (await validation.availability(
           idCollaborator,
           appointmentDate,
           newDate,
-          idDocumentTypeCollaborator
+          idDocumentTypeCollaborator,
         )) > 0
       ) {
         res.json({
@@ -230,13 +251,13 @@ router.post(
                 data: messages.succesMessage.insertedSuccessfully,
               });
             }
-          }
+          },
         );
       }
     } catch (error) {
       res.json({ status: 400, data: messages.errors.noCreationAppointment });
     }
-  }
+  },
 );
 
 router.post(
@@ -285,12 +306,34 @@ router.post(
         valorCita = parseFloat(await util.valueService(services[0]));
       }
 
+      const maxTime = moment(newDate).set({ hour: 19, minute: 0, second: 0 });
+      if (moment(newDate).isAfter(maxTime)) {
+        return res.json({
+          status: 400,
+          data: messages.errors.invalidTime,
+        });
+      }
+      const dayOfWeek = moment(newDate).day();
+      if (dayOfWeek === 6) {
+        const maxSaturdayTime = moment(newDate).set({
+          hour: 18,
+          minute: 0,
+          second: 0,
+        });
+        if (moment(newDate).isAfter(maxSaturdayTime)) {
+          return res.json({
+            status: 400,
+            data: messages.errors.invalidTimeSaturday,
+          });
+        }
+      }
+
       if (
         (await validation.availability(
           idCollaborator,
           appointmentDate,
           newDate,
-          idDocumentTypeCollaborator
+          idDocumentTypeCollaborator,
         )) > 0
       ) {
         res.json({
@@ -322,13 +365,13 @@ router.post(
                 data: messages.succesMessage.insertedSuccessfully,
               });
             }
-          }
+          },
         );
       }
     } catch (error) {
       res.json({ status: 400, data: messages.errors.noCreationAppointment });
     }
-  }
+  },
 );
 
 module.exports = router;

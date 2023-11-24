@@ -99,7 +99,7 @@ async function getTotalServiceAmount(idService) {
           const totalAmount = rows[0] ? rows[0].Valor_Servicio : 0;
           resolve(totalAmount);
         }
-      }
+      },
     );
   });
 }

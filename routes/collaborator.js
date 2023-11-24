@@ -57,7 +57,7 @@ router.get("/collaborator", validation.validateToken, (req, res) => {
             data: messages.succesMessage.insertedSuccessfully,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({
@@ -81,7 +81,7 @@ router.get("/collaboratorByEmail", validation.validateToken, (req, res) => {
             data: rows,
           });
         }
-      }
+      },
     );
   } catch (error) {
     res.json({

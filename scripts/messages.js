@@ -7,6 +7,10 @@ const messages = {
     noPermission: "No tienes permiso para realizar esa acción",
     noCreationAppointment: "Error al crear la cita",
     no: "El monto a retirar es mayor al total del servicio.",
+    invalidTime:
+      "La fecha final del servicio sobrepasa la hora de cierre. 7 p.m.",
+    invalidTimeSaturday:
+      "La fecha final del servicio sobrepasa la hora de cierre. 6 p.m.",
   },
   success: {},
   succesMessage: {

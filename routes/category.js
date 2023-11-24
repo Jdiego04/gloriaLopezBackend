@@ -26,8 +26,7 @@ router.get("/all", validation.validateToken, (req, res) => {
   }
 });
 
-
-router.get("/allCategoryCliente",  (req, res) => {
+router.get("/allCategoryCliente", (req, res) => {
   try {
     pool.query(queries.categoy.allCategorys, (err, rows, fields) => {
       if (err) throw err;

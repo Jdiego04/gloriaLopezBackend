@@ -203,7 +203,7 @@ const queries = {
       WHERE \
           ts.Duracion_Servicio = '00:00:00'",
     product:
-    "SELECT \
+      "SELECT \
       ts.Id_Servicio, \
       ts.Id_Categoria, \
       tc.Categoria, \
@@ -324,7 +324,7 @@ const queries = {
       LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON ttd.Id_TipoDocumento = tc.Id_TipoDocumento AND ttd.Activo = 'S' \
       LEFT JOIN TBL_CARGOS tc2 ON tc2.Id_Cargo = tc.Id_Cargo AND tc2.Activo = 'S' \
       WHERE tc.Numero_DocumentoColaborador = ? AND tc.Id_TipoDocumento = ? AND tc.Activo = 'S'",
-      collaboratorByEmail:
+    collaboratorByEmail:
       "SELECT tc.Id_TipoDocumento,  Numero_DocumentoColaborador \
       FROM TBL_COLABORADORES tc \
       WHERE Correo_Electronico = ? AND tc.Activo = 'S'",
