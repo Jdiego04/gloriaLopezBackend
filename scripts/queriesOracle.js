@@ -49,7 +49,7 @@ const queriesOracle = {
             WHEN activo = 'S' THEN 'N' \
         END \
         WHERE id_servicio = ?",
-        ServiceByCategoria: `SELECT s.id_servicio, s.nombre_servicio 
+        ServiceByCategoria: `SELECT s.id_servicio, s.nombre_servicio, s.valor_servicio, s.duracion_servicio
         FROM tbl_servicios s 
         LEFT JOIN tbl_Categorias c ON c.id_categoria = :param1 AND s.activo = 'S'`
     },
