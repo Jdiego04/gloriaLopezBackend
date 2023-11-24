@@ -63,7 +63,7 @@ const queries = {
         (Id_Categoria, Nombre_Servicio, Valor_Servicio, Descripcion_Servicio, Duracion_Servicio) \
       VALUES (?, ?, ?, ?, ?)",
     newServiceAppointment:
-      "INSERT INTO TBL_SERVICIOS_CITAS (Id_Servicio, Id_Cita,Valor_Servicio) VALUES (?, ?, ?)",
+      "INSERT INTO TBL_SERVICIOS_CITAS (Id_Servicio, Id_Cita) VALUES (?, ?)",
     newServiceProvider:
       "INSERT INTO TBL_SERVICIOS_PROVEEDORES (Id_Servicio, Id_Proveedor) VALUES (?, ?)",
     allServiceHistory:

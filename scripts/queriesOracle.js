@@ -132,8 +132,6 @@ const queriesOracle = {
         tbl_servicios s ON s.id_servicio = sc.id_servicio AND s.activo = 'S'
     LEFT JOIN
         tbl_categorias cat ON cat.id_categoria = s.id_categoria AND cat.activo = 'S'
-    WHERE
-        s.id_servicio IS NOT NULL AND cat.id_categoria IS NOT NULL
     GROUP BY
         c.id_cita,
         col.Nombres,

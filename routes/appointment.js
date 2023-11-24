@@ -194,7 +194,7 @@ router.put("/changeOracle", async (req, res) => {
       valor: valor,
       id_cita: id_cita
     }, {
-      autoCommit: true 
+      autoCommit: true
     });
 
     await connection.close();
@@ -221,7 +221,7 @@ router.put("/changeOracle", async (req, res) => {
 
 router.post("/insert", async (req, res) => {
   const connection = await OracleDB.getConnection(database);
-  const { 
+  const {
     id_estado_cita,
     id_tipo_documento_cliente,
     numero_documento_cliente,
@@ -232,8 +232,7 @@ router.post("/insert", async (req, res) => {
     dia_cita,
     hora_cita,
     minutos_cita,
-    services } = req.body;
-
+    id_servicio } = req.body;
   const sql =
     `INSERT INTO tbl_citas 
       (id_estadocita, id_tipodocumentocliente, numero_documentocliente, 
@@ -243,7 +242,6 @@ router.post("/insert", async (req, res) => {
       (:id_estado_cita, :id_tipo_documento_cliente, :numero_documento_cliente, 
        :id_tipo_documento_colaborador, :numero_documento_colaborador, :annio_cita, 
        :mes_cita, :dia_cita, :hora_cita, :minutos_cita, 0)`;
-
   const binds = {
     id_estado_cita: id_estado_cita,
     id_tipo_documento_cliente: id_tipo_documento_cliente,
@@ -255,12 +253,32 @@ router.post("/insert", async (req, res) => {
     dia_cita: dia_cita,
     hora_cita: hora_cita,
     minutos_cita: minutos_cita,
-    services: services
   };
-
-  const result = await connection.execute(sql, binds, { autoCommit: true });
-
-  res.json(result.rows);
+ 
+  try {
+    connection.execute(sql, binds, { autoCommit: true },  
+      async (err, result) => {
+        console.log(result)
+        if (err) {
+          throw err;
+        } else {
+          const id_Appointment = result.lastRowid;
+          await util.newServiceAppointment(id_servicio, id_Appointment);
+          res.json({
+            status: 201,
+            data: messages.succesMessage.insertedSuccessfully
+          })
+        }
+      });
+  } catch (error) {
+    res.json({ status: 400, data: 'No fue posible insertar la cita' })
+  }
 });
+
+
+
+
+
+
 
 module.exports = router;

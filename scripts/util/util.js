@@ -170,13 +170,14 @@ function valueService(idService) {
 
 async function newServiceAppointment(services, idAppointment) {
   const promises = services.map(async (service) => {
+    console.log("entra a la promesa")
     try {
-      let value = await valueService(service);
-
+      console.log(idAppointment)
       return new Promise((resolve, reject) => {
         pool.query(
           queries.service.newServiceAppointment,
-          [service, idAppointment, value],
+
+          [service, idAppointment, { autoCommit: true }],
           (err, rows, fields) => {
             if (err) {
               reject(err);
@@ -193,7 +194,7 @@ async function newServiceAppointment(services, idAppointment) {
   });
   try {
     const results = await Promise.all(promises);
-  } catch (error) {}
+  } catch (error) { }
 }
 
 module.exports = {
