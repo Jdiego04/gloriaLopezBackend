@@ -101,29 +101,57 @@ const queriesOracle = {
                     id_tipodocumentocolaborador,numero_documentocolaborador,annio_cita, mes_cita,dia_cita, hora_cita, \
                     minutos_cita, valor_cita) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
         allAppointment: `
-        SELECT 
-            c.id_cita,
-            col.Nombres || ' ' || col.Primer_apellido || ' ' || col.Segundo_apellido AS nombre_Colaborador,
-            cli.Nombres || ' ' || cli.Primer_apellido || ' ' || cli.Segundo_apellido AS nombre_Cliente,
-            TO_CHAR(
-                TO_TIMESTAMP_TZ(
-                    c.annio_cita || '-' || c.mes_cita || '-' || c.dia_cita || ' ' || c.hora_cita || ':' || c.minutos_cita || ':00 UTC',
-                    'YYYY-MM-DD HH24:MI:SS TZR'
-                ),
-                'YYYY-MM-DD"T"HH24:MI:SS.FF3"Z"'
-            ) AS fecha_inicio,
-            TO_CHAR(c.Fecha_final, 'YYYY-MM-DD"T"HH24:MI:SS.FF3"Z"') AS Fecha_final,
-            c.Valor_Cita,
-            cli.Numero_Contacto,
-            ec.Estado_Cita
-        FROM 
-            tbl_citas c
-        LEFT JOIN 
-            tbl_colaboradores col ON col.id_tipodocumento = c.id_tipodocumentocolaborador AND col.Numero_DocumentoColaborador = c.Numero_DocumentoColaborador
-        LEFT JOIN 
-            tbl_clientes cli ON cli.id_tipodocumento = c.Id_TipoDocumentoCliente AND cli.Numero_DocumentoCliente = c.Numero_DocumentoCliente
-        LEFT JOIN 
-            tbl_estados_citas ec ON ec.Id_EstadoCita = c.Id_EstadoCita`,
+        SELECT  
+        c.id_cita,
+        col.Nombres || ' ' || col.Primer_apellido || ' ' || col.Segundo_apellido AS nombre_Colaborador,
+        cli.Nombres || ' ' || cli.Primer_apellido || ' ' || cli.Segundo_apellido AS nombre_Cliente,
+        TO_CHAR(
+            TO_TIMESTAMP_TZ(
+                c.annio_cita || '-' || c.mes_cita || '-' || c.dia_cita || ' ' || c.hora_cita || ':' || c.minutos_cita || ':00 UTC',
+                'YYYY-MM-DD HH24:MI:SS TZR'
+            ),
+            'YYYY-MM-DD"T"HH24:MI:SS.FF3"Z"'
+        ) AS fecha_inicio,
+        TO_CHAR(c.Fecha_final, 'YYYY-MM-DD"T"HH24:MI:SS.FF3"Z"') AS Fecha_final,
+        c.Valor_Cita,
+        cli.Numero_Contacto,
+        ec.Estado_Cita, 
+        cat.categoria,
+        LISTAGG(s.nombre_servicio, ', ') WITHIN GROUP (ORDER BY s.id_servicio) AS servicios_asociados
+    FROM 
+        tbl_citas c
+    LEFT JOIN 
+        tbl_colaboradores col ON col.id_tipodocumento = c.id_tipodocumentocolaborador AND col.Numero_DocumentoColaborador = c.Numero_DocumentoColaborador AND col.activo = 'S'
+    LEFT JOIN 
+        tbl_clientes cli ON cli.id_tipodocumento = c.Id_TipoDocumentoCliente AND cli.Numero_DocumentoCliente = c.Numero_DocumentoCliente AND cli.activo = 'S'
+    LEFT JOIN 
+        tbl_estados_citas ec ON ec.Id_EstadoCita = c.Id_EstadoCita AND ec.activo = 'S'
+    LEFT JOIN
+        tbl_servicios_citas sc ON sc.id_cita = c.id_cita
+    LEFT JOIN
+        tbl_servicios s ON s.id_servicio = sc.id_servicio AND s.activo = 'S'
+    LEFT JOIN
+        tbl_categorias cat ON cat.id_categoria = s.id_categoria AND cat.activo = 'S'
+    GROUP BY
+        c.id_cita,
+        col.Nombres,
+        col.Primer_apellido,
+        col.Segundo_apellido,
+        cli.Nombres,
+        cli.Primer_apellido,
+        cli.Segundo_apellido,
+        TO_CHAR(
+            TO_TIMESTAMP_TZ(
+                c.annio_cita || '-' || c.mes_cita || '-' || c.dia_cita || ' ' || c.hora_cita || ':' || c.minutos_cita || ':00 UTC',
+                'YYYY-MM-DD HH24:MI:SS TZR'
+            ),
+            'YYYY-MM-DD"T"HH24:MI:SS.FF3"Z"'
+        ),
+        TO_CHAR(c.Fecha_final, 'YYYY-MM-DD"T"HH24:MI:SS.FF3"Z"'),
+        c.Valor_Cita,
+        cli.Numero_Contacto,
+        ec.Estado_Cita, 
+        cat.categoria`,
         change:
         `UPDATE TBL_CITAS 
             SET 
