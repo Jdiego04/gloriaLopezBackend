@@ -145,6 +145,14 @@ const queries = {
         (Id_Servicio, Cantidad, Tipo_Modificacion, Descripcion_Servicio, Numero_DocumentoColaborador, \
           Id_TipoDocumento) \
       VALUES (?, ?, ?, ?, ?, ?)",
+    accountService:
+      "SELECT ths.Id_Servicio, ts.Nombre_Servicio, \
+        SUM(CASE WHEN Tipo_Modificacion = 'E' THEN Cantidad ELSE 0 END) - \
+        SUM(CASE WHEN Tipo_Modificacion = 'S' THEN Cantidad ELSE 0 END) AS CantidadTotal \
+      FROM TBL_HISTORIAL_SERVICIOS ths \
+      LEFT JOIN TBL_SERVICIOS ts ON ts.Id_Servicio = ths.Id_Servicio \
+      WHERE ths.Id_Servicio = ? \
+      GROUP BY ths.Id_Servicio",
     accountServiceHistory:
       "SELECT ths.Id_Servicio, ts.Nombre_Servicio, \
         SUM(CASE WHEN Tipo_Modificacion = 'E' THEN Cantidad ELSE 0 END) AS Entradas, \
@@ -165,19 +173,64 @@ const queries = {
       LEFT JOIN TBL_SERVICIOS ts ON ts.Id_Servicio = ths.Id_Servicio \
       GROUP BY ths.Id_Servicio",
     allProduct:
-      "SELECT ts.Id_Servicio, ts.Id_Categoria,tc.Categoria,ts.Nombre_Servicio, ts.Valor_Servicio ,ts.Descripcion_Servicio, \
-        ts.Duracion_Servicio,tp.Id_Proveedor, tp.Nombre AS nombre_Proveedor,ts.Activo  FROM  TBL_SERVICIOS ts \
+      "SELECT \
+        ts.Id_Servicio, \
+        ts.Id_Categoria, \
+        tc.Categoria, \
+        ts.Nombre_Servicio, \
+        ts.Valor_Servicio, \
+        ts.Descripcion_Servicio, \
+        ts.Duracion_Servicio, \
+        tp.Id_Proveedor, \
+        tp.Nombre AS nombre_Proveedor, \
+        ts.Activo, \
+        COALESCE(total_servicio.CantidadTotal, 0) AS CantidadTotal \
+      FROM \
+          TBL_SERVICIOS ts \
       JOIN TBL_CATEGORIAS tc ON tc.Id_Categoria = ts.Id_Categoria AND tc.Activo = 'S' \
       LEFT JOIN TBL_SERVICIOS_PROVEEDORES tsp ON tsp.Id_Servicio = ts.Id_Servicio \
-      LEFT JOIN TBL_PROVEEDORES tp ON tp.Id_Proveedor  = tsp.Id_Proveedor AND tp.Activo = 'S' \
-      WHERE  ts.Duracion_Servicio = '00:00:00'",
+      LEFT JOIN TBL_PROVEEDORES tp ON tp.Id_Proveedor = tsp.Id_Proveedor AND tp.Activo = 'S' \
+      LEFT JOIN ( \
+          SELECT \
+              ths.Id_Servicio, \
+              SUM(CASE WHEN Tipo_Modificacion = 'E' THEN Cantidad ELSE 0 END) - \
+              SUM(CASE WHEN Tipo_Modificacion = 'S' THEN Cantidad ELSE 0 END) AS CantidadTotal \
+          FROM \
+              TBL_HISTORIAL_SERVICIOS ths \
+          GROUP BY \
+              ths.Id_Servicio \
+      ) total_servicio ON total_servicio.Id_Servicio = ts.Id_Servicio \
+      WHERE \
+          ts.Duracion_Servicio = '00:00:00'",
     product:
-      "SELECT ts.Id_Servicio, ts.Id_Categoria,tc.Categoria,ts.Nombre_Servicio, ts.Valor_Servicio ,ts.Descripcion_Servicio, \
-        ts.Duracion_Servicio, tp.Id_Proveedor, tp.Nombre AS nombre_Proveedor,ts.Activo  FROM  TBL_SERVICIOS ts \
-      JOIN TBL_CATEGORIAS tc ON tc.Id_Categoria = ts.Id_Categoria AND tc.Activo = 'S' \
-      LEFT JOIN TBL_SERVICIOS_PROVEEDORES tsp ON tsp.Id_Servicio = ts.Id_Servicio \
-      LEFT JOIN TBL_PROVEEDORES tp ON tp.Id_Proveedor  = tsp.Id_Proveedor AND tp.Activo = 'S' \
-      WHERE  ts.Duracion_Servicio = '00:00:00' AND ts.Id_Servicio = ?",
+    "SELECT \
+      ts.Id_Servicio, \
+      ts.Id_Categoria, \
+      tc.Categoria, \
+      ts.Nombre_Servicio, \
+      ts.Valor_Servicio, \
+      ts.Descripcion_Servicio, \
+      ts.Duracion_Servicio, \
+      tp.Id_Proveedor, \
+      tp.Nombre AS nombre_Proveedor, \
+      ts.Activo, \
+      COALESCE(total_servicio.CantidadTotal, 0) AS CantidadTotal \
+    FROM \
+        TBL_SERVICIOS ts \
+    JOIN TBL_CATEGORIAS tc ON tc.Id_Categoria = ts.Id_Categoria AND tc.Activo = 'S' \
+    LEFT JOIN TBL_SERVICIOS_PROVEEDORES tsp ON tsp.Id_Servicio = ts.Id_Servicio \
+    LEFT JOIN TBL_PROVEEDORES tp ON tp.Id_Proveedor = tsp.Id_Proveedor AND tp.Activo = 'S' \
+    LEFT JOIN ( \
+        SELECT \
+            ths.Id_Servicio, \
+            SUM(CASE WHEN Tipo_Modificacion = 'E' THEN Cantidad ELSE 0 END) - \
+            SUM(CASE WHEN Tipo_Modificacion = 'S' THEN Cantidad ELSE 0 END) AS CantidadTotal \
+        FROM \
+            TBL_HISTORIAL_SERVICIOS ths \
+        GROUP BY \
+            ths.Id_Servicio \
+    ) total_servicio ON total_servicio.Id_Servicio = ts.Id_Servicio \
+          WHERE  ts.Duracion_Servicio = '00:00:00' AND ts.Id_Servicio = ?",
     productByProvider:
       "SELECT ts.Id_Servicio, ts.Id_Categoria,tc.Categoria,ts.Nombre_Servicio, ts.Valor_Servicio ,ts.Descripcion_Servicio, \
         ts.Duracion_Servicio, tp.Nombre AS nombre_Proveedor  FROM  TBL_SERVICIOS ts \
@@ -783,8 +836,7 @@ const queries = {
       LEFT JOIN TBL_COLABORADORES tc ON tc.Numero_DocumentoColaborador = ths.Numero_DocumentoColaborador \
         AND tc.Id_TipoDocumento = ths.Id_TipoDocumento \
       LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON ttd.Id_TipoDocumento = ths.Id_TipoDocumento  \
-      HAVING \
-          COUNT(*) > 0 \
+      WHERE ths.Numero_DocumentoColaborador IS NOT NULL \
       ORDER BY \
         ths.Id_Servicio",
     historyProductByProduct:
@@ -805,9 +857,7 @@ const queries = {
       LEFT JOIN TBL_COLABORADORES tc ON tc.Numero_DocumentoColaborador = ths.Numero_DocumentoColaborador \
         AND tc.Id_TipoDocumento = ths.Id_TipoDocumento \
       LEFT JOIN TBL_TIPO_DOCUMENTOS ttd ON ttd.Id_TipoDocumento = ths.Id_TipoDocumento  \
-      WHERE ths.Id_Servicio = ? \
-      HAVING \
-        COUNT(*) > 0 \
+      WHERE ths.Numero_DocumentoColaborador IS NOT NULL AND ths.Id_Servicio = ?\
       ORDER BY \
         ths.Id_Servicio",
   },

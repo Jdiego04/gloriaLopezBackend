@@ -87,9 +87,27 @@ const validateToken = (req, res, next) => {
   }
 };
 
+async function getTotalServiceAmount(idService) {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      queries.service.accountService,
+      [idService],
+      (err, rows, fields) => {
+        if (err) {
+          reject(err);
+        } else {
+          const totalAmount = rows[0] ? rows[0].Valor_Servicio : 0;
+          resolve(totalAmount);
+        }
+      }
+    );
+  });
+}
+
 module.exports = {
   duration,
   newDate,
   availability,
   validateToken,
+  getTotalServiceAmount,
 };

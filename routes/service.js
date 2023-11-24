@@ -486,7 +486,7 @@ router.post(
   body("idCollaborator").not().isEmpty().trim().escape(),
   body("idDocumentType").not().isEmpty().trim().escape(),
   validation.validateToken,
-  (req, res) => {
+  async (req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -501,6 +501,15 @@ router.post(
         idCollaborator,
         idDocumentType,
       } = req.body;
+
+      const totalServiceAmount = await validation.getTotalServiceAmount(idService);
+
+      if (modificationType === 'S' && parseFloat(amount) > totalServiceAmount) {
+        return res.json({
+          status: 400,
+          data: messages.errors.no,
+        });
+      }
 
       pool.query(
         queries.service.newServiceHistory,

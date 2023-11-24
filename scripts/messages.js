@@ -6,6 +6,7 @@ const messages = {
     exist: "Este registro ya existe",
     noPermission: "No tienes permiso para realizar esa acción",
     noCreationAppointment: "Error al crear la cita",
+    no: "El monto a retirar es mayor al total del servicio.",
   },
   success: {},
   succesMessage: {
