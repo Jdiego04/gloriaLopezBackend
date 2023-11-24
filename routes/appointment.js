@@ -89,13 +89,10 @@ router.get("/allOracleClientes", async (req, res) => {
 });
 
 router.get("/allOracleCollaboratorByCategory", async (req, res) => {
-  const { idCategory } = req.query;
-  const params = { param1: idCategory };
   try {
     const connection = await OracleDB.getConnection(database);
     const resultado = await connection.execute(
-      queriesOracle.collaborator.CollaboratorByCategory,
-      params
+      queriesOracle.collaborator.CollaboratorByCategory
     );
     await finallyConexion(connection);
 
