@@ -9,7 +9,8 @@ const queriesOracle = {
             WHEN activo = 'N' THEN 'S' \
             WHEN activo = 'S' THEN 'N' \
         END \
-        WHERE id_estadocita = ?"
+        WHERE id_estadocita = ?",
+        allStateAppointment: `SELECT id_estadocita, estado_cita FROM tbl_estados_citas WHERE activo = 'S'`
     },
     module: {
         newModule: "INSERT INTO tbl_modulos (Nombre_Modulo) VALUES (?)",
@@ -36,7 +37,8 @@ const queriesOracle = {
             WHEN activo = 'N' THEN 'S' \
             WHEN activo = 'S' THEN 'N' \
         END \
-        WHERE id_categoria = ?"
+        WHERE id_categoria = ?",
+        allCategoria: `Select id_Categoria, categoria From tbl_Categorias where Activo = 'S' `
     },
     service: {
         newService: "INSERT INTO tbl_servicios (id_categoria,nombre_servicio,valor_servicio,descripcion_servicio, \
@@ -47,7 +49,9 @@ const queriesOracle = {
             WHEN activo = 'S' THEN 'N' \
         END \
         WHERE id_servicio = ?",
-        prueba: "SELECT * FROM tbl_servicios"
+        ServiceByCategoria: `SELECT s.id_servicio, s.nombre_servicio 
+        FROM tbl_servicios s 
+        LEFT JOIN tbl_Categorias c ON c.id_categoria = :param1 AND s.activo = 'S'`
     },
     chargesByModule: {
         newChargesByModule: "INSERT INTO tbl_modulos_cargos (id_modulo,id_cargo,crear,modificar,leer) \
@@ -74,7 +78,9 @@ const queriesOracle = {
             WHEN activo = 'N' THEN 'S' \
             WHEN activo = 'S' THEN 'N' \
             END \
-            WHERE tbl_colaboradores = ?"
+            WHERE tbl_colaboradores = ?",
+        allClient: `SELECT id_tipodocumento,numero_documentocliente, 
+        Nombres || ' ' || Primer_apellido || ' ' || Segundo_apellido AS nombre_Cliente FROM tbl_clientes where Activo = 'S'`
     },
     collaborator: {
         newCollaborator: "INSERT INTO tbl_colaboradores (Nombres,Primer_Apellido,Segundo_Apellido,id_TipoDocumento, \
@@ -85,7 +91,10 @@ const queriesOracle = {
                 WHEN activo = 'N' THEN 'S' \
                 WHEN activo = 'S' THEN 'N' \
                 END \
-                WHERE tbl_colaboradores = ?"
+                WHERE tbl_colaboradores = ?",
+        CollaboratorByCategory: `SELECT col.id_tipodocumento, col.numero_documentocolaborador, 
+        col.Nombres || ' ' || col.Primer_apellido || ' ' || col.Segundo_apellido AS nombre_Colaborador
+        FROM tbl_colaboradores col LEFT JOIN tbl_Categorias c  ON c.id_categoria = :param1 and col.activo='S'`,
     },
     appointment: {
         newAppointment: "INSERT INTO tbl_citas (id_estadocita,id_tipodocumentocliente,numero_documentocliente, \
@@ -123,7 +132,7 @@ const queriesOracle = {
             WHERE Id_Cita = ?`,
     },
     servicesByAppointment: {
-        newServicesByAppointment: " INSERT INTO tbl_servicios_citas (id_servicio,id_cita) VALUES (?,?);"
+        newServicesByAppointment: " INSERT INTO tbl_servicios_citas (id_servicio,id_cita) VALUES (?,?)"
     }
 }
 
