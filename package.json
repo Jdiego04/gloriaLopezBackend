@@ -4,6 +4,7 @@
   "description": "",
   "main": "views/index.js",
   "scripts": {
+    "build": "npm run format",
     "dev": "nodemon/views/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon/views/index.js",
@@ -22,8 +23,7 @@
   "homepage": "https://github.com/Jdiego04/gloriaLopezBackend#readme",
   "devDependencies": {
     "depcheck": "^1.4.7",
-    "nodemon": "^2.0.20",
-    "rimraf": "^5.0.5"
+    "nodemon": "^2.0.20"
   },
   "dependencies": {
     "cors": "^2.8.5",
