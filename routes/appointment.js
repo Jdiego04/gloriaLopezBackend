@@ -6,6 +6,7 @@ const { body, validationResult } = require("express-validator");
 const messages = require("../scripts/messages");
 const validation = require("../scripts/util/validation");
 const util = require("../scripts/util/util");
+const moment = require('moment');
 
 router.get("/all", validation.validateToken, (req, res) => {
   try {
@@ -160,7 +161,7 @@ router.post(
       if (!errors.isEmpty()) {
         return res.json({
           status: 400,
-          data: messages.errors.noCreationAppointment,
+          data: errors.array() ,
         });
       }
 
@@ -255,7 +256,7 @@ router.post(
         );
       }
     } catch (error) {
-      res.json({ status: 400, data: messages.errors.noCreationAppointment });
+      res.json({ status: 400, data: error });
     }
   },
 );
@@ -369,7 +370,7 @@ router.post(
         );
       }
     } catch (error) {
-      res.json({ status: 400, data: messages.errors.noCreationAppointment });
+      res.json({ status: 400, data: error });
     }
   },
 );
