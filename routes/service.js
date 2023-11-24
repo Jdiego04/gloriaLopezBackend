@@ -500,29 +500,37 @@ router.post(
         serviceDescription,
         idCollaborator,
         idDocumentType,
+        
       } = req.body;
 
       const totalServiceAmount = await validation.getTotalServiceAmount(idService);
 
-      console.log(totalServiceAmount);
-      console.log(modificationType);
-
+    
       if (modificationType === "S" && parseFloat(amount) > totalServiceAmount) {
         return res.json({
           status: 400,
           data: messages.errors.no,
         });
+      }else{
+        pool.query(
+          queries.service.newServiceHistory,
+          [idService, amount, modificationType, serviceDescription, idCollaborator,idDocumentType, ],
+          (err, rows, fields) => {
+            if (err) throw err;
+            else {
+              res.json({
+                status: 201,
+                data: messages.succesMessage.insertedSuccessfully,
+              });
+            }
+          },
+        );
       }
 
-      const [rows, fields] = await pool.query(
-        queries.service.newServiceHistory,
-        [idService, amount, modificationType, serviceDescription, idDocumentType, idCollaborator]
-      );
+      
 
-      res.json({
-        status: 201,
-        data: messages.succesMessage.insertedSuccessfully,
-      });
+    
+     
     } catch (error) {
       console.error(error);
       res.json({
