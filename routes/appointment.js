@@ -185,30 +185,23 @@ router.put("/changeOracle", async (req, res) => {
   try {
     const { idState, valor, id_cita } = req.body;
 
-    // Obtener la conexión
     const connection = await OracleDB.getConnection(database);
-
-    // Definir la sentencia SQL con placeholders
     const sql = `
       UPDATE TBL_CITAS
       SET
       ID_ESTADOCITA = :idState,
       Valor_Cita = :valor
       WHERE Id_Cita = :id_cita`;
-
-    // Ejecutar la sentencia SQL con los valores proporcionados
     const result = await connection.execute(sql, {
       idState: idState,
       valor: valor,
       id_cita: id_cita
     }, {
-      autoCommit: true // Si quieres que se realice un commit automático
+      autoCommit: true 
     });
 
-    // Liberar la conexión
     await connection.close();
 
-    // Verificar el resultado
     if (result.rowsAffected && result.rowsAffected === 1) {
       res.json({
         status: 200,
@@ -231,7 +224,8 @@ router.put("/changeOracle", async (req, res) => {
 
 router.post("/insert", async (req, res) => {
   const connection = await OracleDB.getConnection(database);
-  const { id_estado_cita,
+  const { 
+    id_estado_cita,
     id_tipo_documento_cliente,
     numero_documento_cliente,
     id_tipo_documento_colaborador,
@@ -241,7 +235,7 @@ router.post("/insert", async (req, res) => {
     dia_cita,
     hora_cita,
     minutos_cita,
-    valor_cita } = req.body;
+    services } = req.body;
 
   const sql =
     `INSERT INTO tbl_citas 
@@ -251,7 +245,7 @@ router.post("/insert", async (req, res) => {
      VALUES 
       (:id_estado_cita, :id_tipo_documento_cliente, :numero_documento_cliente, 
        :id_tipo_documento_colaborador, :numero_documento_colaborador, :annio_cita, 
-       :mes_cita, :dia_cita, :hora_cita, :minutos_cita, :valor_cita)`;
+       :mes_cita, :dia_cita, :hora_cita, :minutos_cita, 0)`;
 
   const binds = {
     id_estado_cita: id_estado_cita,
@@ -264,7 +258,7 @@ router.post("/insert", async (req, res) => {
     dia_cita: dia_cita,
     hora_cita: hora_cita,
     minutos_cita: minutos_cita,
-    valor_cita: valor_cita
+    services: services
   };
 
   const result = await connection.execute(sql, binds, { autoCommit: true });

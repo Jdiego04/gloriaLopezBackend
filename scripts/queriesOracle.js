@@ -94,7 +94,7 @@ const queriesOracle = {
                 WHERE tbl_colaboradores = ?",
         CollaboratorByCategory: `SELECT col.id_tipodocumento, col.numero_documentocolaborador, 
         col.Nombres || ' ' || col.Primer_apellido || ' ' || col.Segundo_apellido AS nombre_Colaborador
-        FROM tbl_colaboradores col LEFT JOIN tbl_Categorias c  ON c.id_categoria = :param1 and col.activo='S'`,
+        FROM tbl_colaboradores col WHERE col.activo='S'`,
     },
     appointment: {
         newAppointment: "INSERT INTO tbl_citas (id_estadocita,id_tipodocumentocliente,numero_documentocliente, \
