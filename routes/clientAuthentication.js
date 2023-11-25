@@ -59,7 +59,10 @@ router.post("/recoverPassword", (req, res) => {
     const { email } = req.body;
 
     pool.query(queries.client.recoverPassword, email, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        throw err;
+      }
+
       else {
         if (rows.length > 0) {
           //Genera una contraseña provicional

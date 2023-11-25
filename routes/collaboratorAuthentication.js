@@ -168,7 +168,14 @@ router.post("/singUp", async (req, res) => {
           positionId,
         ],
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try{
+              console.error(err);
+              throw err;
+            }catch{
+              res.json({ status: 400, data: messages.errors.exist });
+            }
+          }
           else {
             res.json({
               status: 201,
