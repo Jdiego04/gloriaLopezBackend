@@ -269,8 +269,8 @@ router.post("/insert", async (req, res) => {
         if (err) {
           throw err;
         } else {
-          // const id_Appointment = result.lastRowid;
-          // await util.newServiceAppointment(id_servicio, id_Appointment);
+          const id_Appointment = result.lastRowid;
+          await util.newServiceAppointment(id_servicio, id_Appointment);
           res.json({
             status: 201,
             data: messages.succesMessage.insertedSuccessfully
