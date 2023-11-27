@@ -4,8 +4,8 @@
   "description": "",
   "main": "views/index.js",
   "scripts": {
-    "build": "npm run format",
-    "dev": "nodemon/views/index.js",
+    "build": "npm install",
+    "dev": "nodemon views/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon/views/index.js",
     "format": "prettier --write **/*"
