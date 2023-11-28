@@ -10,7 +10,14 @@ const validation = require("../scripts/util/validation");
 router.get("/all", validation.validateToken, (req, res) => {
   try {
     pool.query(queries.provider.allProvider, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({ status: 200, data: rows });
       }
@@ -24,7 +31,14 @@ router.get("/provider", validation.validateToken, (req, res) => {
   try {
     const { idProvider } = req.query;
     pool.query(queries.provider.provider, idProvider, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({ status: 200, data: rows });
       }
@@ -49,7 +63,14 @@ router.post("/provider", validation.validateToken, async (req, res) => {
         queries.provider.newProvider,
         [name, contactNumber, address],
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             res.json({
               status: 201,
@@ -79,7 +100,14 @@ router.put("/deactivate", validation.validateToken, (req, res) => {
       queries.provider.deactivate,
       [idProvider],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -101,7 +129,14 @@ router.put("/update", validation.validateToken, (req, res) => {
       queries.provider.updateProvider,
       [name, contactNumber, address, idProvider],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,

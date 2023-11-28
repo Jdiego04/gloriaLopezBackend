@@ -10,7 +10,14 @@ const validation = require("../scripts/util/validation");
 router.get("/all", validation.validateToken, (req, res) => {
   try {
     pool.query(queries.categoy.allCategorys, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({
           status: 200,
@@ -29,7 +36,14 @@ router.get("/all", validation.validateToken, (req, res) => {
 router.get("/allCategoryCliente", (req, res) => {
   try {
     pool.query(queries.categoy.allCategorys, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({
           status: 200,
@@ -49,7 +63,14 @@ router.get("/categoy", validation.validateToken, (req, res) => {
   try {
     const { idCategory } = req.query;
     pool.query(queries.categoy.category, idCategory, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({
           status: 200,
@@ -88,7 +109,14 @@ router.post(
           queries.categoy.newCategory,
           category,
           (err, rows, fields) => {
-            if (err) throw err;
+            if (err) {
+              try {
+                console.error(err);
+                throw err;
+              } catch {
+                res.json({ status: 400, data: messages.errors.errorSystem });
+              }
+            }
             else {
               res.json({
                 status: 201,
@@ -119,7 +147,14 @@ router.put("/deactivate", validation.validateToken, (req, res) => {
       queries.documentType.deactivate,
       idCategory,
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -144,7 +179,14 @@ router.put("/update", validation.validateToken, (req, res) => {
       queries.categoy.update,
       [category, idCategory],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -180,7 +222,14 @@ router.post(
         queries.categoy.newCategory,
         [idCategory, idCollaborator, idDocumentType],
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             res.json({
               status: 201,

@@ -10,7 +10,14 @@ const validation = require("../scripts/util/validation");
 router.get("/all", validation.validateToken, (req, res) => {
   try {
     pool.query(queries.service.all, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({
           status: 200,
@@ -29,7 +36,14 @@ router.get("/all", validation.validateToken, (req, res) => {
 router.get("/allService", validation.validateToken, (req, res) => {
   try {
     pool.query(queries.service.allService, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({
           status: 200,
@@ -49,7 +63,14 @@ router.get("/service", validation.validateToken, (req, res) => {
   try {
     const { idService } = req.query;
     pool.query(queries.service.service, idService, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({
           status: 200,
@@ -72,7 +93,14 @@ router.get("/serviceByAppointment", validation.validateToken, (req, res) => {
       queries.service.serviceByAppointment,
       idAppointment,
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -95,7 +123,14 @@ router.get("/serviceByAppointmentCliente", (req, res) => {
       queries.service.serviceByAppointment,
       idAppointment,
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -119,7 +154,14 @@ router.get("/serviceByCategory", validation.validateToken, (req, res) => {
       queries.service.serviceByCategory,
       idCategory,
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -142,7 +184,14 @@ router.get("/serviceByCategorycliente", (req, res) => {
       queries.service.serviceByCategory,
       idCategory,
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -187,7 +236,14 @@ router.post("/service", validation.validateToken, async (req, res) => {
           serviceDuration,
         ],
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             const idService = rows.insertId;
             if (idProvider != null) {
@@ -195,7 +251,14 @@ router.post("/service", validation.validateToken, async (req, res) => {
                 queries.service.newServiceProvider,
                 [idService, idProvider],
                 (err, rows, fields) => {
-                  if (err) throw err;
+                  if (err) {
+                    try {
+                      console.error(err);
+                      throw err;
+                    } catch {
+                      res.json({ status: 400, data: messages.errors.errorSystem });
+                    }
+                  }
                   else {
                     res.json({
                       status: 201,
@@ -232,7 +295,14 @@ router.put("/deactivate", validation.validateToken, (req, res) => {
     const { idService } = req.body;
 
     pool.query(queries.service.deactivate, idService, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({
           status: 200,
@@ -270,7 +340,14 @@ router.put("/update", validation.validateToken, (req, res) => {
         idService,
       ],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -305,7 +382,14 @@ router.post(
         queries.service.newServiceAppointment,
         [idService, idAppointment],
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             res.json({
               status: 201,
@@ -341,7 +425,14 @@ router.post(
         queries.service.newServiceProvider,
         [idService, idProvider],
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             res.json({
               status: 201,
@@ -362,7 +453,14 @@ router.post(
 router.get("/allServiceHistory", validation.validateToken, (req, res) => {
   try {
     pool.query(queries.service.allServiceHistory, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({
           status: 200,
@@ -385,7 +483,14 @@ router.get("/serviceHistory", validation.validateToken, (req, res) => {
       queries.service.serviceHistory,
       idserviceHistory,
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -412,7 +517,14 @@ router.get(
         queries.service.serviceHistoryByCollaborator,
         [idCollaborator, idDocumentType],
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             res.json({
               status: 200,
@@ -440,7 +552,14 @@ router.get(
         queries.service.serviceHistoryByProvider,
         idProvider,
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             res.json({
               status: 200,
@@ -465,7 +584,14 @@ router.get("/serviceHistoryByService", validation.validateToken, (req, res) => {
       queries.service.serviceHistoryByService,
       idService,
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -527,7 +653,14 @@ router.post(
             idDocumentType,
           ],
           (err, rows, fields) => {
-            if (err) throw err;
+            if (err) {
+              try {
+                console.error(err);
+                throw err;
+              } catch {
+                res.json({ status: 400, data: messages.errors.errorSystem });
+              }
+            }
             else {
               res.json({
                 status: 201,
@@ -557,7 +690,14 @@ router.get(
         queries.service.accountAllServiceHistory,
         idService,
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             res.json({
               status: 200,
@@ -582,7 +722,14 @@ router.get("/accountServiceHistory", validation.validateToken, (req, res) => {
       queries.service.accountServiceHistory,
       idService,
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -605,7 +752,14 @@ router.get(
   (req, res) => {
     try {
       pool.query(queries.service.accountServiceHistory, (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -625,7 +779,14 @@ router.get(
 router.get("/allProduct", validation.validateToken, (req, res) => {
   try {
     pool.query(queries.service.allProduct, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({
           status: 200,
@@ -645,7 +806,14 @@ router.get("/product", validation.validateToken, (req, res) => {
   try {
     const { idService } = req.query;
     pool.query(queries.service.product, idService, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({
           status: 200,
@@ -668,7 +836,14 @@ router.get("/productByProvider", validation.validateToken, (req, res) => {
       queries.service.productByProvider,
       idProvider,
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,

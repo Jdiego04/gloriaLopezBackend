@@ -11,7 +11,14 @@ const moment = require('moment');
 router.get("/all", validation.validateToken, (req, res) => {
   try {
     pool.query(queries.appointment.allAppointment, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({ status: 200, data: rows });
       }
@@ -28,7 +35,14 @@ router.get("/appointment", validation.validateToken, (req, res) => {
       queries.appointment.appointment,
       idAppoinment,
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({ status: 200, data: rows });
         }
@@ -46,7 +60,14 @@ router.get("/appointmentByCliente", validation.validateToken, (req, res) => {
       queries.appointment.appointmentByCliente,
       [idClient, idDocumentType],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({ status: 200, data: rows });
         }
@@ -64,7 +85,14 @@ router.get("/appointmentByClientCorreo", (req, res) => {
       queries.appointment.appointmentByClientCorreo,
       [CorreoCliente],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({ status: 200, data: rows });
         }
@@ -85,7 +113,14 @@ router.get(
         queries.appointment.appointmentByColaborador,
         [idCollaborator, idDocumentType],
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             res.json({ status: 200, data: rows });
           }
@@ -105,7 +140,14 @@ router.put("/change", validation.validateToken, (req, res) => {
       queries.appointment.change,
       [idState, value, idAppoinment],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -129,7 +171,14 @@ router.put("/changeCliente", (req, res) => {
       queries.appointment.change,
       [idState, value, idAppoinment],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -242,7 +291,12 @@ router.post(
           ],
           async (err, rows, fields) => {
             if (err) {
-              throw err;
+              try {
+                console.error(err);
+                throw err;
+              } catch {
+                res.json({ status: 400, data: messages.errors.errorSystem });
+              }
             } else {
               const idAppointment = rows.insertId;
               await util.newServiceAppointment(services, idAppointment);

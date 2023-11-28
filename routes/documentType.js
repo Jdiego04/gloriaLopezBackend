@@ -9,7 +9,14 @@ const validation = require("../scripts/util/validation");
 router.get("/all", (req, res) => {
   try {
     pool.query(queries.documentType.allDocumentType, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({ status: 200, data: rows });
       }
@@ -29,7 +36,14 @@ router.get("/documentType", validation.validateToken, (req, res) => {
       queries.documentType.documentType,
       idDocumentType,
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({ status: 200, data: rows });
         }
@@ -60,7 +74,14 @@ router.post(
         queries.documentType.newDocumentType,
         documentType,
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             res.json({
               status: 201,
@@ -86,7 +107,14 @@ router.put("/deactivate", validation.validateToken, (req, res) => {
       queries.documentType.deactivate,
       idDocumentType,
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,

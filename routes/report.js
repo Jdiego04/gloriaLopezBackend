@@ -12,7 +12,14 @@ router.get("/appointmentByState", validation.validateToken, (req, res) => {
       queries.report.appointmentByState,
       [idState, startDate, endDate, startDate, endDate],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           if (rows.length > 0) {
             res.json({ status: 200, data: rows });
@@ -47,7 +54,14 @@ router.get(
           endDate,
         ],
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             if (rows.length > 0) {
               res.json({ status: 200, data: rows });
@@ -73,7 +87,14 @@ router.get("/appointmentByClient", validation.validateToken, (req, res) => {
       queries.report.appointmentByClient,
       [idClient, idDocumentType, startDate, endDate, startDate, endDate],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           if (rows.length > 0) {
             res.json({ status: 200, data: rows });
@@ -98,7 +119,14 @@ router.get("/totalByCollaborator", validation.validateToken, (req, res) => {
       queries.report.totalByCollaborator,
       [startDate, endDate, startDate, endDate],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           if (rows.length > 0) {
             res.json({ status: 200, data: rows });
@@ -119,7 +147,14 @@ router.get("/totalByCollaborator", validation.validateToken, (req, res) => {
 router.get("/historyProduct", validation.validateToken, (req, res) => {
   try {
     pool.query(queries.report.historyProduct, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         if (rows.length > 0) {
           res.json({ status: 200, data: rows });
@@ -143,7 +178,14 @@ router.get("/historyProductByProduct", validation.validateToken, (req, res) => {
       queries.report.historyProductByProduct,
       idProduct,
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           if (rows.length > 0) {
             res.json({ status: 200, data: rows });

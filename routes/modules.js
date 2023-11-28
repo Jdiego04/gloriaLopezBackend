@@ -9,7 +9,14 @@ const validation = require("../scripts/util/validation");
 router.get("/all", validation.validateToken, (req, res) => {
   try {
     pool.query(queries.module.all, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({ status: 200, data: rows });
       }
@@ -23,7 +30,14 @@ router.get("/module", validation.validateToken, (req, res) => {
   try {
     const { idModule } = req.query;
     pool.query(queries.module.module, idModule, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({ status: 200, data: rows });
       }
@@ -45,7 +59,14 @@ router.get(
         queries.module.moduleByCollaborator,
         [idCollaborator, idDocumentType],
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             res.json({ status: 200, data: rows });
           }
@@ -71,7 +92,14 @@ router.post(
       const { moduleName } = req.body;
 
       pool.query(queries.module.newModule, moduleName, (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 201,
@@ -90,7 +118,14 @@ router.put("/deactivate", validation.validateToken, (req, res) => {
     const { idModule } = req.body;
 
     pool.query(queries.module.deactivate, idModule, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({
           status: 200,
@@ -111,7 +146,14 @@ router.put("/updateModule", validation.validateToken, (req, res) => {
       queries.module.updateModule,
       [moduleName, idModule],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -178,7 +220,14 @@ router.get(
         queries.module.allPermissionModuleByCollaborator,
         [idCollaborator, idDocumentType],
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             res.json({ status: 200, data: rows });
           }
@@ -200,7 +249,14 @@ router.get(
         queries.module.permissionModuleByCollaborator,
         [idCollaborator, idDocumentType, idModule],
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             res.json({ status: 200, data: rows });
           }
@@ -228,7 +284,14 @@ router.put(
         queries.module.updatePermissionModule,
         [idPermission, idModule, idCollaborator, idDocumentType],
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             res.json({
               status: 200,
@@ -246,7 +309,14 @@ router.put(
 router.get("/allPermissionModule", validation.validateToken, (req, res) => {
   try {
     pool.query(queries.module.permissionModule, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({ status: 200, data: rows });
       }
@@ -259,7 +329,14 @@ router.get("/allPermissionModule", validation.validateToken, (req, res) => {
 router.get("/allPermission", validation.validateToken, (req, res) => {
   try {
     pool.query(queries.module.allPermission, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({ status: 200, data: rows });
       }

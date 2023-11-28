@@ -9,7 +9,14 @@ const validation = require("../scripts/util/validation");
 router.get("/all", validation.validateToken, (req, res) => {
   try {
     pool.query(queries.position.all, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({
           status: 200,
@@ -29,7 +36,14 @@ router.get("/position", validation.validateToken, (req, res) => {
   try {
     const { idPosition } = req.query;
     pool.query(queries.position.position, idPosition, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({
           status: 200,
@@ -62,7 +76,14 @@ router.post(
         queries.position.newPosition,
         position,
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             res.json({
               status: 201,
@@ -85,7 +106,14 @@ router.put("/deactivate", validation.validateToken, (req, res) => {
     const { idPosition } = req.body;
 
     pool.query(queries.position.deactivate, idPosition, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({
           status: 200,
@@ -109,7 +137,14 @@ router.put("/update", validation.validateToken, (req, res) => {
       queries.position.update,
       [position, idPosition],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,

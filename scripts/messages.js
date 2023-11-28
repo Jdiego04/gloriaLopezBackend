@@ -11,6 +11,8 @@ const messages = {
       "La fecha final del servicio sobrepasa la hora de cierre. 7 p.m.",
     invalidTimeSaturday:
       "La fecha final del servicio sobrepasa la hora de cierre. 6 p.m.",
+    errorSystem:
+      "Hubo un error en el sistema, vuelve a intentar",
   },
   success: {},
   succesMessage: {

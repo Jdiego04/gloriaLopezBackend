@@ -7,7 +7,14 @@ const validation = require("../scripts/util/validation");
 router.get("/all", validation.validateToken, (req, res) => {
   try {
     pool.query(queries.client.all, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({ status: 200, data: rows });
       }
@@ -24,7 +31,14 @@ router.get("/client", validation.validateToken, (req, res) => {
       queries.client.client,
       [idClient, idDocumentType],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({ status: 200, data: rows });
         }
@@ -39,7 +53,14 @@ router.get("/clientByEmail", (req, res) => {
   try {
     const { eMail } = req.query;
     pool.query(queries.client.clientByEmail, [eMail], (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({ status: 200, data: rows });
       }
@@ -57,13 +78,27 @@ router.put("/deactivate", (req, res) => {
       queries.client.otp,
       [clientId, documentTypeId, otp],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           pool.query(
             queries.client.deactivate,
             [documentTypeId, clientId],
             (err, rows, fields) => {
-              if (err) throw err;
+              if (err) {
+                try {
+                  console.error(err);
+                  throw err;
+                } catch {
+                  res.json({ status: 400, data: messages.errors.errorSystem });
+                }
+              }
             },
           );
           res.json({
@@ -81,7 +116,14 @@ router.put("/deactivate", (req, res) => {
 router.get("/allCitasCliente", (req, res) => {
   try {
     pool.query(queries.client.all, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({ status: 200, data: rows });
       }

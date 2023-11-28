@@ -8,7 +8,14 @@ const validation = require("../scripts/util/validation");
 router.get("/all", validation.validateToken, (req, res) => {
   try {
     pool.query(queries.collaborator.all, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({ status: 200, data: rows });
       }
@@ -21,7 +28,14 @@ router.get("/all", validation.validateToken, (req, res) => {
 router.get("/allActivate", validation.validateToken, (req, res) => {
   try {
     pool.query(queries.collaborator.allActivate, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({ status: 200, data: rows });
       }
@@ -33,7 +47,14 @@ router.get("/allActivate", validation.validateToken, (req, res) => {
 router.get("/allActiveCollaboratorClient", (req, res) => {
   try {
     pool.query(queries.collaborator.allActivate, (err, rows, fields) => {
-      if (err) throw err;
+      if (err) {
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
+      }
       else {
         res.json({ status: 200, data: rows });
       }
@@ -50,7 +71,14 @@ router.get("/collaborator", validation.validateToken, (req, res) => {
       queries.collaborator.collaborator,
       [idCollaborator, idDocumentType],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -74,7 +102,14 @@ router.get("/collaboratorByEmail", validation.validateToken, (req, res) => {
       queries.collaborator.collaboratorByEmail,
       [eMailCollaborator],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,

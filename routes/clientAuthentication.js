@@ -60,7 +60,12 @@ router.post("/recoverPassword", (req, res) => {
 
     pool.query(queries.client.recoverPassword, email, (err, rows, fields) => {
       if (err) {
-        throw err;
+        try {
+          console.error(err);
+          throw err;
+        } catch {
+          res.json({ status: 400, data: messages.errors.errorSystem });
+        }
       }
 
       else {
@@ -76,7 +81,14 @@ router.post("/recoverPassword", (req, res) => {
             queries.client.updatePassword,
             [hashedPassword, email],
             (err, rows, fields) => {
-              if (err) throw err;
+              if (err) {
+                try {
+                  console.error(err);
+                  throw err;
+                } catch {
+                  res.json({ status: 400, data: messages.errors.errorSystem });
+                }
+              }
               else {
                 const subject = "Nueva contraseña Gloria Lopez";
                 const content = ` Su nueva contraseña provisional es: ${password} 
@@ -108,7 +120,14 @@ router.post("/updatePassword", validation.validateToken, (req, res) => {
       queries.client.updatePassword,
       [password, email],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -164,7 +183,14 @@ router.post("/singUp", async (req, res) => {
           birthDate,
         ],
         (err, rows, fields) => {
-          if (err) throw err;
+          if (err) {
+            try {
+              console.error(err);
+              throw err;
+            } catch {
+              res.json({ status: 400, data: messages.errors.errorSystem });
+            }
+          }
           else {
             const otp = util.generateOTP();
             const subject = "Codigo de verificacion";
@@ -175,7 +201,14 @@ router.post("/singUp", async (req, res) => {
               queries.otp.newOtp,
               [clientId, documentTypeId, otp],
               (err, rows, fields) => {
-                if (err) throw err;
+                if (err) {
+                  try {
+                    console.error(err);
+                    throw err;
+                  } catch {
+                    res.json({ status: 400, data: messages.errors.errorSystem });
+                  }
+                }
                 else {
                   res.json({
                     status: 201,
@@ -224,7 +257,14 @@ router.put("/update", validation.validateToken, (req, res) => {
         documentTypeId,
       ],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,

@@ -63,7 +63,14 @@ router.post("/recoverPassword", (req, res) => {
       queries.collaborator.recoverPassword,
       email,
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           if (rows.length > 0) {
             //Genera una contraseña provicional
@@ -109,7 +116,14 @@ router.post("/updatePassword", (req, res) => {
       queries.collaborator.updatePassword,
       [password, email],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -169,10 +183,10 @@ router.post("/singUp", async (req, res) => {
         ],
         (err, rows, fields) => {
           if (err) {
-            try{
+            try {
               console.error(err);
               throw err;
-            }catch{
+            } catch {
               res.json({ status: 400, data: messages.errors.exist });
             }
           }
@@ -206,7 +220,14 @@ router.put("/deactivate", validation.validateToken, (req, res) => {
       queries.collaborator.deactivate,
       [idCollaborator, idDocumentType],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -247,7 +268,14 @@ router.put("/update", validation.validateToken, (req, res) => {
         idDocumentType,
       ],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 200,
@@ -272,7 +300,14 @@ router.post("/collaboratorCategory", validation.validateToken, (req, res) => {
       queries.collaborator.newCollaboratorCategory,
       [idCategory, idCollaborator, idDocumentType],
       (err, rows, fields) => {
-        if (err) throw err;
+        if (err) {
+          try {
+            console.error(err);
+            throw err;
+          } catch {
+            res.json({ status: 400, data: messages.errors.errorSystem });
+          }
+        }
         else {
           res.json({
             status: 201,
