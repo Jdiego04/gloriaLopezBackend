@@ -53,7 +53,7 @@ async function configureMailTransport(callback) {
     const oauth2Client = new google.auth.OAuth2(
       accountTransport.auth.clientId,
       accountTransport.auth.clientSecret,
-      accountTransport.auth.redirectUri,
+      accountTransport.auth.redirectUri
     );
 
     oauth2Client.setCredentials({
@@ -76,7 +76,7 @@ async function configureMailTransport(callback) {
       // Actualiza la fecha de vencimiento en tu configuración
       const newExpirationDate = new Date();
       newExpirationDate.setSeconds(
-        newExpirationDate.getSeconds() + tokenResponse.res.data.expires_in,
+        newExpirationDate.getSeconds() + tokenResponse.res.data.expires_in
       );
       accountTransport.auth.expiryDate = newExpirationDate.toISOString();
     }
@@ -93,7 +93,7 @@ async function configureMailTransport(callback) {
           refreshToken: accountTransport.auth.refreshToken,
           accessToken: accountTransport.auth.accessToken,
         },
-      }),
+      })
     );
   } catch (error) {
     console.error("Error al configurar el transporte de correo:", error);
@@ -126,9 +126,9 @@ async function checkIfExists(dato1, dato2, dato3) {
     // Realizar la consulta usando async/await
     const rows = await pool.query(
       `SELECT * FROM ${mysql.escapeId(dato1)} WHERE ${mysql.escapeId(
-        dato2,
+        dato2
       )} = ?`,
-      [dato3],
+      [dato3]
     );
 
     // Verificar si hay resultados
@@ -163,7 +163,7 @@ function valueService(idService) {
         } else {
           resolve(rows[0].Valor_Servicio);
         }
-      },
+      }
     );
   });
 }
@@ -183,7 +183,7 @@ async function newServiceAppointment(services, idAppointment) {
             } else {
               resolve(rows);
             }
-          },
+          }
         );
       });
     } catch (error) {
@@ -193,7 +193,10 @@ async function newServiceAppointment(services, idAppointment) {
   });
   try {
     const results = await Promise.all(promises);
-  } catch (error) {}
+    console.log(results);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 module.exports = {
